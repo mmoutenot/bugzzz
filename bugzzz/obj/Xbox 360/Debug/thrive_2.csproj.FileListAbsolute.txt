@@ -1,0 +1,6 @@
+C:\Users\Marshall\Documents\Visual Studio 2008\Projects\thrive_2\thrive_2\bin\Xbox 360\Debug\thrive_2.exe
+C:\Users\Marshall\Documents\Visual Studio 2008\Projects\thrive_2\thrive_2\bin\Xbox 360\Debug\thrive_2.pdb
+C:\Users\Marshall\Documents\Visual Studio 2008\Projects\thrive_2\thrive_2\obj\Xbox 360\Debug\ResolveAssemblyReference.cache
+C:\Users\Marshall\Documents\Visual Studio 2008\Projects\thrive_2\thrive_2\obj\Xbox 360\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
+C:\Users\Marshall\Documents\Visual Studio 2008\Projects\thrive_2\thrive_2\obj\Xbox 360\Debug\thrive_2.exe
+C:\Users\Marshall\Documents\Visual Studio 2008\Projects\thrive_2\thrive_2\obj\Xbox 360\Debug\thrive_2.pdb
