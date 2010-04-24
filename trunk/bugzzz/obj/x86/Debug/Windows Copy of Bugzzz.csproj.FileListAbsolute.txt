@@ -6,3 +6,12 @@ C:\Users\Marshall\Documents\Visual Studio 2008\Projects\thrive_2\thrive_2\bin\x8
 C:\Users\Marshall\Documents\Visual Studio 2008\Projects\thrive_2\thrive_2\bin\x86\Debug\Bugzzz.pdb
 C:\Users\Marshall\Documents\Visual Studio 2008\Projects\thrive_2\thrive_2\obj\x86\Debug\Bugzzz.exe
 C:\Users\Marshall\Documents\Visual Studio 2008\Projects\thrive_2\thrive_2\obj\x86\Debug\Bugzzz.pdb
+C:\Users\Marshall\Documents\Visual Studio 2008\Projects\bugzzz\bugzzz\bin\x86\Debug\Content\sprites\smiley1.xnb
+C:\Users\Marshall\Documents\Visual Studio 2008\Projects\bugzzz\bugzzz\bin\x86\Debug\Content\sprites\cannonball.xnb
+C:\Users\Marshall\Documents\Visual Studio 2008\Projects\bugzzz\bugzzz\bin\x86\Debug\Bugzzz.exe
+C:\Users\Marshall\Documents\Visual Studio 2008\Projects\bugzzz\bugzzz\bin\x86\Debug\Bugzzz.pdb
+C:\Users\Marshall\Documents\Visual Studio 2008\Projects\bugzzz\bugzzz\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Marshall\Documents\Visual Studio 2008\Projects\bugzzz\bugzzz\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
+C:\Users\Marshall\Documents\Visual Studio 2008\Projects\bugzzz\bugzzz\obj\x86\Debug\Bugzzz.exe
+C:\Users\Marshall\Documents\Visual Studio 2008\Projects\bugzzz\bugzzz\obj\x86\Debug\Bugzzz.pdb
+C:\Users\Marshall\Documents\Visual Studio 2008\Projects\bugzzz\bugzzz\bin\x86\Debug\Content\sprites\enemy.xnb
