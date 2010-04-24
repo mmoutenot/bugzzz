@@ -25,17 +25,13 @@ namespace Bugzzz
         GameObject[] enemies;
         const int maxEnemies = 5;
         const int maxBullets = 15;
-
+        Player player1;
+        Player player2;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Viewport viewport;
         Rectangle viewportRect;
-        float p_rotation = 0.0f;
-        Texture2D p_sprite = null;
-        Vector2 p_velocity = Vector2.Zero;
-        Vector2 p_position = Vector2.Zero;
-        
-        bool p_fire;
+
         Random rand;
         //for fire delay
         float elapsedTime = 0;
@@ -59,8 +55,6 @@ namespace Bugzzz
         {
             // TODO: Add your initialization logic here
             //player's stating position
-            p_position.X = 200;
-            p_position.Y = 200;
 
             base.Initialize();
         }
@@ -89,8 +83,9 @@ namespace Bugzzz
             {
                 enemies[j] = new GameObject(Content.Load<Texture2D>("sprites\\enemy"));
             }
-            
-            p_sprite = Content.Load<Texture2D>("sprites\\smiley1");
+            player1=new Player(1,Content.Load<Texture2D>("sprites\\smiley1"));
+            player2 = new Player(2, Content.Load<Texture2D>("sprites\\smiley1"));
+
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
@@ -120,8 +115,8 @@ namespace Bugzzz
                 if (!bullet.alive)
                 {
                     bullet.alive = true;
-                    bullet.position = p_position - bullet.center;
-                    bullet.velocity = new Vector2((float)Math.Cos(p_rotation + Math.PI / 2), (float)Math.Sin(p_rotation + Math.PI / 2)) * 15.0f;
+                    bullet.position = player1.p_position - bullet.center;
+                    bullet.velocity = new Vector2((float)Math.Cos(player1.p_rotation + Math.PI / 2), (float)Math.Sin(player1.p_rotation + Math.PI / 2)) * 15.0f;
                     return;
                 }
             }
@@ -135,7 +130,7 @@ namespace Bugzzz
                 if (enemy.alive)
                 {
                     //checks for collision with the player
-                    Rectangle playerRect = new Rectangle((int)p_position.X,(int)p_position.Y,150,150);
+                    Rectangle playerRect = new Rectangle((int)player1.p_position.X,(int)player1.p_position.Y,100,100);
                     Rectangle enemyRect = new Rectangle((int)enemy.position.X,(int)enemy.position.Y,enemy.sprite.Width,enemy.sprite.Height);
                     if (playerRect.Intersects(enemyRect))
                     {
@@ -145,7 +140,7 @@ namespace Bugzzz
                     }
 
                     //makes enemies move towards the player
-                    Vector2 target = new Vector2((float)p_position.X, (float)p_position.Y);
+                    Vector2 target = new Vector2((float)player1.p_position.X, (float)player1.p_position.Y);
                     enemy.velocity = target - enemy.position;
                     enemy.velocity.Normalize();
                     enemy.position += enemy.velocity * 2;
@@ -177,7 +172,7 @@ namespace Bugzzz
                         enemy.position = new Vector2(viewportRect.Bottom, MathHelper.Lerp(0.0f, (float)viewportRect.Width, (float)rand.NextDouble()));
                     }
 
-                    Vector2 target = new Vector2((float)p_position.X, (float)p_position.Y);
+                    Vector2 target = new Vector2((float)player1.p_position.X, (float)player1.p_position.Y);
                     enemy.velocity = target - enemy.position;
                     enemy.velocity.Normalize();
                     enemy.position += enemy.velocity * 2;
@@ -233,8 +228,8 @@ namespace Bugzzz
             UpdateInput();
             updateBullets();
             updateEnemies();
-            p_position += p_velocity;
-            if (p_fire && elapsedTime>=fireDelay)
+            player1.p_position += player1.p_velocity;
+            if (player1.p_fire && elapsedTime>=fireDelay)
             {
                 elapsedTime = 0.0f;
                 fireBullets();
@@ -247,21 +242,21 @@ namespace Bugzzz
             GamePadState currentState = GamePad.GetState(PlayerIndex.One);
             if (currentState.IsConnected)
             {
-                p_velocity.X = currentState.ThumbSticks.Left.X*5;
-                p_velocity.Y = -currentState.ThumbSticks.Left.Y * 5;
-                //p_rotation = -(float)((Math.Tan(currentState.ThumbSticks.Right.Y / currentState.ThumbSticks.Right.X)*2*Math.PI)/180);
+                player1.p_velocity.X = currentState.ThumbSticks.Left.X*5;
+                player1.p_velocity.Y = -currentState.ThumbSticks.Left.Y * 5;
+                //player1.p_rotation = -(float)((Math.Tan(currentState.ThumbSticks.Right.Y / currentState.ThumbSticks.Right.X)*2*Math.PI)/180);
                 const float DEADZONE = 0.2f;
                 const float FIREDEADZONE = 0.3f;
 
                 Vector2 direction = GamePad.GetState(PlayerIndex.One).ThumbSticks.Right;
                 float magnitude = direction.Length();
-                p_fire = false;
+                player1.p_fire = false;
                 if (magnitude > DEADZONE)
                 {
-                    p_rotation = (float)(-1*(3.14/2+Math.Atan2(currentState.ThumbSticks.Right.Y, currentState.ThumbSticks.Right.X)));
+                    player1.p_rotation = (float)(-1*(3.14/2+Math.Atan2(currentState.ThumbSticks.Right.Y, currentState.ThumbSticks.Right.X)));
                     if (magnitude > FIREDEADZONE)
                     {
-                        p_fire = true;
+                        player1.p_fire = true;
                     }
                 } 
 
@@ -275,7 +270,7 @@ namespace Bugzzz
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
-            spriteBatch.Draw(p_sprite, new Rectangle((int)p_position.X, (int)p_position.Y, 100, 100), null, Color.White,p_rotation,new Vector2(160,160), SpriteEffects.None, 0);
+            spriteBatch.Draw(player1.p_sprite, new Rectangle((int)player1.p_position.X, (int)player1.p_position.Y, 100, 100), null, Color.White,player1.p_rotation,new Vector2(160,160), SpriteEffects.None, 0);
             // TODO: Add your drawing code here
             foreach (GameObject bullet in bullets)
             {
