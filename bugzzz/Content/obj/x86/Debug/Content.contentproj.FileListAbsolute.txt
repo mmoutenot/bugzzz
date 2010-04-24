@@ -1,1 +1,2 @@
 C:\Users\Marshall\Documents\Visual Studio 2008\Projects\thrive_2\thrive_2\Content\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Marshall\Documents\Visual Studio 2008\Projects\bugzzz\bugzzz\Content\obj\x86\Debug\ResolveAssemblyReference.cache

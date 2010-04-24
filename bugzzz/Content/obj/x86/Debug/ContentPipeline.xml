@@ -7,7 +7,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Marshall\Documents\Visual Studio 2008\Projects\thrive_2\thrive_2\bin\x86\Debug\Content\sprites\smiley1.xnb</Output>
+      <Output>C:\Users\Marshall\Documents\Visual Studio 2008\Projects\bugzzz\bugzzz\bin\x86\Debug\Content\sprites\smiley1.xnb</Output>
       <Time>2010-04-19T14:02:11.4510543-04:00</Time>
     </Item>
     <Item>
@@ -16,18 +16,27 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Marshall\Documents\Visual Studio 2008\Projects\thrive_2\thrive_2\bin\x86\Debug\Content\sprites\cannonball.xnb</Output>
+      <Output>C:\Users\Marshall\Documents\Visual Studio 2008\Projects\bugzzz\bugzzz\bin\x86\Debug\Content\sprites\cannonball.xnb</Output>
       <Time>2010-04-23T19:31:06.754975-04:00</Time>
+    </Item>
+    <Item>
+      <Source>sprites\enemy.tga</Source>
+      <Name>sprites\enemy</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Marshall\Documents\Visual Studio 2008\Projects\bugzzz\bugzzz\bin\x86\Debug\Content\sprites\enemy.xnb</Output>
+      <Time>2009-11-26T15:09:12-05:00</Time>
     </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>
       <TargetPlatform>Windows</TargetPlatform>
       <BuildConfiguration>Debug</BuildConfiguration>
       <CompressContent>false</CompressContent>
-      <RootDirectory>C:\Users\Marshall\Documents\Visual Studio 2008\Projects\thrive_2\thrive_2\Content\</RootDirectory>
-      <LoggerRootDirectory>C:\Users\Marshall\Documents\Visual Studio 2008\Projects\thrive_2\thrive_2\</LoggerRootDirectory>
-      <IntermediateDirectory>C:\Users\Marshall\Documents\Visual Studio 2008\Projects\thrive_2\thrive_2\Content\obj\x86\Debug\</IntermediateDirectory>
-      <OutputDirectory>C:\Users\Marshall\Documents\Visual Studio 2008\Projects\thrive_2\thrive_2\bin\x86\Debug\Content\</OutputDirectory>
+      <RootDirectory>C:\Users\Marshall\Documents\Visual Studio 2008\Projects\bugzzz\bugzzz\Content\</RootDirectory>
+      <LoggerRootDirectory>C:\Users\Marshall\Documents\Visual Studio 2008\Projects\bugzzz\bugzzz\</LoggerRootDirectory>
+      <IntermediateDirectory>C:\Users\Marshall\Documents\Visual Studio 2008\Projects\bugzzz\bugzzz\Content\obj\x86\Debug\</IntermediateDirectory>
+      <OutputDirectory>C:\Users\Marshall\Documents\Visual Studio 2008\Projects\bugzzz\bugzzz\bin\x86\Debug\Content\</OutputDirectory>
     </Settings>
     <Assemblies>
       <Assembly>

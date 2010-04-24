@@ -21,6 +21,8 @@ namespace Bugzzz
     public class Game1 : Microsoft.Xna.Framework.Game
     {
         GameObject[] bullets;
+        GameObject[] enemies;
+        const int maxEnemies = 5;
         const int maxBullets = 15;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -31,6 +33,7 @@ namespace Bugzzz
         Vector2 p_velocity = Vector2.Zero;
         Vector2 p_position = Vector2.Zero;
         bool p_fire;
+        Random rand;
 
 
 
@@ -62,6 +65,7 @@ namespace Bugzzz
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
+            rand= new Random();
             viewport = GraphicsDevice.Viewport;
             viewportRect = new Rectangle(0, 0,
                 GraphicsDevice.Viewport.Width,
@@ -71,6 +75,11 @@ namespace Bugzzz
             for (int i = 0; i < maxBullets; i++)
             {
                 bullets[i] = new GameObject(Content.Load<Texture2D>("sprites\\cannonball"));
+            }
+            enemies = new GameObject[maxEnemies];
+            for (int j = 0; j < maxEnemies; j++)
+            {
+                enemies[j] = new GameObject(Content.Load<Texture2D>("sprites\\enemy"));
             }
             
             p_sprite = Content.Load<Texture2D>("sprites\\smiley1");
@@ -109,6 +118,52 @@ namespace Bugzzz
             }
         }
 
+        public void updateEnemies()
+        {
+            foreach (GameObject enemy in enemies)
+            {
+                if (enemy.alive)
+                {
+                    Vector2 target = new Vector2((float)p_position.X, (float)p_position.Y);
+                    enemy.velocity = target - enemy.position;
+                    enemy.velocity.Normalize();
+                    enemy.position += enemy.velocity * 2;
+                    if (!viewportRect.Contains(new Point((int)enemy.position.X, (int)enemy.position.Y)))
+                    {
+                        enemy.alive = false;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("made an enemy");
+                    enemy.alive = true;
+                    int side = rand.Next(4);
+                    if (side == 0)
+                    {
+                        enemy.position = new Vector2(viewportRect.Left, MathHelper.Lerp(0.0f, (float)viewportRect.Height, (float)rand.NextDouble()));
+                    }
+                    else if (side == 1)
+                    {
+                        enemy.position = new Vector2(viewportRect.Top, MathHelper.Lerp(0.0f, (float)viewportRect.Width, (float)rand.NextDouble()));
+                    }
+                    else if (side == 1)
+                    {
+                        enemy.position = new Vector2(viewportRect.Right, MathHelper.Lerp(0.0f, (float)viewportRect.Height, (float)rand.NextDouble()));
+                    }
+                    else
+                    {
+                        enemy.position = new Vector2(viewportRect.Bottom, MathHelper.Lerp(0.0f, (float)viewportRect.Width, (float)rand.NextDouble()));
+                    }
+
+                    Vector2 target = new Vector2((float)p_position.X, (float)p_position.Y);
+                    enemy.velocity = target - enemy.position;
+                    enemy.velocity.Normalize();
+                    enemy.position += enemy.velocity * 2;
+
+                }
+            }
+        }
+
         public void updateBullets()
         {
             foreach (GameObject bullet in bullets)
@@ -121,15 +176,27 @@ namespace Bugzzz
                         bullet.alive = false;
                         continue;
                     }
-                    Rectangle bulletRect = new Rectangle((int)bullet.position.X, (int)bullet.position.Y, bullet.sprite.Width, bullet.sprite.Height);
-                    //Rectangle explodeRect = new Rectangle((int)x,(int)y,10,1000);
-                    /*
-                    if(cannonBallRect.Intersects(explodeRect)){
-                        ball.alive = false;
-                        score += 1;
-                        break;
+                    Rectangle bulletRect = new Rectangle(
+                        (int)bullet.position.X,
+                        (int)bullet.position.Y,
+                        bullet.sprite.Width,
+                        bullet.sprite.Height);
+
+                    foreach (GameObject enemy in enemies)
+                    {
+                        Rectangle enemyRect = new Rectangle(
+                            (int)enemy.position.X,
+                            (int)enemy.position.Y,
+                            enemy.sprite.Width,
+                            enemy.sprite.Height);
+
+                        if (bulletRect.Intersects(enemyRect))
+                        {
+                            bullet.alive = false;
+                            enemy.alive = false;
+                            break;
+                        }
                     }
-                    */
                 }
             }
         }
@@ -142,6 +209,7 @@ namespace Bugzzz
             // TODO: Add your update logic here
             UpdateInput();
             updateBullets();
+            updateEnemies();
             p_position += p_velocity;
             if (p_fire)
             {
@@ -190,6 +258,13 @@ namespace Bugzzz
                 if (bullet.alive)
                 {
                     spriteBatch.Draw(bullet.sprite, bullet.position, Color.White);
+                }
+            }
+            foreach (GameObject enemy in enemies)
+            {
+                if (enemy.alive)
+                {
+                    spriteBatch.Draw(enemy.sprite, enemy.position, Color.White);
                 }
             }
             spriteBatch.End();
