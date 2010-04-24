@@ -20,10 +20,12 @@ namespace Bugzzz
 
     public class Game1 : Microsoft.Xna.Framework.Game
     {
+        //arrays containing bullet entities and enemies
         GameObject[] bullets;
         GameObject[] enemies;
         const int maxEnemies = 5;
         const int maxBullets = 15;
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Viewport viewport;
@@ -32,9 +34,10 @@ namespace Bugzzz
         Texture2D p_sprite = null;
         Vector2 p_velocity = Vector2.Zero;
         Vector2 p_position = Vector2.Zero;
+        
         bool p_fire;
         Random rand;
-
+        //for fire delay
         float elapsedTime = 0;
         float fireDelay = 0.25f;
 
@@ -55,6 +58,7 @@ namespace Bugzzz
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            //player's stating position
             p_position.X = 200;
             p_position.Y = 200;
 
@@ -74,6 +78,7 @@ namespace Bugzzz
                 GraphicsDevice.Viewport.Width,
                 GraphicsDevice.Viewport.Height);
 
+            //Initializes all of the bullets, enemies, etc.
             bullets = new GameObject[maxBullets];
             for (int i = 0; i < maxBullets; i++)
             {
@@ -109,6 +114,7 @@ namespace Bugzzz
 
         public void fireBullets()
         {
+            //firing command
             foreach (GameObject bullet in bullets)
             {
                 if (!bullet.alive)
@@ -121,12 +127,14 @@ namespace Bugzzz
             }
         }
 
+   
         public void updateEnemies()
         {
             foreach (GameObject enemy in enemies)
             {
                 if (enemy.alive)
                 {
+                    //checks for collision with the player
                     Rectangle playerRect = new Rectangle((int)p_position.X,(int)p_position.Y,150,150);
                     Rectangle enemyRect = new Rectangle((int)enemy.position.X,(int)enemy.position.Y,enemy.sprite.Width,enemy.sprite.Height);
                     if (playerRect.Intersects(enemyRect))
@@ -136,6 +144,7 @@ namespace Bugzzz
                         break;
                     }
 
+                    //makes enemies move towards the player
                     Vector2 target = new Vector2((float)p_position.X, (float)p_position.Y);
                     enemy.velocity = target - enemy.position;
                     enemy.velocity.Normalize();
@@ -194,7 +203,7 @@ namespace Bugzzz
                         (int)bullet.position.Y,
                         bullet.sprite.Width,
                         bullet.sprite.Height);
-
+                    //enemy-bullet collision detection.
                     foreach (GameObject enemy in enemies)
                     {
                         Rectangle enemyRect = new Rectangle(
