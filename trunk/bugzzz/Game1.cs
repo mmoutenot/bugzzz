@@ -130,7 +130,7 @@ namespace Bugzzz
                 if (enemy.alive)
                 {
                     //checks for collision with the player
-                    Rectangle playerRect = new Rectangle((int)player1.p_position.X,(int)player1.p_position.Y,100,100);
+                    Rectangle playerRect = new Rectangle((int)player1.p_position.X - player1.p_sprite.Width / 2, (int)player1.p_position.Y - player1.p_sprite.Height/2, player1.p_sprite.Width, player1.p_sprite.Height);
                     Rectangle enemyRect = new Rectangle((int)enemy.position.X,(int)enemy.position.Y,enemy.sprite.Width,enemy.sprite.Height);
                     if (playerRect.Intersects(enemyRect))
                     {
@@ -270,7 +270,7 @@ namespace Bugzzz
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
-            spriteBatch.Draw(player1.p_sprite, new Rectangle((int)player1.p_position.X, (int)player1.p_position.Y, 100, 100), null, Color.White,player1.p_rotation,new Vector2(160,160), SpriteEffects.None, 0);
+            spriteBatch.Draw(player1.p_sprite, new Rectangle((int)player1.p_position.X, (int)player1.p_position.Y, player1.p_sprite.Width, player1.p_sprite.Height), null, Color.White, player1.p_rotation, new Vector2(player1.p_sprite.Width / 2, player1.p_sprite.Height / 2), SpriteEffects.None, 0);
             // TODO: Add your drawing code here
             foreach (GameObject bullet in bullets)
             {
