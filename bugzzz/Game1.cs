@@ -35,6 +35,9 @@ namespace Bugzzz
         bool p_fire;
         Random rand;
 
+        float elapsedTime = 0;
+        float fireDelay = 0.25f;
+
 
 
         public Game1()
@@ -124,10 +127,20 @@ namespace Bugzzz
             {
                 if (enemy.alive)
                 {
+                    Rectangle playerRect = new Rectangle((int)p_position.X,(int)p_position.Y,150,150);
+                    Rectangle enemyRect = new Rectangle((int)enemy.position.X,(int)enemy.position.Y,enemy.sprite.Width,enemy.sprite.Height);
+                    if (playerRect.Intersects(enemyRect))
+                    {
+                        //p_alive = false;
+                        enemy.alive = false;
+                        break;
+                    }
+
                     Vector2 target = new Vector2((float)p_position.X, (float)p_position.Y);
                     enemy.velocity = target - enemy.position;
                     enemy.velocity.Normalize();
                     enemy.position += enemy.velocity * 2;
+                    
                     if (!viewportRect.Contains(new Point((int)enemy.position.X, (int)enemy.position.Y)))
                     {
                         enemy.alive = false;
@@ -205,14 +218,16 @@ namespace Bugzzz
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
-
+            float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            elapsedTime += elapsed;
             // TODO: Add your update logic here
             UpdateInput();
             updateBullets();
             updateEnemies();
             p_position += p_velocity;
-            if (p_fire)
+            if (p_fire && elapsedTime>=fireDelay)
             {
+                elapsedTime = 0.0f;
                 fireBullets();
             }
             base.Update(gameTime);
