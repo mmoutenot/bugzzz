@@ -42,7 +42,7 @@ namespace Bugzzz
         Texture2D heathBar;
 
         //rotation increment
-        float angle_rot = 0.01f;
+        float angle_rot = .18f;
 
 
 
@@ -184,7 +184,7 @@ namespace Bugzzz
                 }
                 else
                 {
-                    Console.WriteLine("made an enemy");
+                   // Console.WriteLine("made an enemy");
                     enemy.alive = true;
                     int side = rand.Next(4);
                     if (side == 0)
@@ -374,12 +374,12 @@ namespace Bugzzz
 
                 if (magnitude > DEADZONE)
                 {
-
-                    float angle = -(float)((Math.Tan(currentState.ThumbSticks.Right.Y / currentState.ThumbSticks.Right.X) * 2 * Math.PI) / 180);
+                    //Smooth Rotation
+                    float angle = (float)(-1 * (3.14 / 2 + Math.Atan2(currentState.ThumbSticks.Right.Y, currentState.ThumbSticks.Right.X)));
 
                     if (angle != player1.p_rotation)
                         player1.p_rotation = MathFns.Clerp(player1.p_rotation, angle, angle_rot);
-                    //player1.p_rotation = (float)(-1*(3.14/2+Math.Atan2(currentState.ThumbSticks.Right.Y, currentState.ThumbSticks.Right.X)));
+
                     if (magnitude > FIREDEADZONE)
                     {
                         player1.p_fire = true;

@@ -7,6 +7,10 @@ namespace Bugzzz
 {
     public sealed class MathFns
     {
+        public static float min_angle = 0f;
+        public static float max_angle = (float)(2*Math.PI);
+
+
         public static float Hermite(float start, float end, float value)
         {
             return Lerp(start, end, value * value * (3.0f - 2.0f * value));
@@ -46,26 +50,25 @@ namespace Bugzzz
 
         public static float Clerp(float start, float end, float value)
         {
-            float min = 0.0f;
-            float max = 360.0f;
-            float half = Math.Abs((max - min) / 2.0f);//half the distance between min and max
+            float half = Math.Abs((max_angle - min_angle) / 2.0f);//half the distance between min and max
             float retval = 0.0f;
             float diff = 0.0f;
 
+            //determine which direction to rotate
             if ((end - start) < -half)
             {
-                diff = ((max - start) + end) * value;
+                diff = ((max_angle - start) + end) * value;
                 retval = start + diff;
             }
             else if ((end - start) > half)
             {
-                diff = -((max - end) + start) * value;
+                diff = -((max_angle - end) + start) * value;
                 retval = start + diff;
             }
             else retval = start + (end - start) * value;
 
-            //Debug.Log("Start: "  + start + "   End: " + end + "  Value: " + value + "  Half: " + half + "  Diff: " + diff + "  Retval: " + retval);
-            return retval;
+           //Console.WriteLine("Start: "  + start + "   End: " + end + "  Value: " + value + "  Half: " + half + "  Diff: " + diff + "  Retval: " + retval);
+           return retval;
         }
     }
 }
