@@ -21,6 +21,7 @@ namespace Bugzzz
         {
             return Lerp(start, end, 1.0f - (float) (Math.Cos(value * Math.PI * 0.5f)));
         }
+
         /*
         public static float Berp(float start, float end, float value)
         {
