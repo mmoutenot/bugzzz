@@ -24,9 +24,11 @@ namespace Bugzzz
         public Vector2 p_position = Vector2.Zero;
         public bool p_fire;
         private int p_id;
+        public bool deploy;
 
         public Player(int id, Texture2D spriteT, Texture2D spriteB)
         {
+            deploy = false;
             p_id = id; 
             p_fire = false;
             p_position.X = 200;
