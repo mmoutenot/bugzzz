@@ -42,7 +42,7 @@ namespace Bugzzz
         Texture2D heathBar;
 
         //rotation increment
-        float angle_rot = 0.75f;
+        float angle_rot = 0.01f;
 
 
 
