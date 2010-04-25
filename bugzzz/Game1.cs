@@ -83,8 +83,8 @@ namespace Bugzzz
             {
                 enemies[j] = new GameObject(Content.Load<Texture2D>("sprites\\enemy"));
             }
-            player1=new Player(1,Content.Load<Texture2D>("sprites\\smiley1"));
-            player2 = new Player(2, Content.Load<Texture2D>("sprites\\smiley1"));
+            player1 = new Player(1, Content.Load<Texture2D>("sprites\\cannon"), Content.Load<Texture2D>("sprites\\smiley1"));
+            player2 = new Player(2, Content.Load<Texture2D>("sprites\\cannon"), Content.Load<Texture2D>("sprites\\smiley1"));
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
@@ -130,7 +130,7 @@ namespace Bugzzz
                 if (enemy.alive)
                 {
                     //checks for collision with the player
-                    Rectangle playerRect = new Rectangle((int)player1.p_position.X - player1.p_sprite.Width / 2, (int)player1.p_position.Y - player1.p_sprite.Height/2, player1.p_sprite.Width, player1.p_sprite.Height);
+                    Rectangle playerRect = new Rectangle((int)player1.p_position.X - player1.p_spriteB.Width / 2, (int)player1.p_position.Y - player1.p_spriteB.Height/2, player1.p_spriteB.Width, player1.p_spriteB.Height);
                     Rectangle enemyRect = new Rectangle((int)enemy.position.X,(int)enemy.position.Y,enemy.sprite.Width,enemy.sprite.Height);
                     if (playerRect.Intersects(enemyRect))
                     {
@@ -251,6 +251,11 @@ namespace Bugzzz
                 Vector2 direction = GamePad.GetState(PlayerIndex.One).ThumbSticks.Right;
                 float magnitude = direction.Length();
                 player1.p_fire = false;
+                if (GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.Length() > DEADZONE)
+                {
+                    player1.p_rotation_b = (float)(-1 * (3.14 / 2 + Math.Atan2(currentState.ThumbSticks.Left.Y, currentState.ThumbSticks.Left.X)));
+                }
+
                 if (magnitude > DEADZONE)
                 {
                     player1.p_rotation = (float)(-1*(3.14/2+Math.Atan2(currentState.ThumbSticks.Right.Y, currentState.ThumbSticks.Right.X)));
@@ -270,7 +275,9 @@ namespace Bugzzz
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
-            spriteBatch.Draw(player1.p_sprite, new Rectangle((int)player1.p_position.X, (int)player1.p_position.Y, player1.p_sprite.Width, player1.p_sprite.Height), null, Color.White, player1.p_rotation, new Vector2(player1.p_sprite.Width / 2, player1.p_sprite.Height / 2), SpriteEffects.None, 0);
+            
+            spriteBatch.Draw(player1.p_spriteB, new Rectangle((int)player1.p_position.X, (int)player1.p_position.Y, player1.p_spriteB.Width, player1.p_spriteB.Height), null, Color.White, player1.p_rotation_b, new Vector2(player1.p_spriteB.Width / 2, player1.p_spriteB.Height / 2), SpriteEffects.None, 0);
+            spriteBatch.Draw(player1.p_spriteT, new Rectangle((int)player1.p_position.X, (int)player1.p_position.Y, player1.p_spriteT.Width, player1.p_spriteT.Height), null, Color.White, (float)(player1.p_rotation+.5*Math.PI), new Vector2(player1.p_spriteT.Width / 2, player1.p_spriteT.Height / 2), SpriteEffects.None, 0);
             // TODO: Add your drawing code here
             foreach (GameObject bullet in bullets)
             {
