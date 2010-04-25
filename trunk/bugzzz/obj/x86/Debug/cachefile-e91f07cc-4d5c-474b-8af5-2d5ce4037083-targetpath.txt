@@ -1,3 +1,4 @@
 Content\sprites\smiley1.xnb
 Content\sprites\cannonball.xnb
 Content\sprites\enemy.xnb
+Content\sprites\cannon.xnb

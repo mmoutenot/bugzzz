@@ -28,6 +28,15 @@
       <Output>C:\Users\Marshall\Documents\Visual Studio 2008\Projects\bugzzz\bugzzz\bin\x86\Debug\Content\sprites\enemy.xnb</Output>
       <Time>2009-11-26T15:09:12-05:00</Time>
     </Item>
+    <Item>
+      <Source>sprites\cannon.tga</Source>
+      <Name>sprites\cannon</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Marshall\Documents\Visual Studio 2008\Projects\bugzzz\bugzzz\bin\x86\Debug\Content\sprites\cannon.xnb</Output>
+      <Time>2009-11-26T15:09:12-05:00</Time>
+    </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>
       <TargetPlatform>Windows</TargetPlatform>
