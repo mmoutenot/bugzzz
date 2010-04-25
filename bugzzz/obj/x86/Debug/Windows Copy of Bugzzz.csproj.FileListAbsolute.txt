@@ -16,3 +16,4 @@ C:\Users\Marshall\Documents\Visual Studio 2008\Projects\bugzzz\bugzzz\obj\x86\De
 C:\Users\Marshall\Documents\Visual Studio 2008\Projects\bugzzz\bugzzz\obj\x86\Debug\Bugzzz.pdb
 C:\Users\Marshall\Documents\Visual Studio 2008\Projects\bugzzz\bugzzz\bin\x86\Debug\Content\sprites\enemy.xnb
 C:\Users\Marshall\Documents\Visual Studio 2008\Projects\bugzzz\bugzzz\bin\x86\Debug\Content\sprites\cannon.xnb
+C:\Users\Marshall\Documents\Visual Studio 2008\Projects\bugzzz\bugzzz\bin\x86\Debug\Content\sprites\healthBar.xnb

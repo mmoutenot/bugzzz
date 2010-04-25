@@ -38,6 +38,7 @@ namespace Bugzzz
         //for fire delay
         float elapsedTime = 0;
         float fireDelay = 0.25f;
+        Texture2D heathBar;
 
 
 
@@ -69,6 +70,7 @@ namespace Bugzzz
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             turret = new Turret(Content.Load<Texture2D>("sprites\\cannon"));
+            heathBar = Content.Load<Texture2D>("sprites\\healthBar");
 
             rand= new Random();
             viewport = GraphicsDevice.Viewport;
@@ -141,6 +143,7 @@ namespace Bugzzz
                     bullet.alive = true;
                     bullet.position = turret.position - bullet.center;
                     bullet.velocity = new Vector2((float)Math.Cos(turret.rotation + Math.PI / 2), (float)Math.Sin(turret.rotation + Math.PI / 2)) * 15.0f;
+                    turret.bulletsLeft -= 1;
                     return;
                 }
             }
@@ -160,6 +163,7 @@ namespace Bugzzz
                     {
                         //p_alive = false;
                         enemy.alive = false;
+                        player1.health -= 25;
                         break;
                     }
 
@@ -294,7 +298,7 @@ namespace Bugzzz
                 elapsedTime = 0.0f;
                 fireBullets();
             }
-            if (turret.fire && elapsedTime >= fireDelay)
+            if (turret.fire && elapsedTime >= fireDelay+.5 && turret.placed)
             {
                 elapsedTime = 0.0f;
                 fireTurretBullets();
@@ -305,32 +309,43 @@ namespace Bugzzz
 
         protected void UpdateTurret()
         {
-            if (player1.deploy)
+            if (turret.bulletsLeft > 0)
             {
-                turret.position = player1.p_position;
-                turret.placed = true;
-                player1.deploy = false;
-            }
-            if (turret.placed)
-            {
-                double temp = Math.Sqrt((Math.Pow((turret.position.X - enemies[0].position.X), (double)2.0f) + Math.Pow((turret.position.Y - enemies[0].position.Y), (double)2.0f)));
-                turret.closestEnemy = 0;
-                for (int i = 1; i < enemies.Length; i++)
+
+                if (player1.deploy)
                 {
-                    if (Math.Sqrt(Math.Pow((turret.position.X - enemies[i].position.X), 2) + Math.Pow((turret.position.Y - enemies[i].position.Y),2)) < temp)
+                    turret.position = player1.p_position;
+                    turret.placed = true;
+                    player1.deploy = false;
+                }
+                if (turret.placed)
+                {
+                    double temp = Math.Sqrt((Math.Pow((turret.position.X - enemies[0].position.X), (double)2.0f) + Math.Pow((turret.position.Y - enemies[0].position.Y), (double)2.0f)));
+                    turret.closestEnemy = 0;
+                    for (int i = 1; i < enemies.Length; i++)
                     {
-                        turret.closestEnemy = i;
+                        if (Math.Sqrt(Math.Pow((turret.position.X - enemies[i].position.X), 2) + Math.Pow((turret.position.Y - enemies[i].position.Y), 2)) < temp)
+                        {
+                            turret.closestEnemy = i;
+                        }
                     }
+                    Vector2 direction = turret.position - enemies[turret.closestEnemy].position;
+                    direction.Normalize();
+                    float desiredAngle = (float)Math.Acos((double)direction.X);
+                    if (direction.Y < 0)
+                    {
+                        desiredAngle = (float)(2.0f * Math.PI) - (float)desiredAngle;
+                    }
+                    turret.rotation = desiredAngle + (float)Math.PI / 2;
+                    turret.fire = true;
                 }
-                Vector2 direction = turret.position - enemies[turret.closestEnemy].position;
-                direction.Normalize();
-                float desiredAngle = (float)Math.Acos((double)direction.X);
-                if (direction.Y < 0)
-                {
-                    desiredAngle = (float)(2.0f * Math.PI) - (float)desiredAngle;
-                }
-                turret.rotation = desiredAngle+(float)Math.PI/2;
-                turret.fire = true;
+            }
+            else
+            {
+                turret.placed = false;
+                player1.deploy = false;
+                turret.bulletsLeft = 25;
+
             }
         }
         protected void UpdateInput()
@@ -371,11 +386,14 @@ namespace Bugzzz
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
-            
+            spriteBatch.Draw(heathBar, new Rectangle(50, 50, player1.health, 15), Color.Red);
             spriteBatch.Draw(player1.p_spriteB, new Rectangle((int)player1.p_position.X, (int)player1.p_position.Y, player1.p_spriteB.Width, player1.p_spriteB.Height), null, Color.White, player1.p_rotation_b, new Vector2(player1.p_spriteB.Width / 2, player1.p_spriteB.Height / 2), SpriteEffects.None, 0);
             spriteBatch.Draw(player1.p_spriteT, new Rectangle((int)player1.p_position.X, (int)player1.p_position.Y, player1.p_spriteT.Width, player1.p_spriteT.Height), null, Color.White, (float)(player1.p_rotation+.5*Math.PI), new Vector2(player1.p_spriteT.Width / 2, player1.p_spriteT.Height / 2), SpriteEffects.None, 0);
-            spriteBatch.Draw(turret.sprite, new Rectangle((int)turret.position.X, (int)turret.position.Y, turret.sprite.Width, turret.sprite.Height), null, Color.White, (float)(turret.rotation + .5 * Math.PI), new Vector2(turret.sprite.Width / 2, turret.sprite.Width / 2), SpriteEffects.None, 0);
-            // TODO: Add your drawing code here
+            if (turret.placed)
+            {
+                spriteBatch.Draw(turret.sprite, new Rectangle((int)turret.position.X, (int)turret.position.Y, turret.sprite.Width, turret.sprite.Height), null, Color.White, (float)(turret.rotation + .5 * Math.PI), new Vector2(turret.sprite.Width / 2, turret.sprite.Height / 2), SpriteEffects.None, 0);
+
+            }// TODO: Add your drawing code here
             foreach (GameObject bullet in bullets)
             {
                 if (bullet.alive)

@@ -16,7 +16,7 @@ namespace Bugzzz
 {
     class Turret
     {
-        public const int bulletsLeft = 25;
+        public int bulletsLeft = 10;
         public float rotation = 0.0f;
         public Texture2D sprite = null;
         public bool fire;
