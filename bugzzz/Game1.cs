@@ -362,7 +362,8 @@ namespace Bugzzz
 
 
                 float angle = -(float)((Math.Tan(currentState.ThumbSticks.Right.Y / currentState.ThumbSticks.Right.X) * 2 * Math.PI) / 180);
-                player1.p_rotation = MathFns.Clerp(player1.p_rotation, angle, angle_rot);
+                if (angle != player1.p_rotation)
+                 player1.p_rotation = MathFns.Clerp(player1.p_rotation, angle, angle_rot);
 
 
                 const float DEADZONE = 0.2f;
