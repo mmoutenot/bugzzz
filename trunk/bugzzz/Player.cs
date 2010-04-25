@@ -25,6 +25,7 @@ namespace Bugzzz
         public bool p_fire;
         private int p_id;
         public bool deploy;
+        public int health;
 
         public Player(int id, Texture2D spriteT, Texture2D spriteB)
         {
@@ -38,6 +39,7 @@ namespace Bugzzz
             p_spriteB = spriteB;
             p_rotation = 0.0f;
             p_rotation_b = 0.0f;
+            health = 100;
         }
     }
 }

@@ -37,6 +37,15 @@
       <Output>C:\Users\Marshall\Documents\Visual Studio 2008\Projects\bugzzz\bugzzz\bin\x86\Debug\Content\sprites\cannon.xnb</Output>
       <Time>2010-04-25T00:59:18.9102359-04:00</Time>
     </Item>
+    <Item>
+      <Source>sprites\healthBar.png</Source>
+      <Name>sprites\healthBar</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Marshall\Documents\Visual Studio 2008\Projects\bugzzz\bugzzz\bin\x86\Debug\Content\sprites\healthBar.xnb</Output>
+      <Time>2010-04-25T16:07:20.3658645-04:00</Time>
+    </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>
       <TargetPlatform>Windows</TargetPlatform>
