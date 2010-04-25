@@ -41,6 +41,9 @@ namespace Bugzzz
         float fireDelay = 0.25f;
         Texture2D heathBar;
 
+        //rotation increment
+        float angle_rot = 0.75f;
+
 
 
         public Game1()
@@ -371,7 +374,12 @@ namespace Bugzzz
 
                 if (magnitude > DEADZONE)
                 {
-                    player1.p_rotation = (float)(-1*(3.14/2+Math.Atan2(currentState.ThumbSticks.Right.Y, currentState.ThumbSticks.Right.X)));
+
+                    float angle = -(float)((Math.Tan(currentState.ThumbSticks.Right.Y / currentState.ThumbSticks.Right.X) * 2 * Math.PI) / 180);
+
+                    if (angle != player1.p_rotation)
+                        player1.p_rotation = MathFns.Clerp(player1.p_rotation, angle, angle_rot);
+                    //player1.p_rotation = (float)(-1*(3.14/2+Math.Atan2(currentState.ThumbSticks.Right.Y, currentState.ThumbSticks.Right.X)));
                     if (magnitude > FIREDEADZONE)
                     {
                         player1.p_fire = true;
