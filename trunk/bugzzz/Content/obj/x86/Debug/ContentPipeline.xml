@@ -8,7 +8,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Marshall\Documents\Visual Studio 2008\Projects\bugzzz\bugzzz\bin\x86\Debug\Content\sprites\smiley1.xnb</Output>
-      <Time>2010-04-19T14:02:11.4510543-04:00</Time>
+      <Time>2010-04-25T00:58:18.7177931-04:00</Time>
     </Item>
     <Item>
       <Source>sprites\cannonball.tga</Source>
@@ -35,7 +35,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Marshall\Documents\Visual Studio 2008\Projects\bugzzz\bugzzz\bin\x86\Debug\Content\sprites\cannon.xnb</Output>
-      <Time>2009-11-26T15:09:12-05:00</Time>
+      <Time>2010-04-25T00:59:18.9102359-04:00</Time>
     </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>
