@@ -7,8 +7,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Marshall\Documents\Visual Studio 2008\Projects\bugzzz\bugzzz\bin\x86\Debug\Content\sprites\smiley1.xnb</Output>
-      <Time>2010-04-25T00:58:18.7177931-04:00</Time>
+      <Output>F:\Calvin Hopkins Data\My Documents\Visual Studio 2008\Projects\bugzzz\bugzzz\bin\x86\Debug\Content\sprites\smiley1.xnb</Output>
+      <Time>2010-04-25T16:19:44.5006446-04:00</Time>
     </Item>
     <Item>
       <Source>sprites\cannonball.tga</Source>
@@ -16,8 +16,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Marshall\Documents\Visual Studio 2008\Projects\bugzzz\bugzzz\bin\x86\Debug\Content\sprites\cannonball.xnb</Output>
-      <Time>2010-04-23T19:31:06.754975-04:00</Time>
+      <Output>F:\Calvin Hopkins Data\My Documents\Visual Studio 2008\Projects\bugzzz\bugzzz\bin\x86\Debug\Content\sprites\cannonball.xnb</Output>
+      <Time>2010-04-25T16:19:44.4956443-04:00</Time>
     </Item>
     <Item>
       <Source>sprites\enemy.tga</Source>
@@ -25,8 +25,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Marshall\Documents\Visual Studio 2008\Projects\bugzzz\bugzzz\bin\x86\Debug\Content\sprites\enemy.xnb</Output>
-      <Time>2009-11-26T15:09:12-05:00</Time>
+      <Output>F:\Calvin Hopkins Data\My Documents\Visual Studio 2008\Projects\bugzzz\bugzzz\bin\x86\Debug\Content\sprites\enemy.xnb</Output>
+      <Time>2010-04-25T16:19:44.5106452-04:00</Time>
     </Item>
     <Item>
       <Source>sprites\cannon.tga</Source>
@@ -34,8 +34,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Marshall\Documents\Visual Studio 2008\Projects\bugzzz\bugzzz\bin\x86\Debug\Content\sprites\cannon.xnb</Output>
-      <Time>2010-04-25T00:59:18.9102359-04:00</Time>
+      <Output>F:\Calvin Hopkins Data\My Documents\Visual Studio 2008\Projects\bugzzz\bugzzz\bin\x86\Debug\Content\sprites\cannon.xnb</Output>
+      <Time>2010-04-25T16:19:44.5056449-04:00</Time>
     </Item>
     <Item>
       <Source>sprites\healthBar.png</Source>
@@ -43,47 +43,47 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Marshall\Documents\Visual Studio 2008\Projects\bugzzz\bugzzz\bin\x86\Debug\Content\sprites\healthBar.xnb</Output>
-      <Time>2010-04-25T16:07:20.3658645-04:00</Time>
+      <Output>F:\Calvin Hopkins Data\My Documents\Visual Studio 2008\Projects\bugzzz\bugzzz\bin\x86\Debug\Content\sprites\healthBar.xnb</Output>
+      <Time>2010-04-25T16:19:44.5146454-04:00</Time>
     </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>
       <TargetPlatform>Windows</TargetPlatform>
       <BuildConfiguration>Debug</BuildConfiguration>
       <CompressContent>false</CompressContent>
-      <RootDirectory>C:\Users\Marshall\Documents\Visual Studio 2008\Projects\bugzzz\bugzzz\Content\</RootDirectory>
-      <LoggerRootDirectory>C:\Users\Marshall\Documents\Visual Studio 2008\Projects\bugzzz\bugzzz\</LoggerRootDirectory>
-      <IntermediateDirectory>C:\Users\Marshall\Documents\Visual Studio 2008\Projects\bugzzz\bugzzz\Content\obj\x86\Debug\</IntermediateDirectory>
-      <OutputDirectory>C:\Users\Marshall\Documents\Visual Studio 2008\Projects\bugzzz\bugzzz\bin\x86\Debug\Content\</OutputDirectory>
+      <RootDirectory>F:\Calvin Hopkins Data\My Documents\Visual Studio 2008\Projects\bugzzz\bugzzz\Content\</RootDirectory>
+      <LoggerRootDirectory>F:\Calvin Hopkins Data\My Documents\Visual Studio 2008\Projects\bugzzz\bugzzz\</LoggerRootDirectory>
+      <IntermediateDirectory>F:\Calvin Hopkins Data\My Documents\Visual Studio 2008\Projects\bugzzz\bugzzz\Content\obj\x86\Debug\</IntermediateDirectory>
+      <OutputDirectory>F:\Calvin Hopkins Data\My Documents\Visual Studio 2008\Projects\bugzzz\bugzzz\bin\x86\Debug\Content\</OutputDirectory>
     </Settings>
     <Assemblies>
       <Assembly>
         <Key>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v3.1\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.XImporter.dll</Key>
-        <Value>2009-05-28T03:16:14-04:00</Value>
+        <Value>2009-05-28T01:16:14-04:00</Value>
       </Assembly>
       <Assembly>
         <Key>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v3.1\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.VideoImporters.dll</Key>
-        <Value>2009-05-28T03:16:06-04:00</Value>
+        <Value>2009-05-28T01:16:06-04:00</Value>
       </Assembly>
       <Assembly>
         <Key>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v3.1\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.TextureImporter.dll</Key>
-        <Value>2009-05-28T03:16:16-04:00</Value>
+        <Value>2009-05-28T01:16:16-04:00</Value>
       </Assembly>
       <Assembly>
         <Key>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v3.1\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.FBXImporter.dll</Key>
-        <Value>2009-05-28T03:16:26-04:00</Value>
+        <Value>2009-05-28T01:16:26-04:00</Value>
       </Assembly>
       <Assembly>
         <Key>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v3.1\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.EffectImporter.dll</Key>
-        <Value>2009-05-28T03:16:12-04:00</Value>
+        <Value>2009-05-28T01:16:12-04:00</Value>
       </Assembly>
       <Assembly>
         <Key>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v3.1\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.AudioImporters.dll</Key>
-        <Value>2009-05-28T03:16:06-04:00</Value>
+        <Value>2009-05-28T01:16:06-04:00</Value>
       </Assembly>
       <Assembly>
         <Key>C:\Windows\assembly\GAC_32\Microsoft.Xna.Framework.Content.Pipeline\3.1.0.0__6d5c3888ef60e27d\Microsoft.Xna.Framework.Content.Pipeline.dll</Key>
-        <Value>2010-04-17T02:10:17.3550889-04:00</Value>
+        <Value>2010-02-03T18:21:59.8875598-05:00</Value>
       </Assembly>
     </Assemblies>
   </Asset>
