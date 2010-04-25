@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
+
 namespace Bugzzz
 {
     /// <summary>
@@ -39,6 +40,9 @@ namespace Bugzzz
         float elapsedTime = 0;
         float fireDelay = 0.25f;
         Texture2D heathBar;
+
+        //Angle Rotation
+        static float angle_rot = .75f;
 
 
 
@@ -355,7 +359,12 @@ namespace Bugzzz
             {
                 player1.p_velocity.X = currentState.ThumbSticks.Left.X*5;
                 player1.p_velocity.Y = -currentState.ThumbSticks.Left.Y * 5;
-                //player1.p_rotation = -(float)((Math.Tan(currentState.ThumbSticks.Right.Y / currentState.ThumbSticks.Right.X)*2*Math.PI)/180);
+
+
+                float angle = -(float)((Math.Tan(currentState.ThumbSticks.Right.Y / currentState.ThumbSticks.Right.X) * 2 * Math.PI) / 180);
+                player1.p_rotation = MathFns.Clerp(player1.p_rotation, angle, angle_rot);
+
+
                 const float DEADZONE = 0.2f;
                 const float FIREDEADZONE = 0.3f;
 
