@@ -11,7 +11,6 @@ using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
-
 namespace Bugzzz
 {
     /// <summary>
@@ -38,11 +37,9 @@ namespace Bugzzz
         Random rand;
         //for fire delay
         float elapsedTime = 0;
+        float t_elapsedTime = 0;
         float fireDelay = 0.25f;
         Texture2D heathBar;
-
-        //Angle Rotation
-        static float angle_rot = .75f;
 
 
 
@@ -291,6 +288,7 @@ namespace Bugzzz
                 player1.deploy = true;
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
             elapsedTime += elapsed;
+            t_elapsedTime += elapsed;
             // TODO: Add your update logic here
             UpdateTurret();
             UpdateInput();
@@ -302,9 +300,9 @@ namespace Bugzzz
                 elapsedTime = 0.0f;
                 fireBullets();
             }
-            if (turret.fire && elapsedTime >= fireDelay+.5 && turret.placed)
+            if (turret.fire && t_elapsedTime >= fireDelay+.5 && turret.placed)
             {
-                elapsedTime = 0.0f;
+                t_elapsedTime = 0.0f;
                 fireTurretBullets();
             }
             base.Update(gameTime);
@@ -359,13 +357,7 @@ namespace Bugzzz
             {
                 player1.p_velocity.X = currentState.ThumbSticks.Left.X*5;
                 player1.p_velocity.Y = -currentState.ThumbSticks.Left.Y * 5;
-
-
-                float angle = -(float)((Math.Tan(currentState.ThumbSticks.Right.Y / currentState.ThumbSticks.Right.X) * 2 * Math.PI) / 180);
-                if (angle != player1.p_rotation)
-                 player1.p_rotation = MathFns.Clerp(player1.p_rotation, angle, angle_rot);
-
-
+                //player1.p_rotation = -(float)((Math.Tan(currentState.ThumbSticks.Right.Y / currentState.ThumbSticks.Right.X)*2*Math.PI)/180);
                 const float DEADZONE = 0.2f;
                 const float FIREDEADZONE = 0.3f;
 
