@@ -43,6 +43,7 @@ namespace Bugzzz
 
         //rotation increment
         float angle_rot = .18f;
+        float turret_rot = .3f;
 
 
 
@@ -320,6 +321,7 @@ namespace Bugzzz
                 if (player1.deploy)
                 {
                     turret.position = player1.p_position;
+                    turret.rotation = 0f;
                     turret.placed = true;
                     player1.deploy = false;
                 }
@@ -327,21 +329,35 @@ namespace Bugzzz
                 {
                     double temp = Math.Sqrt((Math.Pow((turret.position.X - enemies[0].position.X), (double)2.0f) + Math.Pow((turret.position.Y - enemies[0].position.Y), (double)2.0f)));
                     turret.closestEnemy = 0;
+                    Vector2 offset = new Vector2(); //allows for aiming at center of target
                     for (int i = 1; i < enemies.Length; i++)
                     {
                         if (Math.Sqrt(Math.Pow((turret.position.X - enemies[i].position.X), 2) + Math.Pow((turret.position.Y - enemies[i].position.Y), 2)) < temp)
                         {
-                            turret.closestEnemy = i;
+                           turret.closestEnemy = i;
+                           offset.X = enemies[i].center.X;
+                           offset.Y = enemies[i].center.Y/2;
                         }
                     }
-                    Vector2 direction = turret.position - enemies[turret.closestEnemy].position;
+                    
+                    Vector2 direction = turret.position - enemies[turret.closestEnemy].position + offset;
+                    
                     direction.Normalize();
                     float desiredAngle = (float)Math.Acos((double)direction.X);
                     if (direction.Y < 0)
                     {
                         desiredAngle = (float)(2.0f * Math.PI) - (float)desiredAngle;
                     }
-                    turret.rotation = desiredAngle + (float)Math.PI / 2;
+
+                    //Smooth Rotation
+                    if (desiredAngle != turret.rotation)
+                    {
+                      // Console.WriteLine("Turret: " + turret.rotation + "Desired: " + desiredAngle);
+                       turret.rotation = MathFns.Clerp(turret.rotation, desiredAngle + (float)Math.PI / 2, this.turret_rot);
+                    }
+                    
+                    //previous rotation function
+                   //turret.rotation = desiredAngle + (float)Math.PI / 2;
                     turret.fire = true;
                 }
             }
