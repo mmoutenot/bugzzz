@@ -407,8 +407,10 @@ namespace Bugzzz
                 }
 
             }
+                //keyboard controls
             else
             {
+                //player1.p_fire = false;
                 KeyboardState keyboardState = Keyboard.GetState();
                 MouseState mouse = Mouse.GetState();
                 float XDistance = player1.p_position.X - mouse.X;
@@ -416,7 +418,7 @@ namespace Bugzzz
                 float xdim = 800;
                 float ydim = 800;
 
-                float rotation = (float)Math.Atan2(YDistance, XDistance);
+                float rotation = (float)(Math.Atan2(YDistance, XDistance)+Math.PI/2);
                 player1.p_rotation = rotation;
 
                 if (mouse.LeftButton == ButtonState.Pressed && previousMouseState.LeftButton != ButtonState.Pressed)
@@ -425,6 +427,35 @@ namespace Bugzzz
                     xdim = mouse.X;
                     ydim = mouse.Y;
                 }
+                else
+                {
+                    player1.p_fire = false;
+                }
+                if (keyboardState.IsKeyDown(Keys.Left))
+                {
+                    player1.p_velocity.X = -5;
+                }
+                else if (keyboardState.IsKeyDown(Keys.Right))
+                {
+                    player1.p_velocity.X = 5;
+                }
+                else
+                {
+                    player1.p_velocity.X = 0;
+                }
+                if (keyboardState.IsKeyDown(Keys.Up))
+                {
+                    player1.p_velocity.Y = -5;
+                }
+                else if (keyboardState.IsKeyDown(Keys.Down))
+                {
+                    player1.p_velocity.Y = 5;
+                }
+                else
+                {
+                    player1.p_velocity.Y = 0;
+                }
+
                 //cannon.rotation = MathHelper.Clamp(cannon.rotation, MathHelper.PiOver2, 0);
                 // TODO: Add your update logic here
                 previousKeyboardState = keyboardState;
