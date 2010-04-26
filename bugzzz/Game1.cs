@@ -45,6 +45,8 @@ namespace Bugzzz
         float angle_rot = .18f;
         float turret_rot = .3f;
 
+        KeyboardState previousKeyboardState = Keyboard.GetState();
+        MouseState previousMouseState = Mouse.GetState();
 
 
         public Game1()
@@ -371,10 +373,12 @@ namespace Bugzzz
         }
         protected void UpdateInput()
         {
+
+
             GamePadState currentState = GamePad.GetState(PlayerIndex.One);
             if (currentState.IsConnected)
             {
-                player1.p_velocity.X = currentState.ThumbSticks.Left.X*5;
+                player1.p_velocity.X = currentState.ThumbSticks.Left.X * 5;
                 player1.p_velocity.Y = -currentState.ThumbSticks.Left.Y * 5;
                 //player1.p_rotation = -(float)((Math.Tan(currentState.ThumbSticks.Right.Y / currentState.ThumbSticks.Right.X)*2*Math.PI)/180);
                 const float DEADZONE = 0.2f;
@@ -400,8 +404,31 @@ namespace Bugzzz
                     {
                         player1.p_fire = true;
                     }
-                } 
+                }
 
+            }
+            else
+            {
+                KeyboardState keyboardState = Keyboard.GetState();
+                MouseState mouse = Mouse.GetState();
+                float XDistance = player1.p_position.X - mouse.X;
+                float YDistance = player1.p_position.Y - mouse.Y;
+                float xdim = 800;
+                float ydim = 800;
+
+                float rotation = (float)Math.Atan2(YDistance, XDistance);
+                player1.p_rotation = rotation;
+
+                if (mouse.LeftButton == ButtonState.Pressed && previousMouseState.LeftButton != ButtonState.Pressed)
+                {
+                    player1.p_fire = true;
+                    xdim = mouse.X;
+                    ydim = mouse.Y;
+                }
+                //cannon.rotation = MathHelper.Clamp(cannon.rotation, MathHelper.PiOver2, 0);
+                // TODO: Add your update logic here
+                previousKeyboardState = keyboardState;
+                previousMouseState = mouse;
             }
         }
         /// <summary>
