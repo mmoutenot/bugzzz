@@ -33,7 +33,6 @@ namespace Bugzzz
         SpriteBatch spriteBatch;
         Viewport viewport;
         Rectangle viewportRect;
-        Vector2 offset;
 
         Random rand;
         //for fire delay
@@ -82,9 +81,7 @@ namespace Bugzzz
 
             rand= new Random();
             viewport = GraphicsDevice.Viewport;
-            viewportRect = new Rectangle(0, 0,
-                GraphicsDevice.Viewport.Width,
-                GraphicsDevice.Viewport.Height);
+            viewportRect = new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
 
             //Initializes all of the bullets, enemies, etc.
             bullets = new GameObject[maxBullets];
@@ -104,9 +101,6 @@ namespace Bugzzz
             }
             player1 = new Player(1, Content.Load<Texture2D>("sprites\\cannon"), Content.Load<Texture2D>("sprites\\smiley1"));
             player2 = new Player(2, Content.Load<Texture2D>("sprites\\cannon"), Content.Load<Texture2D>("sprites\\smiley1"));
-
-
-            offset = new Vector2();
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
@@ -179,7 +173,11 @@ namespace Bugzzz
                     }
 
                     //makes enemies move towards the player
-                    Vector2 target = new Vector2((float)player1.p_position.X, (float)player1.p_position.Y);
+                    Vector2 target;
+                    if (MathFns.Distance(enemy.position, player1.p_position) > MathFns.Distance(enemy.position, player2.p_position))
+                        target = player2.p_position;
+                    else
+                        target = player2.p_position;
                     enemy.velocity = target - enemy.position;
                     enemy.velocity.Normalize();
                     enemy.position += enemy.velocity * 2;
@@ -334,7 +332,7 @@ namespace Bugzzz
                 }
                 if (turret.placed)
                 {
-                    double temp = Math.Sqrt((Math.Pow((turret.position.X - enemies[0].position.X), (double)2.0f) + Math.Pow((turret.position.Y - enemies[0].position.Y), (double)2.0f)));
+                    double temp = MathFns.Distance(turret.position, enemies[0].position);
                     turret.closestEnemy = 0;
                     Vector2 offset = new Vector2(); //allows for aiming at center of target
                     for (int i = 1; i < enemies.Length; i++)
@@ -364,7 +362,7 @@ namespace Bugzzz
                     }
                     
                     //previous rotation function
-                   //turret.rotation = desiredAngle + (float)Math.PI / 2;
+                    //turret.rotation = desiredAngle + (float)Math.PI / 2;
                     turret.fire = true;
                 }
             }
