@@ -33,6 +33,7 @@ namespace Bugzzz
         SpriteBatch spriteBatch;
         Viewport viewport;
         Rectangle viewportRect;
+        Vector2 offset;
 
         Random rand;
         //for fire delay
@@ -103,6 +104,9 @@ namespace Bugzzz
             }
             player1 = new Player(1, Content.Load<Texture2D>("sprites\\cannon"), Content.Load<Texture2D>("sprites\\smiley1"));
             player2 = new Player(2, Content.Load<Texture2D>("sprites\\cannon"), Content.Load<Texture2D>("sprites\\smiley1"));
+
+
+            offset = new Vector2();
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
@@ -288,6 +292,7 @@ namespace Bugzzz
         protected override void Update(GameTime gameTime)
         {
             // Allows the game to exit
+
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
             if (GamePad.GetState(PlayerIndex.One).Buttons.A == ButtonState.Pressed)
