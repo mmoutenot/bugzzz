@@ -421,7 +421,7 @@ namespace Bugzzz
                 float rotation = (float)(Math.Atan2(YDistance, XDistance)+Math.PI/2);
                 player1.p_rotation = rotation;
 
-                if (mouse.LeftButton == ButtonState.Pressed && previousMouseState.LeftButton != ButtonState.Pressed)
+                if (mouse.LeftButton == ButtonState.Pressed)
                 {
                     player1.p_fire = true;
                     xdim = mouse.X;
@@ -454,6 +454,10 @@ namespace Bugzzz
                 else
                 {
                     player1.p_velocity.Y = 0;
+                }
+                if (keyboardState.IsKeyDown(Keys.Z))
+                {
+                    player1.deploy = true;
                 }
 
                 //cannon.rotation = MathHelper.Clamp(cannon.rotation, MathHelper.PiOver2, 0);
