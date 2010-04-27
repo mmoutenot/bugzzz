@@ -26,10 +26,13 @@ namespace Bugzzz
         GameObject[] turretBullets;
         GameObject[] enemies;
         ArrayList score;
-        private int scoreCount = 0;
         Turret turret;
         const int maxEnemies = 5;
         const int maxBullets = 15;
+
+        // Score display time on screen as it fades out
+        const int SCORE_TIME = 80;
+        
         Player player1;
         Player player2;
         SpriteFont font;
@@ -262,7 +265,8 @@ namespace Bugzzz
                         {
                             bullet.alive = false;
                             enemy.alive = false;
-                            score.Add(new Score(20,100,enemy.position,true));
+                            score.Add(new Score(20,SCORE_TIME,enemy.position,true));
+                            player1.score += 20;
                             break;
                         }
                     }
@@ -498,6 +502,7 @@ namespace Bugzzz
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
             spriteBatch.Draw(heathBar, new Rectangle(50, 50, player1.health, 15), Color.Red);
+            spriteBatch.DrawString(font, player1.score.ToString(), new Vector2(30, 30), new Color(Color.Red, (byte)130));
             spriteBatch.Draw(player1.p_spriteB, new Rectangle((int)player1.p_position.X, (int)player1.p_position.Y, player1.p_spriteB.Width, player1.p_spriteB.Height), null, Color.White, player1.p_rotation_b, new Vector2(player1.p_spriteB.Width / 2, player1.p_spriteB.Height / 2), SpriteEffects.None, 0);
             spriteBatch.Draw(player1.p_spriteT, new Rectangle((int)player1.p_position.X, (int)player1.p_position.Y, player1.p_spriteT.Width, player1.p_spriteT.Height), null, Color.White, (float)(player1.p_rotation+.5*Math.PI), new Vector2(player1.p_spriteT.Width / 2, player1.p_spriteT.Height / 2), SpriteEffects.None, 0);
             if (turret.placed)
@@ -526,26 +531,27 @@ namespace Bugzzz
                     spriteBatch.Draw(enemy.sprite, enemy.position, Color.White);
                 }
             }
+            ArrayList deadScores = new ArrayList();
             foreach (Score s in score)
             {
                 if (s.alive)
                 {
                     if (s.time > 0)
                     {
-                        spriteBatch.DrawString(font, s.pointVal.ToString(), s.position, Color.Azure);
+                        spriteBatch.DrawString(font, s.pointVal.ToString(), s.position, new Color(Color.Red,(byte)(s.time+40)));
                         s.time--;
                     }
                     else
                     {
                         s.alive = false;
-                        //  Here is where it breaks because we try to remove an element while we are going through them
-                        // I think, although we do want to remove scores that have expired times because they should no longer
-                        // be drawn
-                        //score.Remove(s);
+                        deadScores.Add(s);
                     }
                 }
             }
-
+            foreach (Score s in deadScores)
+            {
+                score.Remove(s);
+            }
 
             spriteBatch.End();
             base.Draw(gameTime);

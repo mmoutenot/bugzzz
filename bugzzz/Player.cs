@@ -26,6 +26,7 @@ namespace Bugzzz
         private int p_id;
         public bool deploy;
         public int health;
+        public int score;
 
         public Player(int id, Texture2D spriteT, Texture2D spriteB)
         {
