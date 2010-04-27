@@ -842,7 +842,7 @@ namespace Bugzzz
                     }
                     //Fade out
                 }
-                else if (fade_in = false)
+                else if (fade_in == false)
                 {
                     if (elapsed >= (float)fade_length / 24)
                     {
