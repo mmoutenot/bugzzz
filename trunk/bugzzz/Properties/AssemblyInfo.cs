@@ -5,9 +5,9 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("thrive_2")]
-[assembly: AssemblyProduct("thrive_2")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Bugzzz")]
+[assembly: AssemblyProduct("Bugzzz")]
+[assembly: AssemblyDescription("Kill or be killed")]
 [assembly: AssemblyCompany("Microsoft")]
 [assembly: AssemblyCopyright("Copyright © Microsoft 2010")]
 [assembly: AssemblyTrademark("")]
