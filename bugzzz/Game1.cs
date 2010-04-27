@@ -41,7 +41,7 @@ namespace Bugzzz
         const int fade_length = 150;
         const int fade_increment = 5;
         int current_fade;
-        bool fade_in;
+        bool fade_in, fade_out, scoreScreen;
         
         Player player1;
         Player player2;
@@ -831,47 +831,92 @@ namespace Bugzzz
             if (enemies_level[level] == enemies_killed)
             {
                 //Fade to Black
-                float elapsed = gameTime.ElapsedGameTime.Milliseconds;
                 spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
-                if (current_fade <= 255 && fade_in == true)
+                #region Fade In Logic
+                if (fade_in)
                 {
-                    if (elapsed >= (float)fade_length / 24)
+                    spriteBatch.Draw(healthBar, new Rectangle(0, 0, this.viewport.Width, this.viewport.Height), new Color(Color.Black, (byte)(current_fade)));
+                    current_fade += fade_increment;
+
+                    if (current_fade == 255)
                     {
-                        spriteBatch.Draw(healthBar, new Rectangle(0, 0, this.viewport.Width, this.viewport.Height), new Color(Color.Black, (byte)(255 - current_fade)));
-                        current_fade += fade_increment;
+                        scoreScreen = true;
+                        fade_in = false;
                     }
                     //Fade out
                 }
-                else if (fade_in == false)
+                #endregion
+                #region Score Screen Logic
+                if (scoreScreen)
                 {
-                    if (elapsed >= (float)fade_length / 24)
+                    //TODO: Add Score Screen Here
+                    spriteBatch.Draw(healthBar, new Rectangle(0, 0, this.viewport.Width, this.viewport.Height), new Color(Color.Black, (byte)(current_fade)));
+                    
+                    if (!GamePad.GetState(PlayerIndex.One).IsConnected)
                     {
-                        spriteBatch.Draw(healthBar, new Rectangle(0, 0, this.viewport.Width, this.viewport.Height), new Color(Color.Black, (byte)(255 - current_fade)));
-                        current_fade -= fade_increment;
+                        if (Keyboard.GetState().IsKeyDown(Keys.Z))
+                        {
+                            fade_out = true;
+                            scoreScreen = false;
+                        }
                     }
-                    if (current_fade == 255)
+                    else
+                    {
+                        if (GamePad.GetState(PlayerIndex.One).Buttons.A == ButtonState.Pressed)
+                        {
+                            fade_out = true;
+                            scoreScreen = false;
+                        }
+                    }
+
+                    if (!GamePad.GetState(PlayerIndex.Two).IsConnected)
+                    {
+                        if (Keyboard.GetState().IsKeyDown(Keys.Q))
+                        {
+                            fade_out = true;
+                            scoreScreen = false;
+                        }
+                    }
+                    else
+                    {
+                        if (GamePad.GetState(PlayerIndex.Two).Buttons.A == ButtonState.Pressed)
+                        {
+                            fade_out = true;
+                            scoreScreen = false;
+                        }
+                    }
+
+
+                }
+                #endregion
+                #region Fade Out Logic
+                if (fade_out)
+                {
+                    spriteBatch.Draw(healthBar, new Rectangle(0, 0, this.viewport.Width, this.viewport.Height), new Color(Color.Black, (byte)(current_fade)));
+                    current_fade -= fade_increment;
+
+                    if (current_fade <= 0)
                     {
                         level++; //TODO: Will crash after 5 levels. 
                         enemies_killed = 0;
                     }
                 }
-                else
-                {
-                    Console.Out.WriteLine("Fade in/out error");
-                }
+                #endregion
 
                 spriteBatch.End();
-
-
             }
             else
             {
+                fade_in = false;
+                fade_out = false;
+                scoreScreen = false;
                 GraphicsDevice.Clear(Color.CornflowerBlue);
                 spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
                 spriteBatch.Draw(healthBar, new Rectangle(this.viewport.Width / 15, this.viewport.Height / 15, (int)this.viewport.Width * player1.health / 600, this.viewport.Height / 30), Color.Red);
                 spriteBatch.Draw(healthBar, new Rectangle(this.viewport.Width * 12 / 16, this.viewport.Height / 15, (int)this.viewport.Width * player2.health / 600, this.viewport.Height / 30), Color.Red);
                 spriteBatch.DrawString(font, "Player 1 Score: " + player1.score.ToString(), new Vector2(this.viewport.Width / 15, this.viewport.Height / 60), new Color(Color.White, (byte)130));
                 spriteBatch.DrawString(font, "Player 2 Score: " + player2.score.ToString(), new Vector2(this.viewport.Width * 12 / 16, this.viewport.Height / 60), new Color(Color.White, (byte)130));
+                spriteBatch.DrawString(font, "Enemies Killed: " + enemies_killed.ToString(), new Vector2(this.viewport.Width * 7 / 16, this.viewport.Height / 60), new Color(Color.Beige, (byte)130));
                 spriteBatch.Draw(player1.p_spriteB, new Rectangle((int)player1.p_position.X, (int)player1.p_position.Y, player1.p_spriteB.Width, player1.p_spriteB.Height), null, Color.White, player1.p_rotation_b, new Vector2(player1.p_spriteB.Width / 2, player1.p_spriteB.Height / 2), SpriteEffects.None, 0);
                 spriteBatch.Draw(player1.p_spriteT, new Rectangle((int)player1.p_position.X, (int)player1.p_position.Y, player1.p_spriteT.Width, player1.p_spriteT.Height), null, Color.White, (float)(player1.p_rotation + .5 * Math.PI), new Vector2(player1.p_spriteT.Width / 2, player1.p_spriteT.Height / 2), SpriteEffects.None, 0);
                 spriteBatch.Draw(player2.p_spriteB, new Rectangle((int)player2.p_position.X, (int)player2.p_position.Y, player2.p_spriteB.Width, player2.p_spriteB.Height), null, Color.Red, player2.p_rotation_b, new Vector2(player2.p_spriteB.Width / 2, player2.p_spriteB.Height / 2), SpriteEffects.None, 0);
