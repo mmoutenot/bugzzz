@@ -21,6 +21,7 @@ namespace Bugzzz
         public float rotation;
         public Vector2 center;
         public bool alive;
+        public int score;
         public GameObject(Texture2D loadedTexture)
         {
             alive = false;
@@ -29,6 +30,9 @@ namespace Bugzzz
             position = Vector2.Zero;
             sprite = loadedTexture;
             center = new Vector2(sprite.Width / 2, sprite.Height / 2);
+            
+            // set the gameobjects score
+            score = 20;
         }
     };
 }
