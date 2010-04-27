@@ -197,19 +197,6 @@ namespace Bugzzz
                         
                         break;
                     }
-
-                    //makes enemies move towards the player
-                    Vector2 target;
-
-                    if (MathFns.Distance(enemy.position, player1.p_position) > MathFns.Distance(enemy.position, player2.p_position))
-                        target = player2.p_position;
-                    else
-                        target = player1.p_position;
-
-                    enemy.velocity = target - enemy.position;
-                    enemy.velocity.Normalize();
-                    enemy.position += enemy.velocity * 2;
-                    
                     if (!viewportRect.Contains(new Point((int)enemy.position.X, (int)enemy.position.Y)))
                     {
                         enemy.alive = false;
@@ -236,13 +223,18 @@ namespace Bugzzz
                     {
                         enemy.position = new Vector2(viewportRect.Bottom, MathHelper.Lerp(0.0f, (float)viewportRect.Width, (float)rand.NextDouble()));
                     }
-
-                    Vector2 target = new Vector2((float)player1.p_position.X, (float)player1.p_position.Y);
-                    enemy.velocity = target - enemy.position;
-                    enemy.velocity.Normalize();
-                    enemy.position += enemy.velocity * 2;
-
                 }
+                //makes enemies move towards the player
+                Vector2 target;
+
+                if (MathFns.Distance(enemy.position, player1.p_position) > MathFns.Distance(enemy.position, player2.p_position))
+                    target = player2.p_position;
+                else
+                    target = player1.p_position;
+
+                enemy.velocity = target - enemy.position;
+                enemy.velocity.Normalize();
+                enemy.position += enemy.velocity * 2;
             }
         }
 
