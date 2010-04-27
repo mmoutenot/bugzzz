@@ -31,7 +31,7 @@ namespace Bugzzz
         Turret turret1; //Player 1 turret
         Turret turret2; //Player 2 turret
         const int maxEnemies = 5;
-        const int maxBullets = 15;
+        const int maxBullets = 30;
         int[] enemies_level;
         int level;
         int enemies_killed;
@@ -56,8 +56,8 @@ namespace Bugzzz
         float elapsedTime = 0;
         float elapsedTime2 = 0;
         float t_elapsedTime = 0;
+        float fireDelay = 0.15f;
         float t2_elapsedTime = 0;
-        float fireDelay = 0.25f;
         Texture2D healthBar;
 
         //rotation increment
@@ -71,7 +71,57 @@ namespace Bugzzz
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+            
+            
             Content.RootDirectory = "Content";
+        }
+
+        /// <summary>
+        /// Attempt to set the display mode to the desired resolution.  Itterates through the display
+        /// capabilities of the default graphics adapter to determine if the graphics adapter supports the
+        /// requested resolution.  If so, the resolution is set and the function returns true.  If not,
+        /// no change is made and the function returns false.
+        /// </summary>
+        /// <param name="iWidth">Desired screen width.</param>
+        /// <param name="iHeight">Desired screen height.</param>
+        /// <param name="bFullScreen">True if you wish to go to Full Screen, false for Windowed Mode.</param>
+        private bool InitGraphicsMode(int iWidth, int iHeight, bool bFullScreen)
+        {
+            // If we aren't using a full screen mode, the height and width of the window can
+            // be set to anything equal to or smaller than the actual screen size.
+            if (bFullScreen == false)
+            {
+                if ((iWidth <= GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width)
+                    && (iHeight <= GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height))
+                {
+                    graphics.PreferredBackBufferWidth = iWidth;
+                    graphics.PreferredBackBufferHeight = iHeight;
+                    graphics.IsFullScreen = bFullScreen;
+                    graphics.ApplyChanges();
+                    return true;
+                }
+            }
+            else
+            {
+                // If we are using full screen mode, we should check to make sure that the display
+                // adapter can handle the video mode we are trying to set.  To do this, we will
+                // iterate thorugh the display modes supported by the adapter and check them against
+                // the mode we want to set.
+                foreach (DisplayMode dm in GraphicsAdapter.DefaultAdapter.SupportedDisplayModes)
+                {
+                    // Check the width and height of each mode against the passed values
+                    if ((dm.Width == iWidth) && (dm.Height == iHeight))
+                    {
+                        // The mode is supported, so set the buffer formats, apply changes and return
+                        graphics.PreferredBackBufferWidth = iWidth;
+                        graphics.PreferredBackBufferHeight = iHeight;
+                        graphics.IsFullScreen = bFullScreen;
+                        graphics.ApplyChanges();
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
         /// <summary>
@@ -84,7 +134,7 @@ namespace Bugzzz
         {
             // TODO: Add your initialization logic here
             //player's stating position
-
+            InitGraphicsMode(1280, 720, false);
             base.Initialize();
         }
 
@@ -173,7 +223,7 @@ namespace Bugzzz
                 {
                     bullet.alive = true;
                     bullet.position = player1.p_position - bullet.center;
-                    bullet.velocity = new Vector2((float)Math.Cos(player1.p_rotation + Math.PI / 2), (float)Math.Sin(player1.p_rotation + Math.PI / 2)) * 15.0f;
+                    bullet.velocity = new Vector2((float)Math.Cos(player1.p_rotation + Math.PI / 2), (float)Math.Sin(player1.p_rotation + Math.PI / 2)) * 8.0f;
                     return;
                 }
             }
