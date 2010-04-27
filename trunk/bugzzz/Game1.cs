@@ -538,7 +538,7 @@ namespace Bugzzz
                 {
                     if (s.time > 0)
                     {
-                        spriteBatch.DrawString(font, s.pointVal.ToString(), s.position, new Color(Color.Red,(byte)(s.time+40)));
+                        spriteBatch.DrawString(font, s.pointVal.ToString(), s.position, new Color(Color.Red,(byte)(s.time*2.5)));
                         s.time--;
                     }
                     else
