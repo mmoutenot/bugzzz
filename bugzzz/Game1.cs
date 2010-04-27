@@ -32,9 +32,16 @@ namespace Bugzzz
         Turret turret2; //Player 2 turret
         const int maxEnemies = 5;
         const int maxBullets = 15;
+        int[] enemies_level;
+        int level;
+        int enemies_killed;
 
         // Score display time on screen as it fades out
         const int SCORE_TIME = 80;
+        const int fade_length = 150;
+        const int fade_increment = 5;
+        int current_fade;
+        bool fade_in;
         
         Player player1;
         Player player2;
@@ -55,7 +62,7 @@ namespace Bugzzz
 
         //rotation increment
         float angle_rot = .18f;
-        float turret_rot = .3f;
+        float turret_rot = .23f;
 
         KeyboardState previousKeyboardState = Keyboard.GetState();
         MouseState previousMouseState = Mouse.GetState();
@@ -92,8 +99,17 @@ namespace Bugzzz
             turret2 = new Turret(Content.Load<Texture2D>("sprites\\cannon"));
 
             healthBar = Content.Load<Texture2D>("sprites\\healthBar");
-
+            current_fade=0;
+            fade_in = true;
             rand= new Random();
+            enemies_killed = 0;
+            enemies_level  = new int[4];
+            enemies_level[0] = 25;
+            enemies_level[1] = 50;
+            enemies_level[2] = 75;
+            enemies_level[3] = 100;
+
+            level = 0;
             viewport = GraphicsDevice.Viewport;
             viewportRect = new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
 
@@ -223,6 +239,7 @@ namespace Bugzzz
                         //p_alive = false;
                         enemy.alive = false;
                         player1.health -= 25;
+                        enemies_killed++;
                         
                         break;
                     }
@@ -233,6 +250,7 @@ namespace Bugzzz
                         //p_alive = false;
                         enemy.alive = false;
                         player2.health -= 25;
+                        enemies_killed++;
                         
                         break;
                     }
@@ -310,6 +328,7 @@ namespace Bugzzz
                             enemy.alive = false;
                             score.Add(new Score(20,SCORE_TIME,enemy.position,true,1));
                             player1.score += 20;
+                            enemies_killed++;
                             break;
                         }
                     }
@@ -759,98 +778,135 @@ namespace Bugzzz
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-            spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
-            spriteBatch.Draw(healthBar, new Rectangle(this.viewport.Width/15, this.viewport.Height/15, (int)this.viewport.Width*player1.health/600, this.viewport.Height/30), Color.Red);
-            spriteBatch.Draw(healthBar, new Rectangle(this.viewport.Width*12/16, this.viewport.Height / 15, (int)this.viewport.Width*player2.health/600, this.viewport.Height/30), Color.Red);
-            spriteBatch.DrawString(font, "Player 1 Score: " + player1.score.ToString(), new Vector2(this.viewport.Width / 15, this.viewport.Height / 60), new Color(Color.White, (byte)130));
-            spriteBatch.DrawString(font, "Player 2 Score: " + player2.score.ToString(), new Vector2(this.viewport.Width* 12 / 16, this.viewport.Height / 60), new Color(Color.White, (byte)130));
-            spriteBatch.Draw(player1.p_spriteB, new Rectangle((int)player1.p_position.X, (int)player1.p_position.Y, player1.p_spriteB.Width, player1.p_spriteB.Height), null, Color.White, player1.p_rotation_b, new Vector2(player1.p_spriteB.Width / 2, player1.p_spriteB.Height / 2), SpriteEffects.None, 0);
-            spriteBatch.Draw(player1.p_spriteT, new Rectangle((int)player1.p_position.X, (int)player1.p_position.Y, player1.p_spriteT.Width, player1.p_spriteT.Height), null, Color.White, (float)(player1.p_rotation+.5*Math.PI), new Vector2(player1.p_spriteT.Width / 2, player1.p_spriteT.Height / 2), SpriteEffects.None, 0);
-            spriteBatch.Draw(player2.p_spriteB, new Rectangle((int)player2.p_position.X, (int)player2.p_position.Y, player2.p_spriteB.Width, player2.p_spriteB.Height), null, Color.Red, player2.p_rotation_b, new Vector2(player2.p_spriteB.Width / 2, player2.p_spriteB.Height / 2), SpriteEffects.None, 0);
-            spriteBatch.Draw(player2.p_spriteT, new Rectangle((int)player2.p_position.X, (int)player2.p_position.Y, player2.p_spriteT.Width, player2.p_spriteT.Height), null, Color.Red, (float)(player2.p_rotation + .5 * Math.PI), new Vector2(player2.p_spriteT.Width / 2, player2.p_spriteT.Height / 2), SpriteEffects.None, 0);
-            
-            if (turret1.placed)
+            if (enemies_level[level] == enemies_killed)
             {
-                spriteBatch.Draw(turret1.sprite, new Rectangle((int)turret1.position.X, (int)turret1.position.Y, turret1.sprite.Width, turret1.sprite.Height), null, Color.White, (float)(turret1.rotation + .5 * Math.PI), new Vector2(turret1.sprite.Width / 2, turret1.sprite.Height / 2), SpriteEffects.None, 0);
-
-            }
-            if (turret2.placed)
-            {
-                spriteBatch.Draw(turret2.sprite, new Rectangle((int)turret2.position.X, (int)turret2.position.Y, turret2.sprite.Width, turret2.sprite.Height), null, Color.White, (float)(turret2.rotation + .5 * Math.PI), new Vector2(turret2.sprite.Width / 2, turret2.sprite.Height / 2), SpriteEffects.None, 0);
-
-            }
-            // TODO: Add your drawing code here
-            #region Drawing Code:Bullets, TurretBullets, Enemies, Scores
-            //player 1
-            foreach (GameObject bullet in bullets)
-            {
-                if (bullet.alive)
+                //Fade to Black
+                float elapsed = gameTime.ElapsedGameTime.Milliseconds;
+                spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
+                if (current_fade <= 255 && fade_in == true)
                 {
-                    spriteBatch.Draw(bullet.sprite, bullet.position, Color.White);
-                }
-            }
-            //player 2
-            foreach (GameObject bullet in bullets2)
-            {
-                if (bullet.alive)
-                {
-                    spriteBatch.Draw(bullet.sprite, bullet.position, Color.White);
-                }
-            }
-            //turret 1
-            foreach (GameObject bullet in turretBullets1)
-            {
-                if (bullet.alive)
-                {
-                    spriteBatch.Draw(bullet.sprite, bullet.position, Color.White);
-                }
-            }
-            //turret 2
-            foreach (GameObject bullet in turretBullets2)
-            {
-                if (bullet.alive)
-                {
-                    spriteBatch.Draw(bullet.sprite, bullet.position, Color.White);
-                }
-            }
-            foreach (GameObject enemy in enemies)
-            {
-                if (enemy.alive)
-                {
-                    spriteBatch.Draw(enemy.sprite, enemy.position, Color.White);
-                }
-            }
-            ArrayList deadScores = new ArrayList(); //Used for determing what scores need to be deleted. 
-            //Output Scores
-            foreach (Score s in score)
-            {
-                if (s.alive)
-                {
-                    if (s.time > 0)
+                    if (elapsed >= (float)fade_length / 24)
                     {
-                        if (s.player == 1)
-                            spriteBatch.DrawString(font, s.pointVal.ToString(), s.position, new Color(Color.Red,(byte)(s.time*2.5)));
+                        spriteBatch.Draw(healthBar, new Rectangle(0, 0, this.viewport.Width, this.viewport.Height), new Color(Color.Black, (byte)(255 - current_fade)));
+                        current_fade += fade_increment;
+                    }
+                    //Fade out
+                }
+                else if (fade_in = false)
+                {
+                    if (elapsed >= (float)fade_length / 24)
+                    {
+                        spriteBatch.Draw(healthBar, new Rectangle(0, 0, this.viewport.Width, this.viewport.Height), new Color(Color.Black, (byte)(255 - current_fade)));
+                        current_fade -= fade_increment;
+                    }
+                    if (current_fade == 255)
+                    {
+                        level++; //TODO: Will crash after 5 levels. 
+                        enemies_killed = 0;
+                    }
+                }
+                else
+                {
+                    Console.Out.WriteLine("Fade in/out error");
+                }
+
+
+            }
+            else
+            {
+                GraphicsDevice.Clear(Color.CornflowerBlue);
+                spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
+                spriteBatch.Draw(healthBar, new Rectangle(this.viewport.Width / 15, this.viewport.Height / 15, (int)this.viewport.Width * player1.health / 600, this.viewport.Height / 30), Color.Red);
+                spriteBatch.Draw(healthBar, new Rectangle(this.viewport.Width * 12 / 16, this.viewport.Height / 15, (int)this.viewport.Width * player2.health / 600, this.viewport.Height / 30), Color.Red);
+                spriteBatch.DrawString(font, "Player 1 Score: " + player1.score.ToString(), new Vector2(this.viewport.Width / 15, this.viewport.Height / 60), new Color(Color.White, (byte)130));
+                spriteBatch.DrawString(font, "Player 2 Score: " + player2.score.ToString(), new Vector2(this.viewport.Width * 12 / 16, this.viewport.Height / 60), new Color(Color.White, (byte)130));
+                spriteBatch.Draw(player1.p_spriteB, new Rectangle((int)player1.p_position.X, (int)player1.p_position.Y, player1.p_spriteB.Width, player1.p_spriteB.Height), null, Color.White, player1.p_rotation_b, new Vector2(player1.p_spriteB.Width / 2, player1.p_spriteB.Height / 2), SpriteEffects.None, 0);
+                spriteBatch.Draw(player1.p_spriteT, new Rectangle((int)player1.p_position.X, (int)player1.p_position.Y, player1.p_spriteT.Width, player1.p_spriteT.Height), null, Color.White, (float)(player1.p_rotation + .5 * Math.PI), new Vector2(player1.p_spriteT.Width / 2, player1.p_spriteT.Height / 2), SpriteEffects.None, 0);
+                spriteBatch.Draw(player2.p_spriteB, new Rectangle((int)player2.p_position.X, (int)player2.p_position.Y, player2.p_spriteB.Width, player2.p_spriteB.Height), null, Color.Red, player2.p_rotation_b, new Vector2(player2.p_spriteB.Width / 2, player2.p_spriteB.Height / 2), SpriteEffects.None, 0);
+                spriteBatch.Draw(player2.p_spriteT, new Rectangle((int)player2.p_position.X, (int)player2.p_position.Y, player2.p_spriteT.Width, player2.p_spriteT.Height), null, Color.Red, (float)(player2.p_rotation + .5 * Math.PI), new Vector2(player2.p_spriteT.Width / 2, player2.p_spriteT.Height / 2), SpriteEffects.None, 0);
+
+                if (turret1.placed)
+                {
+                    spriteBatch.Draw(turret1.sprite, new Rectangle((int)turret1.position.X, (int)turret1.position.Y, turret1.sprite.Width, turret1.sprite.Height), null, Color.White, (float)(turret1.rotation + .5 * Math.PI), new Vector2(turret1.sprite.Width / 2, turret1.sprite.Height / 2), SpriteEffects.None, 0);
+
+                }
+                if (turret2.placed)
+                {
+                    spriteBatch.Draw(turret2.sprite, new Rectangle((int)turret2.position.X, (int)turret2.position.Y, turret2.sprite.Width, turret2.sprite.Height), null, Color.White, (float)(turret2.rotation + .5 * Math.PI), new Vector2(turret2.sprite.Width / 2, turret2.sprite.Height / 2), SpriteEffects.None, 0);
+
+                }
+                // TODO: Add your drawing code here
+                #region Drawing Code:Bullets, TurretBullets, Enemies, Scores
+                //player 1
+                foreach (GameObject bullet in bullets)
+                {
+                    if (bullet.alive)
+                    {
+                        spriteBatch.Draw(bullet.sprite, bullet.position, Color.White);
+                    }
+                }
+                //player 2
+                foreach (GameObject bullet in bullets2)
+                {
+                    if (bullet.alive)
+                    {
+                        spriteBatch.Draw(bullet.sprite, bullet.position, Color.White);
+                    }
+                }
+                //turret 1
+                foreach (GameObject bullet in turretBullets1)
+                {
+                    if (bullet.alive)
+                    {
+                        spriteBatch.Draw(bullet.sprite, bullet.position, Color.White);
+                    }
+                }
+                //turret 2
+                foreach (GameObject bullet in turretBullets2)
+                {
+                    if (bullet.alive)
+                    {
+                        spriteBatch.Draw(bullet.sprite, bullet.position, Color.White);
+                    }
+                }
+                foreach (GameObject enemy in enemies)
+                {
+                    if (enemy.alive)
+                    {
+                        spriteBatch.Draw(enemy.sprite, enemy.position, Color.White);
+                    }
+                }
+                ArrayList deadScores = new ArrayList(); //Used for determing what scores need to be deleted. 
+                //Output Scores
+                foreach (Score s in score)
+                {
+                    if (s.alive)
+                    {
+                        if (s.time > 0)
+                        {
+                            if (s.player == 1)
+                                spriteBatch.DrawString(font, s.pointVal.ToString(), s.position, new Color(Color.Red, (byte)(s.time * 2.5)));
+                            else
+                                spriteBatch.DrawString(font, s.pointVal.ToString(), s.position, new Color(Color.Green, (byte)(s.time * 2.5)));
+                            s.time--;
+                        }
                         else
-                            spriteBatch.DrawString(font, s.pointVal.ToString(), s.position, new Color(Color.Green, (byte)(s.time * 2.5)));
-                        s.time--;
-                    }
-                    else
-                    {
-                        s.alive = false;
-                        deadScores.Add(s);
+                        {
+                            s.alive = false;
+                            deadScores.Add(s);
+                        }
                     }
                 }
-            }
-            //Remove Scores
-            foreach (Score s in deadScores)
-            {
-                score.Remove(s);
-            }
-            #endregion
+                //Remove Scores
+                foreach (Score s in deadScores)
+                {
+                    score.Remove(s);
+                }
+                #endregion
 
-            spriteBatch.End();
-            base.Draw(gameTime);
+                spriteBatch.End();
+                base.Draw(gameTime);
+            }
         }
     }
 }
