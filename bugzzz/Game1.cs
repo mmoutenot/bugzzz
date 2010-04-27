@@ -810,6 +810,8 @@ namespace Bugzzz
                     Console.Out.WriteLine("Fade in/out error");
                 }
 
+                spriteBatch.End();
+
 
             }
             else
