@@ -51,7 +51,7 @@ namespace Bugzzz
         float t_elapsedTime = 0;
         float t2_elapsedTime = 0;
         float fireDelay = 0.25f;
-        Texture2D heathBar;
+        Texture2D healthBar;
 
         //rotation increment
         float angle_rot = .18f;
@@ -91,7 +91,7 @@ namespace Bugzzz
             turret1 = new Turret(Content.Load<Texture2D>("sprites\\cannon"));
             turret2 = new Turret(Content.Load<Texture2D>("sprites\\cannon"));
 
-            heathBar = Content.Load<Texture2D>("sprites\\healthBar");
+            healthBar = Content.Load<Texture2D>("sprites\\healthBar");
 
             rand= new Random();
             viewport = GraphicsDevice.Viewport;
@@ -761,8 +761,10 @@ namespace Bugzzz
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
-            spriteBatch.Draw(heathBar, new Rectangle(50, 50, player1.health, 15), Color.Red);
-            spriteBatch.DrawString(font, player1.score.ToString(), new Vector2(30, 30), new Color(Color.Red, (byte)130));
+            spriteBatch.Draw(healthBar, new Rectangle(this.viewport.Width/15, this.viewport.Height/15, (int)this.viewport.Width*player1.health/600, this.viewport.Height/30), Color.Red);
+            spriteBatch.Draw(healthBar, new Rectangle(this.viewport.Width*12/16, this.viewport.Height / 15, (int)this.viewport.Width*player2.health/600, this.viewport.Height/30), Color.Red);
+            spriteBatch.DrawString(font, "Player 1 Score: " + player1.score.ToString(), new Vector2(this.viewport.Width / 15, this.viewport.Height / 60), new Color(Color.White, (byte)130));
+            spriteBatch.DrawString(font, "Player 2 Score: " + player2.score.ToString(), new Vector2(this.viewport.Width* 12 / 16, this.viewport.Height / 60), new Color(Color.White, (byte)130));
             spriteBatch.Draw(player1.p_spriteB, new Rectangle((int)player1.p_position.X, (int)player1.p_position.Y, player1.p_spriteB.Width, player1.p_spriteB.Height), null, Color.White, player1.p_rotation_b, new Vector2(player1.p_spriteB.Width / 2, player1.p_spriteB.Height / 2), SpriteEffects.None, 0);
             spriteBatch.Draw(player1.p_spriteT, new Rectangle((int)player1.p_position.X, (int)player1.p_position.Y, player1.p_spriteT.Width, player1.p_spriteT.Height), null, Color.White, (float)(player1.p_rotation+.5*Math.PI), new Vector2(player1.p_spriteT.Width / 2, player1.p_spriteT.Height / 2), SpriteEffects.None, 0);
             spriteBatch.Draw(player2.p_spriteB, new Rectangle((int)player2.p_position.X, (int)player2.p_position.Y, player2.p_spriteB.Width, player2.p_spriteB.Height), null, Color.Red, player2.p_rotation_b, new Vector2(player2.p_spriteB.Width / 2, player2.p_spriteB.Height / 2), SpriteEffects.None, 0);
