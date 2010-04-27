@@ -23,10 +23,12 @@ namespace Bugzzz
     {
         //arrays containing bullet entities and enemies
         GameObject[] bullets;
-        GameObject[] turretBullets;
+        GameObject[] bullets2;
+        GameObject[] turretBullets1;
+        GameObject[] turretBullets2;
         GameObject[] enemies;
         ArrayList score;
-        Turret turret; //Player 1 turret
+        Turret turret1; //Player 1 turret
         Turret turret2; //Player 2 turret
         const int maxEnemies = 5;
         const int maxBullets = 15;
@@ -45,7 +47,9 @@ namespace Bugzzz
         Random rand;
         //for fire delay
         float elapsedTime = 0;
+        float elapsedTime2 = 0;
         float t_elapsedTime = 0;
+        float t2_elapsedTime = 0;
         float fireDelay = 0.25f;
         Texture2D heathBar;
 
@@ -84,7 +88,9 @@ namespace Bugzzz
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            turret = new Turret(Content.Load<Texture2D>("sprites\\cannon"));
+            turret1 = new Turret(Content.Load<Texture2D>("sprites\\cannon"));
+            turret2 = new Turret(Content.Load<Texture2D>("sprites\\cannon"));
+
             heathBar = Content.Load<Texture2D>("sprites\\healthBar");
 
             rand= new Random();
@@ -93,14 +99,18 @@ namespace Bugzzz
 
             //Initializes all of the bullets, enemies, etc.
             bullets = new GameObject[maxBullets];
+            bullets2 = new GameObject[maxBullets];
             for (int i = 0; i < maxBullets; i++)
             {
+                bullets2[i] = new GameObject(Content.Load<Texture2D>("sprites\\cannonball"));
                 bullets[i] = new GameObject(Content.Load<Texture2D>("sprites\\cannonball"));
             }
-            turretBullets = new GameObject[maxBullets];
+            turretBullets1 = new GameObject[maxBullets];
+            turretBullets2 = new GameObject[maxBullets];
             for (int i = 0; i < maxBullets; i++)
             {
-                turretBullets[i] = new GameObject(Content.Load<Texture2D>("sprites\\cannonball"));
+                turretBullets1[i] = new GameObject(Content.Load<Texture2D>("sprites\\cannonball"));
+                turretBullets2[i] = new GameObject(Content.Load<Texture2D>("sprites\\cannonball"));
             }
             enemies = new GameObject[maxEnemies];
             for (int j = 0; j < maxEnemies; j++)
@@ -138,7 +148,7 @@ namespace Bugzzz
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         /// 
 
-        public void fireBullets()
+        public void fireP1Bullets()
         {
             //firing command
             foreach (GameObject bullet in bullets)
@@ -152,18 +162,47 @@ namespace Bugzzz
                 }
             }
         }
-
-        public void fireTurretBullets()
+        public void fireP2Bullets()
         {
             //firing command
-            foreach (GameObject bullet in turretBullets)
+            foreach (GameObject bullet in bullets2)
             {
                 if (!bullet.alive)
                 {
                     bullet.alive = true;
-                    bullet.position = turret.position - bullet.center;
-                    bullet.velocity = new Vector2((float)Math.Cos(turret.rotation + Math.PI / 2), (float)Math.Sin(turret.rotation + Math.PI / 2)) * 15.0f;
-                    turret.bulletsLeft -= 1;
+                    bullet.position = player2.p_position - bullet.center;
+                    bullet.velocity = new Vector2((float)Math.Cos(player2.p_rotation + Math.PI / 2), (float)Math.Sin(player2.p_rotation + Math.PI / 2)) * 15.0f;
+                    return;
+                }
+            }
+        }
+
+        public void fireTurretBullets1()
+        {
+            //firing command
+
+            foreach (GameObject bullet in turretBullets1)
+            {
+                if (!bullet.alive)
+                {
+                    bullet.alive = true;
+                    bullet.position = turret1.position - bullet.center;
+                    bullet.velocity = new Vector2((float)Math.Cos(turret1.rotation + Math.PI / 2), (float)Math.Sin(turret1.rotation + Math.PI / 2)) * 15.0f;
+                    turret1.bulletsLeft -= 1;
+                    return;
+                }
+            }
+        }
+        public void fireTurretBullets2()
+        {
+            foreach (GameObject bullet in turretBullets2)
+            {
+                if (!bullet.alive)
+                {
+                    bullet.alive = true;
+                    bullet.position = turret2.position - bullet.center;
+                    bullet.velocity = new Vector2((float)Math.Cos(turret2.rotation + Math.PI / 2), (float)Math.Sin(turret2.rotation + Math.PI / 2)) * 15.0f;
+                    turret2.bulletsLeft -= 1;
                     return;
                 }
             }
@@ -240,6 +279,7 @@ namespace Bugzzz
 
         public void updateBullets()
         {
+            #region Player 1 Bullets
             foreach (GameObject bullet in bullets)
             {
                 if (bullet.alive)
@@ -268,14 +308,16 @@ namespace Bugzzz
                         {
                             bullet.alive = false;
                             enemy.alive = false;
-                            score.Add(new Score(20,SCORE_TIME,enemy.position,true));
+                            score.Add(new Score(20,SCORE_TIME,enemy.position,true,1));
                             player1.score += 20;
                             break;
                         }
                     }
                 }
             }
-            foreach (GameObject bullet in turretBullets)
+            #endregion
+            #region Player 2 Bullets
+            foreach (GameObject bullet in bullets2)
             {
                 if (bullet.alive)
                 {
@@ -303,13 +345,88 @@ namespace Bugzzz
                         {
                             bullet.alive = false;
                             enemy.alive = false;
-                            score.Add(new Score(10, SCORE_TIME, enemy.position, true));
+                            score.Add(new Score(20, SCORE_TIME, enemy.position, true,2));
+                            player2.score += 20;
+                            break;
+                        }
+                    }
+                }
+            }
+            #endregion
+            #region Turret 1 Bullets
+            foreach (GameObject bullet in turretBullets1)
+            {
+                if (bullet.alive)
+                {
+                    bullet.position += bullet.velocity;
+                    if (!viewportRect.Contains(new Point((int)bullet.position.X, (int)bullet.position.Y)))
+                    {
+                        bullet.alive = false;
+                        continue;
+                    }
+                    Rectangle bulletRect = new Rectangle(
+                        (int)bullet.position.X,
+                        (int)bullet.position.Y,
+                        bullet.sprite.Width,
+                        bullet.sprite.Height);
+                    //enemy-bullet collision detection.
+                    foreach (GameObject enemy in enemies)
+                    {
+                        Rectangle enemyRect = new Rectangle(
+                            (int)enemy.position.X,
+                            (int)enemy.position.Y,
+                            enemy.sprite.Width,
+                            enemy.sprite.Height);
+
+                        if (bulletRect.Intersects(enemyRect))
+                        {
+                            bullet.alive = false;
+                            enemy.alive = false;
+                            score.Add(new Score(10, SCORE_TIME, enemy.position, true,1));
                             player1.score += 10;
                             break;
                         }
                     }
                 }
             }
+            #endregion
+            #region Turret 2 Tullets
+            foreach (GameObject bullet in turretBullets2)
+            {
+                if (bullet.alive)
+                {
+                    bullet.position += bullet.velocity;
+                    if (!viewportRect.Contains(new Point((int)bullet.position.X, (int)bullet.position.Y)))
+                    {
+                        bullet.alive = false;
+                        continue;
+                    }
+                    Rectangle bulletRect = new Rectangle(
+                        (int)bullet.position.X,
+                        (int)bullet.position.Y,
+                        bullet.sprite.Width,
+                        bullet.sprite.Height);
+                    //enemy-bullet collision detection.
+                    foreach (GameObject enemy in enemies)
+                    {
+                        Rectangle enemyRect = new Rectangle(
+                            (int)enemy.position.X,
+                            (int)enemy.position.Y,
+                            enemy.sprite.Width,
+                            enemy.sprite.Height);
+
+                        if (bulletRect.Intersects(enemyRect))
+                        {
+                            bullet.alive = false;
+                            enemy.alive = false;
+                            score.Add(new Score(10, SCORE_TIME, enemy.position, true,2));
+                            player2.score += 10;
+                            break;
+                        }
+                    }
+                }
+            }
+            #endregion
         }
         protected override void Update(GameTime gameTime)
         {
@@ -319,40 +436,59 @@ namespace Bugzzz
                 this.Exit();
             if (GamePad.GetState(PlayerIndex.One).Buttons.A == ButtonState.Pressed)
                 player1.deploy = true;
+            if (GamePad.GetState(PlayerIndex.Two).Buttons.A == ButtonState.Pressed)
+                player2.deploy = true;
+
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
             elapsedTime += elapsed;
+            elapsedTime2 += elapsed;
             t_elapsedTime += elapsed;
+            t2_elapsedTime += elapsed;
             // TODO: Add your update logic here
-            UpdateTurret();
+            UpdateTurret(turret1,player1);
+            UpdateTurret(turret2,player2);
             UpdateInput();
             updateBullets();
             updateEnemies();
+
             player1.p_position += player1.p_velocity;
-            if (player1.p_fire && elapsedTime>=fireDelay)
+            player2.p_position += player2.p_velocity;
+
+            if (player1.p_fire && elapsedTime >= fireDelay)
             {
                 elapsedTime = 0.0f;
-                fireBullets();
+                fireP1Bullets();
             }
-            if (turret.fire && t_elapsedTime >= fireDelay+.5 && turret.placed)
+            if (player2.p_fire && elapsedTime2 >= fireDelay)
+            {
+                elapsedTime2 = 0.0f;
+                fireP2Bullets();
+            }
+            if (turret1.fire && t_elapsedTime >= fireDelay+.5 && turret1.placed)
             {
                 t_elapsedTime = 0.0f;
-                fireTurretBullets();
+                fireTurretBullets1();
+            }
+            if (turret2.fire && t2_elapsedTime >= fireDelay + .5 && turret2.placed)
+            {
+                t2_elapsedTime = 0.0f;
+                fireTurretBullets2();
             }
             base.Update(gameTime);
         }
 
 
-        protected void UpdateTurret()
+        private void UpdateTurret(Turret turret, Player player)
         {
             if (turret.bulletsLeft > 0)
             {
 
-                if (player1.deploy)
+                if (player.deploy)
                 {
-                    turret.position = player1.p_position;
+                    turret.position = player.p_position;
                     turret.rotation = 0f;
                     turret.placed = true;
-                    player1.deploy = false;
+                    player.deploy = false;
                 }
                 if (turret.placed)
                 {
@@ -396,7 +532,7 @@ namespace Bugzzz
             else
             {
                 turret.placed = false;
-                player1.deploy = false;
+                player.deploy = false;
                 turret.bulletsLeft = 25;
 
             }
@@ -512,7 +648,7 @@ namespace Bugzzz
             
             currentState = GamePad.GetState(PlayerIndex.Two);
 
-            #region Player 2 Controls
+            #region Player 2 Control Scheme
 
             if (currentState.IsConnected)
             {
@@ -629,12 +765,22 @@ namespace Bugzzz
             spriteBatch.DrawString(font, player1.score.ToString(), new Vector2(30, 30), new Color(Color.Red, (byte)130));
             spriteBatch.Draw(player1.p_spriteB, new Rectangle((int)player1.p_position.X, (int)player1.p_position.Y, player1.p_spriteB.Width, player1.p_spriteB.Height), null, Color.White, player1.p_rotation_b, new Vector2(player1.p_spriteB.Width / 2, player1.p_spriteB.Height / 2), SpriteEffects.None, 0);
             spriteBatch.Draw(player1.p_spriteT, new Rectangle((int)player1.p_position.X, (int)player1.p_position.Y, player1.p_spriteT.Width, player1.p_spriteT.Height), null, Color.White, (float)(player1.p_rotation+.5*Math.PI), new Vector2(player1.p_spriteT.Width / 2, player1.p_spriteT.Height / 2), SpriteEffects.None, 0);
-            if (turret.placed)
+            spriteBatch.Draw(player2.p_spriteB, new Rectangle((int)player2.p_position.X, (int)player2.p_position.Y, player2.p_spriteB.Width, player2.p_spriteB.Height), null, Color.Red, player2.p_rotation_b, new Vector2(player2.p_spriteB.Width / 2, player2.p_spriteB.Height / 2), SpriteEffects.None, 0);
+            spriteBatch.Draw(player2.p_spriteT, new Rectangle((int)player2.p_position.X, (int)player2.p_position.Y, player2.p_spriteT.Width, player2.p_spriteT.Height), null, Color.Red, (float)(player2.p_rotation + .5 * Math.PI), new Vector2(player2.p_spriteT.Width / 2, player2.p_spriteT.Height / 2), SpriteEffects.None, 0);
+            
+            if (turret1.placed)
             {
-                spriteBatch.Draw(turret.sprite, new Rectangle((int)turret.position.X, (int)turret.position.Y, turret.sprite.Width, turret.sprite.Height), null, Color.White, (float)(turret.rotation + .5 * Math.PI), new Vector2(turret.sprite.Width / 2, turret.sprite.Height / 2), SpriteEffects.None, 0);
+                spriteBatch.Draw(turret1.sprite, new Rectangle((int)turret1.position.X, (int)turret1.position.Y, turret1.sprite.Width, turret1.sprite.Height), null, Color.White, (float)(turret1.rotation + .5 * Math.PI), new Vector2(turret1.sprite.Width / 2, turret1.sprite.Height / 2), SpriteEffects.None, 0);
 
-            }// TODO: Add your drawing code here
+            }
+            if (turret2.placed)
+            {
+                spriteBatch.Draw(turret2.sprite, new Rectangle((int)turret2.position.X, (int)turret2.position.Y, turret2.sprite.Width, turret2.sprite.Height), null, Color.White, (float)(turret2.rotation + .5 * Math.PI), new Vector2(turret2.sprite.Width / 2, turret2.sprite.Height / 2), SpriteEffects.None, 0);
+
+            }
+            // TODO: Add your drawing code here
             #region Drawing Code:Bullets, TurretBullets, Enemies, Scores
+            //player 1
             foreach (GameObject bullet in bullets)
             {
                 if (bullet.alive)
@@ -642,7 +788,24 @@ namespace Bugzzz
                     spriteBatch.Draw(bullet.sprite, bullet.position, Color.White);
                 }
             }
-            foreach (GameObject bullet in turretBullets)
+            //player 2
+            foreach (GameObject bullet in bullets2)
+            {
+                if (bullet.alive)
+                {
+                    spriteBatch.Draw(bullet.sprite, bullet.position, Color.White);
+                }
+            }
+            //turret 1
+            foreach (GameObject bullet in turretBullets1)
+            {
+                if (bullet.alive)
+                {
+                    spriteBatch.Draw(bullet.sprite, bullet.position, Color.White);
+                }
+            }
+            //turret 2
+            foreach (GameObject bullet in turretBullets2)
             {
                 if (bullet.alive)
                 {
@@ -664,7 +827,10 @@ namespace Bugzzz
                 {
                     if (s.time > 0)
                     {
-                        spriteBatch.DrawString(font, s.pointVal.ToString(), s.position, new Color(Color.Red,(byte)(s.time*2.5)));
+                        if (s.player == 1)
+                            spriteBatch.DrawString(font, s.pointVal.ToString(), s.position, new Color(Color.Red,(byte)(s.time*2.5)));
+                        else
+                            spriteBatch.DrawString(font, s.pointVal.ToString(), s.position, new Color(Color.Green, (byte)(s.time * 2.5)));
                         s.time--;
                     }
                     else
