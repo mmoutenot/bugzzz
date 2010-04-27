@@ -300,6 +300,8 @@ namespace Bugzzz
                         {
                             bullet.alive = false;
                             enemy.alive = false;
+                            score.Add(new Score(10, SCORE_TIME, enemy.position, true));
+                            player1.score += 10;
                             break;
                         }
                     }
