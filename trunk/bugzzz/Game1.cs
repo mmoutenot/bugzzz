@@ -174,10 +174,12 @@ namespace Bugzzz
 
                     //makes enemies move towards the player
                     Vector2 target;
+
                     if (MathFns.Distance(enemy.position, player1.p_position) > MathFns.Distance(enemy.position, player2.p_position))
                         target = player2.p_position;
                     else
-                        target = player2.p_position;
+                        target = player1.p_position;
+
                     enemy.velocity = target - enemy.position;
                     enemy.velocity.Normalize();
                     enemy.position += enemy.velocity * 2;
@@ -335,20 +337,23 @@ namespace Bugzzz
                     double temp = MathFns.Distance(turret.position, enemies[0].position);
                     turret.closestEnemy = 0;
                     Vector2 offset = new Vector2(); //allows for aiming at center of target
+
                     for (int i = 1; i < enemies.Length; i++)
                     {
-                        if (Math.Sqrt(Math.Pow((turret.position.X - enemies[i].position.X), 2) + Math.Pow((turret.position.Y - enemies[i].position.Y), 2)) < temp)
+                        if (MathFns.Distance(enemies[i].position,turret.position) < temp)
                         {
                            turret.closestEnemy = i;
-                           offset.X = enemies[i].center.X;
-                           offset.Y = enemies[i].center.Y/2;
+                           offset.X = enemies[i].sprite.Width/2;
+                           offset.Y = enemies[i].sprite.Height/2;
                         }
                     }
-                    
-                    Vector2 direction = turret.position - enemies[turret.closestEnemy].position + offset;
+
+                    Vector2 aim = new Vector2(enemies[turret.closestEnemy].position.X + offset.X, enemies[turret.closestEnemy].position.Y + offset.Y);
+                    Vector2 direction = turret.position - aim;
                     
                     direction.Normalize();
                     float desiredAngle = (float)Math.Acos((double)direction.X);
+
                     if (direction.Y < 0)
                     {
                         desiredAngle = (float)(2.0f * Math.PI) - (float)desiredAngle;
@@ -462,6 +467,8 @@ namespace Bugzzz
                 {
                     player1.deploy = true;
                 }
+                if (keyboardState.IsKeyDown(Keys.Escape))
+                    this.Exit();
 
                 //cannon.rotation = MathHelper.Clamp(cannon.rotation, MathHelper.PiOver2, 0);
                 // TODO: Add your update logic here
