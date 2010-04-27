@@ -28,12 +28,16 @@ namespace Bugzzz
         // Position of Score to be drawn
         public Vector2 position;
 
-        public Score(int pointVal, int time, Vector2 position, bool alive)
+        // Player Score done by
+        public int player;
+
+        public Score(int pointVal, int time, Vector2 position, bool alive, int player)
         {
             this.pointVal = pointVal;
             this.time = time;
             this.alive = alive;
             this.position = position;
+            this.player = player;
         }
     }
 }
