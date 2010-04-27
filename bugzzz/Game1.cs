@@ -728,10 +728,10 @@ namespace Bugzzz
                 const float DEADZONE = 0.2f;
                 const float FIREDEADZONE = 0.3f;
 
-                Vector2 direction = GamePad.GetState(PlayerIndex.One).ThumbSticks.Right;
+                Vector2 direction = GamePad.GetState(PlayerIndex.Two).ThumbSticks.Right;
                 float magnitude = direction.Length();
                 player2.p_fire = false;
-                if (GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.Length() > DEADZONE)
+                if (GamePad.GetState(PlayerIndex.Two).ThumbSticks.Left.Length() > DEADZONE)
                 {
                     player2.p_rotation_b = (float)(-1 * (3.14 / 2 + Math.Atan2(currentState.ThumbSticks.Left.Y, currentState.ThumbSticks.Left.X)));
                 }
