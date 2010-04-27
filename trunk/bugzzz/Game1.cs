@@ -26,7 +26,8 @@ namespace Bugzzz
         GameObject[] turretBullets;
         GameObject[] enemies;
         ArrayList score;
-        Turret turret;
+        Turret turret; //Player 1 turret
+        Turret turret2; //Player 2 turret
         const int maxEnemies = 5;
         const int maxBullets = 15;
 
@@ -186,6 +187,16 @@ namespace Bugzzz
                         
                         break;
                     }
+                    playerRect = new Rectangle((int)player2.p_position.X - player2.p_spriteB.Width / 2, (int)player2.p_position.Y - player2.p_spriteB.Height / 2, player2.p_spriteB.Width, player2.p_spriteB.Height);
+                    
+                    if (playerRect.Intersects(enemyRect))
+                    {
+                        //p_alive = false;
+                        enemy.alive = false;
+                        player2.health -= 25;
+                        
+                        break;
+                    }
 
                     //makes enemies move towards the player
                     Vector2 target;
@@ -217,7 +228,7 @@ namespace Bugzzz
                     {
                         enemy.position = new Vector2(viewportRect.Top, MathHelper.Lerp(0.0f, (float)viewportRect.Width, (float)rand.NextDouble()));
                     }
-                    else if (side == 1)
+                    else if (side == 2)
                     {
                         enemy.position = new Vector2(viewportRect.Right, MathHelper.Lerp(0.0f, (float)viewportRect.Height, (float)rand.NextDouble()));
                     }
@@ -402,9 +413,13 @@ namespace Bugzzz
         {
 
 
-            GamePadState currentState = GamePad.GetState(PlayerIndex.One);
+            GamePadState currentState;
+
+            #region Player 1 Control Scheme
+            currentState = GamePad.GetState(PlayerIndex.One);
             if (currentState.IsConnected)
             {
+                #region XBox Controls Player1
                 player1.p_velocity.X = currentState.ThumbSticks.Left.X * 5;
                 player1.p_velocity.Y = -currentState.ThumbSticks.Left.Y * 5;
                 //player1.p_rotation = -(float)((Math.Tan(currentState.ThumbSticks.Right.Y / currentState.ThumbSticks.Right.X)*2*Math.PI)/180);
@@ -432,11 +447,13 @@ namespace Bugzzz
                         player1.p_fire = true;
                     }
                 }
+                #endregion
 
             }
-                //keyboard controls
+            //keyboard controls
             else
             {
+                #region Keyboard Controls Player1
                 //player1.p_fire = false;
                 KeyboardState keyboardState = Keyboard.GetState();
                 MouseState mouse = Mouse.GetState();
@@ -445,7 +462,7 @@ namespace Bugzzz
                 float xdim = 800;
                 float ydim = 800;
 
-                float rotation = (float)(Math.Atan2(YDistance, XDistance)+Math.PI/2);
+                float rotation = (float)(Math.Atan2(YDistance, XDistance) + Math.PI / 2);
                 player1.p_rotation = rotation;
 
                 if (mouse.LeftButton == ButtonState.Pressed)
@@ -489,12 +506,125 @@ namespace Bugzzz
                 if (keyboardState.IsKeyDown(Keys.Escape))
                     this.Exit();
 
+
+
+                
                 //cannon.rotation = MathHelper.Clamp(cannon.rotation, MathHelper.PiOver2, 0);
                 // TODO: Add your update logic here
                 previousKeyboardState = keyboardState;
                 previousMouseState = mouse;
+
+                #endregion
             }
+            #endregion
+            
+            currentState = GamePad.GetState(PlayerIndex.Two);
+
+            #region Player 2 Controls
+
+            if (currentState.IsConnected)
+            {
+                #region XBox Controller Controls Player 2
+                player2.p_velocity.X = currentState.ThumbSticks.Left.X * 5;
+                player2.p_velocity.Y = -currentState.ThumbSticks.Left.Y * 5;
+                //player2.p_rotation = -(float)((Math.Tan(currentState.ThumbSticks.Right.Y / currentState.ThumbSticks.Right.X)*2*Math.PI)/180);
+                const float DEADZONE = 0.2f;
+                const float FIREDEADZONE = 0.3f;
+
+                Vector2 direction = GamePad.GetState(PlayerIndex.One).ThumbSticks.Right;
+                float magnitude = direction.Length();
+                player2.p_fire = false;
+                if (GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.Length() > DEADZONE)
+                {
+                    player2.p_rotation_b = (float)(-1 * (3.14 / 2 + Math.Atan2(currentState.ThumbSticks.Left.Y, currentState.ThumbSticks.Left.X)));
+                }
+
+                if (magnitude > DEADZONE)
+                {
+                    //Smooth Rotation
+                    float angle = (float)(-1 * (3.14 / 2 + Math.Atan2(currentState.ThumbSticks.Right.Y, currentState.ThumbSticks.Right.X)));
+
+                    if (angle != player2.p_rotation)
+                        player2.p_rotation = MathFns.Clerp(player2.p_rotation, angle, angle_rot);
+
+                    if (magnitude > FIREDEADZONE)
+                    {
+                        player2.p_fire = true;
+                    }
+                }
+                #endregion
+
+            }
+            //keyboard controls
+            else
+            {
+                #region Keyboard Controls Player 2
+
+                //player2.p_fire = false;
+                KeyboardState keyboardState = Keyboard.GetState();
+                MouseState mouse = Mouse.GetState();
+                float XDistance = player2.p_position.X - mouse.X;
+                float YDistance = player2.p_position.Y - mouse.Y;
+                float xdim = 800;
+                float ydim = 800;
+
+                float rotation = (float)(Math.Atan2(YDistance, XDistance) + Math.PI / 2);
+                player2.p_rotation = rotation;
+
+                if (mouse.LeftButton == ButtonState.Pressed)
+                {
+                    player2.p_fire = true;
+                    xdim = mouse.X;
+                    ydim = mouse.Y;
+                }
+                else
+                {
+                    player2.p_fire = false;
+                }
+                if (keyboardState.IsKeyDown(Keys.A))
+                {
+                    player2.p_velocity.X = -5;
+                }
+                else if (keyboardState.IsKeyDown(Keys.D))
+                {
+                    player2.p_velocity.X = 5;
+                }
+                else
+                {
+                    player2.p_velocity.X = 0;
+                }
+                if (keyboardState.IsKeyDown(Keys.W))
+                {
+                    player2.p_velocity.Y = -5;
+                }
+                else if (keyboardState.IsKeyDown(Keys.S))
+                {
+                    player2.p_velocity.Y = 5;
+                }
+                else
+                {
+                    player2.p_velocity.Y = 0;
+                }
+                if (keyboardState.IsKeyDown(Keys.Q))
+                {
+                    player2.deploy = true;
+                }
+                if (keyboardState.IsKeyDown(Keys.Escape))
+                    this.Exit();
+
+
+
+
+                //cannon.rotation = MathHelper.Clamp(cannon.rotation, MathHelper.PiOver2, 0);
+                // TODO: Add your update logic here
+                previousKeyboardState = keyboardState;
+                previousMouseState = mouse;
+                #endregion Keyboard Controls
+
+            }
+            #endregion
         }
+
         /// <summary>
         /// This is called when the game should draw itself.
         /// </summary>
@@ -512,6 +642,7 @@ namespace Bugzzz
                 spriteBatch.Draw(turret.sprite, new Rectangle((int)turret.position.X, (int)turret.position.Y, turret.sprite.Width, turret.sprite.Height), null, Color.White, (float)(turret.rotation + .5 * Math.PI), new Vector2(turret.sprite.Width / 2, turret.sprite.Height / 2), SpriteEffects.None, 0);
 
             }// TODO: Add your drawing code here
+            #region Drawing Code:Bullets, TurretBullets, Enemies, Scores
             foreach (GameObject bullet in bullets)
             {
                 if (bullet.alive)
@@ -533,7 +664,8 @@ namespace Bugzzz
                     spriteBatch.Draw(enemy.sprite, enemy.position, Color.White);
                 }
             }
-            ArrayList deadScores = new ArrayList();
+            ArrayList deadScores = new ArrayList(); //Used for determing what scores need to be deleted. 
+            //Output Scores
             foreach (Score s in score)
             {
                 if (s.alive)
@@ -550,10 +682,12 @@ namespace Bugzzz
                     }
                 }
             }
+            //Remove Scores
             foreach (Score s in deadScores)
             {
                 score.Remove(s);
             }
+            #endregion
 
             spriteBatch.End();
             base.Draw(gameTime);
