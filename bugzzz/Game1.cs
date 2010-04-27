@@ -41,7 +41,7 @@ namespace Bugzzz
         const int fade_length = 150;
         const int fade_increment = 5;
         int current_fade;
-        bool fade_in, fade_out, scoreScreen;
+        bool fade_in, fade_out, scoreScreen, act_fade;
         
         Player player1;
         Player player2;
@@ -829,15 +829,22 @@ namespace Bugzzz
         protected override void Draw(GameTime gameTime)
         {
             if (enemies_level[level] == enemies_killed)
+                act_fade = true;
+            if (act_fade)
             {
                 //Fade to Black
+                float elapsed = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
                 spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
                 #region Fade In Logic
                 if (fade_in)
                 {
+                    
                     spriteBatch.Draw(healthBar, new Rectangle(0, 0, this.viewport.Width, this.viewport.Height), new Color(Color.Black, (byte)(current_fade)));
-                    current_fade += fade_increment;
-
+                    if (elapsed >= fade_length/24)
+                    {
+                        current_fade += fade_increment;
+                    }
+                    Console.Out.WriteLine(current_fade);
                     if (current_fade == 255)
                     {
                         scoreScreen = true;
@@ -846,6 +853,7 @@ namespace Bugzzz
                     //Fade out
                 }
                 #endregion
+
                 #region Score Screen Logic
                 if (scoreScreen)
                 {
@@ -889,16 +897,20 @@ namespace Bugzzz
 
                 }
                 #endregion
+
                 #region Fade Out Logic
                 if (fade_out)
                 {
                     spriteBatch.Draw(healthBar, new Rectangle(0, 0, this.viewport.Width, this.viewport.Height), new Color(Color.Black, (byte)(current_fade)));
-                    current_fade -= fade_increment;
-
+                    if (elapsed >= fade_length/10)
+                        current_fade -= fade_increment;
+                    Console.Out.WriteLine(current_fade);
                     if (current_fade <= 0)
                     {
-                        level++; //TODO: Will crash after 5 levels. 
+                        level++; //TODO: Will crash after 5 levels.
                         enemies_killed = 0;
+                        fade_out = false;
+                        act_fade = false;
                     }
                 }
                 #endregion
@@ -907,7 +919,8 @@ namespace Bugzzz
             }
             else
             {
-                fade_in = false;
+                current_fade = 0;
+                fade_in = true;
                 fade_out = false;
                 scoreScreen = false;
                 GraphicsDevice.Clear(Color.CornflowerBlue);
