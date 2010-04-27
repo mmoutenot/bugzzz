@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
@@ -24,11 +25,14 @@ namespace Bugzzz
         GameObject[] bullets;
         GameObject[] turretBullets;
         GameObject[] enemies;
+        ArrayList score;
+        private int scoreCount = 0;
         Turret turret;
         const int maxEnemies = 5;
         const int maxBullets = 15;
         Player player1;
         Player player2;
+        SpriteFont font;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Viewport viewport;
@@ -99,9 +103,16 @@ namespace Bugzzz
             {
                 enemies[j] = new GameObject(Content.Load<Texture2D>("sprites\\enemy"));
             }
+
+            // The maximum amount of scores to display on screen is the maximum number of dead enemies
+            score = new ArrayList();
+
             player1 = new Player(1, Content.Load<Texture2D>("sprites\\cannon"), Content.Load<Texture2D>("sprites\\smiley1"));
             player2 = new Player(2, Content.Load<Texture2D>("sprites\\cannon"), Content.Load<Texture2D>("sprites\\smiley1"));
 
+            // Loading in the font we will use for showing the killed enemies score value
+            font = Content.Load<SpriteFont>("ScoreFont");
+            
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
@@ -169,6 +180,7 @@ namespace Bugzzz
                         //p_alive = false;
                         enemy.alive = false;
                         player1.health -= 25;
+                        
                         break;
                     }
 
@@ -250,6 +262,7 @@ namespace Bugzzz
                         {
                             bullet.alive = false;
                             enemy.alive = false;
+                            score.Add(new Score(20,100,enemy.position,true));
                             break;
                         }
                     }
@@ -513,6 +526,27 @@ namespace Bugzzz
                     spriteBatch.Draw(enemy.sprite, enemy.position, Color.White);
                 }
             }
+            foreach (Score s in score)
+            {
+                if (s.alive)
+                {
+                    if (s.time > 0)
+                    {
+                        spriteBatch.DrawString(font, s.pointVal.ToString(), s.position, Color.Azure);
+                        s.time--;
+                    }
+                    else
+                    {
+                        s.alive = false;
+                        //  Here is where it breaks because we try to remove an element while we are going through them
+                        // I think, although we do want to remove scores that have expired times because they should no longer
+                        // be drawn
+                        //score.Remove(s);
+                    }
+                }
+            }
+
+
             spriteBatch.End();
             base.Draw(gameTime);
         }
