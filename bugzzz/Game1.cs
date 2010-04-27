@@ -768,7 +768,7 @@ namespace Bugzzz
                 float rotation = (float)(Math.Atan2(YDistance, XDistance) + Math.PI / 2);
                 player2.p_rotation = rotation;
 
-                if (mouse.LeftButton == ButtonState.Pressed)
+                if (keyboardState.IsKeyDown(Keys.Space))
                 {
                     player2.p_fire = true;
                     xdim = mouse.X;
