@@ -16,18 +16,30 @@ namespace Bugzzz
 {
     class Weapons
     {
-        public string name;
-        public int damage;
-        public int id;
+        public string[] names;
+        public int[] damages;
+        public float[] delays;
         Texture2D[] sprite;
 
         public Weapons(Texture2D a, Texture2D b, Texture2D c)
         {
             sprite = new Texture2D[3];
+            names = new String[3];
+            damages = new int[3];
+            delays = new float[3];
             sprite[0] = a;
+            names[0] = "Rifle";
+            damages[0] = 100;
+            delays[0] = 5.0f;
             sprite[1] = b;
+            names[1] = "Shotgun";
+            damages[1] = 10;
+            delays[1] = 1.0f;
             sprite[2] = c;
-            id = 1;
+            names[0] = "Flame Thrower";
+            damages[0] = 100;
+            delays[0] = 0.1f;
+
         }
     }
 }
