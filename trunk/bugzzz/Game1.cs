@@ -40,8 +40,8 @@ namespace Bugzzz
         // Score display time on screen as it fades out
         const int SCORE_TIME = 80;
         const int fade_length = 150;
-        const int fade_increment = 5;
-        int current_fade;
+        const float fade_increment = 0.5f;
+        float current_fade;
         bool fade_in, fade_out, scoreScreen, act_fade;
         
         Player player1;
@@ -958,13 +958,13 @@ namespace Bugzzz
                 if (fade_in)
                 {
                     
-                    spriteBatch.Draw(healthBar, new Rectangle(0, 0, this.viewport.Width, this.viewport.Height), new Color(Color.Black, (byte)(current_fade)));
-                    if (elapsed >= fade_length/24)
+                    spriteBatch.Draw(healthBar, new Rectangle(0, 0, this.viewport.Width, this.viewport.Height), new Color(Color.DarkBlue, (byte)(int)(current_fade)));
+                    if (elapsed >= fade_length/12)
                     {
                         current_fade += fade_increment;
                     }
                     Console.Out.WriteLine(current_fade);
-                    if (current_fade == 255)
+                    if (current_fade == 22)
                     {
                         scoreScreen = true;
                         fade_in = false;
@@ -977,7 +977,7 @@ namespace Bugzzz
                 if (scoreScreen)
                 {
                     //TODO: Add Score Screen Here
-                    spriteBatch.Draw(healthBar, new Rectangle(0, 0, this.viewport.Width, this.viewport.Height), new Color(Color.Black, (byte)(current_fade)));
+                    spriteBatch.Draw(healthBar, new Rectangle(this.viewport.Width/4, this.viewport.Height/4, this.viewport.Width/2, this.viewport.Height/2), new Color(Color.DarkBlue, (byte)(32)));
                     
                     if (!GamePad.GetState(PlayerIndex.One).IsConnected)
                     {
