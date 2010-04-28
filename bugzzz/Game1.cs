@@ -16,7 +16,7 @@ namespace Bugzzz
 {
     /// <summary>
     /// This is the main type for your game
-    /// </summary>
+    /// </summary>z
     /// 
 
     public class Game1 : Microsoft.Xna.Framework.Game
@@ -59,6 +59,9 @@ namespace Bugzzz
         float fireDelay = 0.15f;
         float t2_elapsedTime = 0;
         Texture2D healthBar;
+
+        Weapons p1_w;
+        Weapons p2_w;
 
         //rotation increment
         float angle_rot = .18f;
@@ -163,6 +166,9 @@ namespace Bugzzz
             viewport = GraphicsDevice.Viewport;
             viewportRect = new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
 
+            p1_w = new Weapons(Content.Load<Texture2D>("sprites\\cannonball"), Content.Load<Texture2D>("sprites\\cannonball"), Content.Load<Texture2D>("sprites\\cannonball"));
+            p2_w = new Weapons(Content.Load<Texture2D>("sprites\\cannonball"), Content.Load<Texture2D>("sprites\\cannonball"), Content.Load<Texture2D>("sprites\\cannonball"));
+            
             //Initializes all of the bullets, enemies, etc.
             bullets = new GameObject[maxBullets];
             bullets2 = new GameObject[maxBullets];
@@ -187,8 +193,8 @@ namespace Bugzzz
             // The maximum amount of scores to display on screen is the maximum number of dead enemies
             score = new ArrayList();
 
-            player1 = new Player(1, Content.Load<Texture2D>("sprites\\cannon"), Content.Load<Texture2D>("sprites\\smiley1"));
-            player2 = new Player(2, Content.Load<Texture2D>("sprites\\cannon"), Content.Load<Texture2D>("sprites\\smiley1"));
+            player1 = new Player(1, Content.Load<Texture2D>("sprites\\cannon"), Content.Load<Texture2D>("sprites\\smiley1"), p1_w);
+            player2 = new Player(2, Content.Load<Texture2D>("sprites\\cannon"), Content.Load<Texture2D>("sprites\\smiley1"), p2_w);
 
             // Loading in the font we will use for showing the killed enemies score value
             font = Content.Load<SpriteFont>("ScoreFont");
@@ -217,28 +223,100 @@ namespace Bugzzz
         public void fireP1Bullets()
         {
             //firing command
-            foreach (GameObject bullet in bullets)
+            if (player1.weapon.id == 0)
             {
-                if (!bullet.alive)
+                foreach (GameObject bullet in bullets)
                 {
-                    bullet.alive = true;
-                    bullet.position = player1.p_position - bullet.center;
-                    bullet.velocity = new Vector2((float)Math.Cos(player1.p_rotation + Math.PI / 2), (float)Math.Sin(player1.p_rotation + Math.PI / 2)) * 8.0f;
-                    return;
+                    if (!bullet.alive)
+                    {
+                        bullet.alive = true;
+                        bullet.position = player1.p_position - bullet.center;
+                        bullet.velocity = new Vector2((float)Math.Cos(player1.p_rotation + Math.PI / 2), (float)Math.Sin(player1.p_rotation + Math.PI / 2)) * 8.0f;
+                        return;
+                    }
+                }
+            }
+            if (player1.weapon.id == 1)
+            {
+                double spread = -0.2094;
+                foreach (GameObject bullet in bullets)
+                {
+                    if (!bullet.alive)
+                    {
+                        bullet.alive = true;
+                        bullet.position = player1.p_position - bullet.center;
+                        bullet.velocity = new Vector2((float)Math.Cos(player1.p_rotation + Math.PI / 2 + spread), (float)Math.Sin(player1.p_rotation + Math.PI / 2 + spread)) * 8.0f;
+                        spread += .1047;
+                        if (spread > .21)
+                            return;
+                    }
+                }
+            }
+            if (player1.weapon.id == 2)
+            {
+                double spread = 0;
+                int sign = 1;
+                foreach (GameObject bullet in bullets)
+                {
+                    if (!bullet.alive)
+                    {
+                        bullet.alive = true;
+                        bullet.position = player1.p_position - bullet.center;
+                        bullet.velocity = new Vector2((float)Math.Cos(player1.p_rotation + Math.PI / 2 + spread*sign), (float)Math.Sin(player1.p_rotation + Math.PI / 2 + spread*sign)) * 3.0f;
+                        spread += 0.03491;
+                        sign = -sign;
+                        if (spread > 4 * Math.PI)
+                            return;
+                    }
                 }
             }
         }
         public void fireP2Bullets()
         {
             //firing command
-            foreach (GameObject bullet in bullets2)
+            if (player2.weapon.id == 0)
             {
-                if (!bullet.alive)
+                foreach (GameObject bullet in bullets)
                 {
-                    bullet.alive = true;
-                    bullet.position = player2.p_position - bullet.center;
-                    bullet.velocity = new Vector2((float)Math.Cos(player2.p_rotation + Math.PI / 2), (float)Math.Sin(player2.p_rotation + Math.PI / 2)) * 15.0f;
-                    return;
+                    if (!bullet.alive)
+                    {
+                        bullet.alive = true;
+                        bullet.position = player1.p_position - bullet.center;
+                        bullet.velocity = new Vector2((float)Math.Cos(player1.p_rotation + Math.PI / 2), (float)Math.Sin(player1.p_rotation + Math.PI / 2)) * 8.0f;
+                        return;
+                    }
+                }
+            }
+            if (player2.weapon.id == 1)
+            {
+                double spread = -0.2094;
+                foreach (GameObject bullet in bullets)
+                {
+                    if (!bullet.alive)
+                    {
+                        bullet.alive = true;
+                        bullet.position = player1.p_position - bullet.center;
+                        bullet.velocity = new Vector2((float)Math.Cos(player1.p_rotation + Math.PI / 2 + spread), (float)Math.Sin(player1.p_rotation + Math.PI / 2 + spread)) * 8.0f;
+                        spread += .1047;
+                        if (spread > .21)
+                            return;
+                    }
+                }
+            }
+            if (player2.weapon.id == 2)
+            {
+                double spread = Math.Sin(Math.PI / 4);
+                foreach (GameObject bullet in bullets)
+                {
+                    if (!bullet.alive)
+                    {
+                        bullet.alive = true;
+                        bullet.position = player1.p_position - bullet.center;
+                        bullet.velocity = new Vector2((float)Math.Cos(player1.p_rotation + Math.PI / 2 + spread), (float)Math.Sin(player1.p_rotation + Math.PI / 2 + spread)) * 3.0f;
+                        spread += Math.PI / 5;
+                        if (spread > 4 * Math.PI)
+                            return;
+                    }
                 }
             }
         }
@@ -274,6 +352,158 @@ namespace Bugzzz
             }
         }
 
+        public void updateBullets()
+        {
+            #region Player 1 Bullets
+            foreach (GameObject bullet in bullets)
+            {
+                if (bullet.alive)
+                {
+                    bullet.position += bullet.velocity;
+                    if (!viewportRect.Contains(new Point((int)bullet.position.X, (int)bullet.position.Y)))
+                    {
+                        bullet.alive = false;
+                        continue;
+                    }
+                    Rectangle bulletRect = new Rectangle(
+                        (int)bullet.position.X,
+                        (int)bullet.position.Y,
+                        bullet.sprite.Width,
+                        bullet.sprite.Height);
+                    //enemy-bullet collision detection.
+                    foreach (GameObject enemy in enemies)
+                    {
+                        Rectangle enemyRect = new Rectangle(
+                            (int)enemy.position.X,
+                            (int)enemy.position.Y,
+                            enemy.sprite.Width,
+                            enemy.sprite.Height);
+
+                        if (bulletRect.Intersects(enemyRect))
+                        {
+                            bullet.alive = false;
+                            enemy.alive = false;
+                            score.Add(new Score(20, SCORE_TIME, enemy.position, true, 1));
+                            player1.score += 20;
+                            enemies_killed++;
+                            break;
+                        }
+                    }
+                }
+            }
+            #endregion
+            #region Player 2 Bullets
+            foreach (GameObject bullet in bullets2)
+            {
+                if (bullet.alive)
+                {
+                    bullet.position += bullet.velocity;
+                    if (!viewportRect.Contains(new Point((int)bullet.position.X, (int)bullet.position.Y)))
+                    {
+                        bullet.alive = false;
+                        continue;
+                    }
+                    Rectangle bulletRect = new Rectangle(
+                        (int)bullet.position.X,
+                        (int)bullet.position.Y,
+                        bullet.sprite.Width,
+                        bullet.sprite.Height);
+                    //enemy-bullet collision detection.
+                    foreach (GameObject enemy in enemies)
+                    {
+                        Rectangle enemyRect = new Rectangle(
+                            (int)enemy.position.X,
+                            (int)enemy.position.Y,
+                            enemy.sprite.Width,
+                            enemy.sprite.Height);
+
+                        if (bulletRect.Intersects(enemyRect))
+                        {
+                            bullet.alive = false;
+                            enemy.alive = false;
+                            score.Add(new Score(20, SCORE_TIME, enemy.position, true, 2));
+                            player2.score += 20;
+                            break;
+                        }
+                    }
+                }
+            }
+            #endregion
+            #region Turret 1 Bullets
+            foreach (GameObject bullet in turretBullets1)
+            {
+                if (bullet.alive)
+                {
+                    bullet.position += bullet.velocity;
+                    if (!viewportRect.Contains(new Point((int)bullet.position.X, (int)bullet.position.Y)))
+                    {
+                        bullet.alive = false;
+                        continue;
+                    }
+                    Rectangle bulletRect = new Rectangle(
+                        (int)bullet.position.X,
+                        (int)bullet.position.Y,
+                        bullet.sprite.Width,
+                        bullet.sprite.Height);
+                    //enemy-bullet collision detection.
+                    foreach (GameObject enemy in enemies)
+                    {
+                        Rectangle enemyRect = new Rectangle(
+                            (int)enemy.position.X,
+                            (int)enemy.position.Y,
+                            enemy.sprite.Width,
+                            enemy.sprite.Height);
+
+                        if (bulletRect.Intersects(enemyRect))
+                        {
+                            bullet.alive = false;
+                            enemy.alive = false;
+                            score.Add(new Score(10, SCORE_TIME, enemy.position, true, 1));
+                            player1.score += 10;
+                            break;
+                        }
+                    }
+                }
+            }
+            #endregion
+            #region Turret 2 Tullets
+            foreach (GameObject bullet in turretBullets2)
+            {
+                if (bullet.alive)
+                {
+                    bullet.position += bullet.velocity;
+                    if (!viewportRect.Contains(new Point((int)bullet.position.X, (int)bullet.position.Y)))
+                    {
+                        bullet.alive = false;
+                        continue;
+                    }
+                    Rectangle bulletRect = new Rectangle(
+                        (int)bullet.position.X,
+                        (int)bullet.position.Y,
+                        bullet.sprite.Width,
+                        bullet.sprite.Height);
+                    //enemy-bullet collision detection.
+                    foreach (GameObject enemy in enemies)
+                    {
+                        Rectangle enemyRect = new Rectangle(
+                            (int)enemy.position.X,
+                            (int)enemy.position.Y,
+                            enemy.sprite.Width,
+                            enemy.sprite.Height);
+
+                        if (bulletRect.Intersects(enemyRect))
+                        {
+                            bullet.alive = false;
+                            enemy.alive = false;
+                            score.Add(new Score(10, SCORE_TIME, enemy.position, true, 2));
+                            player2.score += 10;
+                            break;
+                        }
+                    }
+                }
+            }
+            #endregion
+        }
    
         public void updateEnemies()
         {
@@ -345,158 +575,7 @@ namespace Bugzzz
             }
         }
 
-        public void updateBullets()
-        {
-            #region Player 1 Bullets
-            foreach (GameObject bullet in bullets)
-            {
-                if (bullet.alive)
-                {
-                    bullet.position += bullet.velocity;
-                    if (!viewportRect.Contains(new Point((int)bullet.position.X, (int)bullet.position.Y)))
-                    {
-                        bullet.alive = false;
-                        continue;
-                    }
-                    Rectangle bulletRect = new Rectangle(
-                        (int)bullet.position.X,
-                        (int)bullet.position.Y,
-                        bullet.sprite.Width,
-                        bullet.sprite.Height);
-                    //enemy-bullet collision detection.
-                    foreach (GameObject enemy in enemies)
-                    {
-                        Rectangle enemyRect = new Rectangle(
-                            (int)enemy.position.X,
-                            (int)enemy.position.Y,
-                            enemy.sprite.Width,
-                            enemy.sprite.Height);
 
-                        if (bulletRect.Intersects(enemyRect))
-                        {
-                            bullet.alive = false;
-                            enemy.alive = false;
-                            score.Add(new Score(20,SCORE_TIME,enemy.position,true,1));
-                            player1.score += 20;
-                            enemies_killed++;
-                            break;
-                        }
-                    }
-                }
-            }
-            #endregion
-            #region Player 2 Bullets
-            foreach (GameObject bullet in bullets2)
-            {
-                if (bullet.alive)
-                {
-                    bullet.position += bullet.velocity;
-                    if (!viewportRect.Contains(new Point((int)bullet.position.X, (int)bullet.position.Y)))
-                    {
-                        bullet.alive = false;
-                        continue;
-                    }
-                    Rectangle bulletRect = new Rectangle(
-                        (int)bullet.position.X,
-                        (int)bullet.position.Y,
-                        bullet.sprite.Width,
-                        bullet.sprite.Height);
-                    //enemy-bullet collision detection.
-                    foreach (GameObject enemy in enemies)
-                    {
-                        Rectangle enemyRect = new Rectangle(
-                            (int)enemy.position.X,
-                            (int)enemy.position.Y,
-                            enemy.sprite.Width,
-                            enemy.sprite.Height);
-
-                        if (bulletRect.Intersects(enemyRect))
-                        {
-                            bullet.alive = false;
-                            enemy.alive = false;
-                            score.Add(new Score(20, SCORE_TIME, enemy.position, true,2));
-                            player2.score += 20;
-                            break;
-                        }
-                    }
-                }
-            }
-            #endregion
-            #region Turret 1 Bullets
-            foreach (GameObject bullet in turretBullets1)
-            {
-                if (bullet.alive)
-                {
-                    bullet.position += bullet.velocity;
-                    if (!viewportRect.Contains(new Point((int)bullet.position.X, (int)bullet.position.Y)))
-                    {
-                        bullet.alive = false;
-                        continue;
-                    }
-                    Rectangle bulletRect = new Rectangle(
-                        (int)bullet.position.X,
-                        (int)bullet.position.Y,
-                        bullet.sprite.Width,
-                        bullet.sprite.Height);
-                    //enemy-bullet collision detection.
-                    foreach (GameObject enemy in enemies)
-                    {
-                        Rectangle enemyRect = new Rectangle(
-                            (int)enemy.position.X,
-                            (int)enemy.position.Y,
-                            enemy.sprite.Width,
-                            enemy.sprite.Height);
-
-                        if (bulletRect.Intersects(enemyRect))
-                        {
-                            bullet.alive = false;
-                            enemy.alive = false;
-                            score.Add(new Score(10, SCORE_TIME, enemy.position, true,1));
-                            player1.score += 10;
-                            break;
-                        }
-                    }
-                }
-            }
-            #endregion
-            #region Turret 2 Tullets
-            foreach (GameObject bullet in turretBullets2)
-            {
-                if (bullet.alive)
-                {
-                    bullet.position += bullet.velocity;
-                    if (!viewportRect.Contains(new Point((int)bullet.position.X, (int)bullet.position.Y)))
-                    {
-                        bullet.alive = false;
-                        continue;
-                    }
-                    Rectangle bulletRect = new Rectangle(
-                        (int)bullet.position.X,
-                        (int)bullet.position.Y,
-                        bullet.sprite.Width,
-                        bullet.sprite.Height);
-                    //enemy-bullet collision detection.
-                    foreach (GameObject enemy in enemies)
-                    {
-                        Rectangle enemyRect = new Rectangle(
-                            (int)enemy.position.X,
-                            (int)enemy.position.Y,
-                            enemy.sprite.Width,
-                            enemy.sprite.Height);
-
-                        if (bulletRect.Intersects(enemyRect))
-                        {
-                            bullet.alive = false;
-                            enemy.alive = false;
-                            score.Add(new Score(10, SCORE_TIME, enemy.position, true,2));
-                            player2.score += 10;
-                            break;
-                        }
-                    }
-                }
-            }
-            #endregion
-        }
         protected override void Update(GameTime gameTime)
         {
             // Allows the game to exit
