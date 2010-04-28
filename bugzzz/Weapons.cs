@@ -30,7 +30,7 @@ namespace Bugzzz
             sprite[0] = a;
             names[0] = "Rifle";
             damages[0] = 100;
-            delays[0] = 0.5f;
+            delays[0] = 0.20f;
             sprite[1] = b;
             names[1] = "Shotgun";
             damages[1] = 10;

@@ -31,7 +31,7 @@ namespace Bugzzz
         ArrayList score;
         Turret turret1; //Player 1 turret
         Turret turret2; //Player 2 turret
-        const int maxEnemies = 5;
+        const int maxEnemies = 20;
         const int maxBullets = 30;
         int[] enemies_level;
         int level;
@@ -46,11 +46,13 @@ namespace Bugzzz
         
         Player player1;
         Player player2;
-        SpriteFont font;
+        SpriteFont scorefont;
+        SpriteFont levelfont;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Viewport viewport;
         Rectangle viewportRect;
+        LevelScore ls;
 
         Random rand;
         //for fire delay
@@ -158,10 +160,10 @@ namespace Bugzzz
             rand= new Random();
             enemies_killed = 0;
             enemies_level  = new int[4];
-            enemies_level[0] = 25;
-            enemies_level[1] = 50;
-            enemies_level[2] = 75;
-            enemies_level[3] = 100;
+            enemies_level[0] = 100;
+            enemies_level[1] = 250;
+            enemies_level[2] = 500;
+            enemies_level[3] = 1000;
 
             pickups = new WeaponPickup[2];
             pickups[0] = new WeaponPickup(Content.Load<Texture2D>("sprites\\cannonball"));
@@ -208,8 +210,8 @@ namespace Bugzzz
             player2 = new Player(2, Content.Load<Texture2D>("sprites\\cannon"), Content.Load<Texture2D>("sprites\\smiley1"), p2_w);
 
             // Loading in the font we will use for showing the killed enemies score value
-            font = Content.Load<SpriteFont>("ScoreFont");
-            
+            scorefont = Content.Load<SpriteFont>("ScoreFont");
+            levelfont = Content.Load<SpriteFont>("LevelFont");
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
@@ -947,8 +949,12 @@ namespace Bugzzz
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            if (enemies_level[level] == enemies_killed)
+            if (enemies_level[level] == enemies_killed && !act_fade)
+            {
+                ls = new LevelScore(this.level, player1, player2, true, 200);
                 act_fade = true;
+            }
+
             if (act_fade)
             {
                 //Fade to Black
@@ -979,6 +985,7 @@ namespace Bugzzz
                     //TODO: Add Score Screen Here
                     spriteBatch.Draw(healthBar, new Rectangle(this.viewport.Width/4, this.viewport.Height/4, this.viewport.Width/2, this.viewport.Height/2), new Color(Color.DarkBlue, (byte)(32)));
                     
+                    ls.Draw(spriteBatch,healthBar,this.viewport,this.levelfont);
                     if (!GamePad.GetState(PlayerIndex.One).IsConnected)
                     {
                         if (Keyboard.GetState().IsKeyDown(Keys.Z))
@@ -1046,9 +1053,9 @@ namespace Bugzzz
                 spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
                 spriteBatch.Draw(healthBar, new Rectangle(this.viewport.Width / 15, this.viewport.Height / 15, (int)this.viewport.Width * player1.health / 600, this.viewport.Height / 30), Color.Red);
                 spriteBatch.Draw(healthBar, new Rectangle(this.viewport.Width * 12 / 16, this.viewport.Height / 15, (int)this.viewport.Width * player2.health / 600, this.viewport.Height / 30), Color.Red);
-                spriteBatch.DrawString(font, "Player 1 Score: " + player1.score.ToString(), new Vector2(this.viewport.Width / 15, this.viewport.Height / 60), new Color(Color.White, (byte)130));
-                spriteBatch.DrawString(font, "Player 2 Score: " + player2.score.ToString(), new Vector2(this.viewport.Width * 12 / 16, this.viewport.Height / 60), new Color(Color.White, (byte)130));
-                spriteBatch.DrawString(font, "Enemies Killed: " + enemies_killed.ToString(), new Vector2(this.viewport.Width * 7 / 16, this.viewport.Height / 60), new Color(Color.Beige, (byte)130));
+                spriteBatch.DrawString(scorefont, "Player 1 Score: " + player1.score.ToString(), new Vector2(this.viewport.Width / 15, this.viewport.Height / 60), new Color(Color.White, (byte)130));
+                spriteBatch.DrawString(scorefont, "Player 2 Score: " + player2.score.ToString(), new Vector2(this.viewport.Width * 12 / 16, this.viewport.Height / 60), new Color(Color.White, (byte)130));
+                spriteBatch.DrawString(scorefont, "Enemies Killed: " + enemies_killed.ToString(), new Vector2(this.viewport.Width * 7 / 16, this.viewport.Height / 60), new Color(Color.Beige, (byte)130));
                 spriteBatch.Draw(player1.p_spriteB, new Rectangle((int)player1.p_position.X, (int)player1.p_position.Y, player1.p_spriteB.Width, player1.p_spriteB.Height), null, Color.White, player1.p_rotation_b, new Vector2(player1.p_spriteB.Width / 2, player1.p_spriteB.Height / 2), SpriteEffects.None, 0);
                 spriteBatch.Draw(player1.p_spriteT, new Rectangle((int)player1.p_position.X, (int)player1.p_position.Y, player1.p_spriteT.Width, player1.p_spriteT.Height), null, Color.White, (float)(player1.p_rotation + .5 * Math.PI), new Vector2(player1.p_spriteT.Width / 2, player1.p_spriteT.Height / 2), SpriteEffects.None, 0);
                 spriteBatch.Draw(player2.p_spriteB, new Rectangle((int)player2.p_position.X, (int)player2.p_position.Y, player2.p_spriteB.Width, player2.p_spriteB.Height), null, Color.Red, player2.p_rotation_b, new Vector2(player2.p_spriteB.Width / 2, player2.p_spriteB.Height / 2), SpriteEffects.None, 0);
@@ -1121,9 +1128,9 @@ namespace Bugzzz
                         if (s.time > 0)
                         {
                             if (s.player == 1)
-                                spriteBatch.DrawString(font, s.pointVal.ToString(), s.position, new Color(Color.Red, (byte)(s.time * 2.5)));
+                                spriteBatch.DrawString(scorefont, s.pointVal.ToString(), s.position, new Color(Color.Red, (byte)(s.time * 2.5)));
                             else
-                                spriteBatch.DrawString(font, s.pointVal.ToString(), s.position, new Color(Color.Green, (byte)(s.time * 2.5)));
+                                spriteBatch.DrawString(scorefont, s.pointVal.ToString(), s.position, new Color(Color.Green, (byte)(s.time * 2.5)));
                             s.time--;
                         }
                         else
