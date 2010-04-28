@@ -31,5 +31,6 @@ namespace Bugzzz
             fire = false;
             closestEnemy = -1;
         }
+
     }
 }
