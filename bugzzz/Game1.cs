@@ -265,19 +265,13 @@ namespace Bugzzz
             }
             if (player1.activeWeapon == 2)
             {
-                double spread = 0;
-                int sign = 1;
-                foreach (GameObject bullet in bullets)
-                {
+                foreach (GameObject bullet in bullets){
                     if (!bullet.alive)
                     {
                         bullet.alive = true;
                         bullet.position = player1.p_position - bullet.center;
-                        bullet.velocity = new Vector2((float)Math.Cos(player1.p_rotation + Math.PI / 2 + spread*sign), (float)Math.Sin(player1.p_rotation + Math.PI / 2 + spread*sign)) * 3.0f;
-                        spread += 0.03491;
-                        sign = -sign;
-                        if (spread > 4 * Math.PI)
-                            return;
+                        bullet.velocity = new Vector2((float)Math.Cos(player1.p_rotation + Math.PI / 2 + rand.NextDouble()), (float)Math.Sin(player1.p_rotation + Math.PI / 2 + rand.NextDouble())) * 3.0f;
+                        return;
                     }
                 }
             }
@@ -370,6 +364,14 @@ namespace Bugzzz
             {
                 if (bullet.alive)
                 {
+                    if (player1.activeWeapon == 2)
+                    {
+                        Rectangle flameRect = new Rectangle((int)player1.p_position.X-100, (int)player1.p_position.Y-100, 200, 200);
+                        Rectangle flameBulletRect = new Rectangle((int)bullet.position.X, (int)bullet.position.Y, bullet.sprite.Width, bullet.sprite.Height);
+                        if (!flameRect.Intersects(flameBulletRect))
+                            bullet.alive = false;
+                    }
+
                     bullet.position += bullet.velocity;
                     if (!viewportRect.Contains(new Point((int)bullet.position.X, (int)bullet.position.Y)))
                     {
@@ -632,6 +634,7 @@ namespace Bugzzz
             UpdateInput();
             updateBullets();
             updateEnemies();
+            updatePickups();
 
             player1.p_position += player1.p_velocity;
             player2.p_position += player2.p_velocity;
