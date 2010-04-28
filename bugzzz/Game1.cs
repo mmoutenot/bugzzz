@@ -27,6 +27,7 @@ namespace Bugzzz
         GameObject[] turretBullets1;
         GameObject[] turretBullets2;
         GameObject[] enemies;
+        WeaponPickup[] pickups;
         ArrayList score;
         Turret turret1; //Player 1 turret
         Turret turret2; //Player 2 turret
@@ -161,6 +162,16 @@ namespace Bugzzz
             enemies_level[1] = 50;
             enemies_level[2] = 75;
             enemies_level[3] = 100;
+
+            pickups = new WeaponPickup[2];
+            pickups[0] = new WeaponPickup(Content.Load<Texture2D>("sprites\\cannonball"));
+            pickups[0].alive = true;
+            pickups[0].weaponIndex = 1;
+            pickups[0].position = new Vector2(200.0f, 100.0f);
+            pickups[1] = new WeaponPickup(Content.Load<Texture2D>("sprites\\cannonball"));
+            pickups[1].alive = true;
+            pickups[1].weaponIndex = 2;
+            pickups[1].position = new Vector2(600.0f, 300.0f);
 
             level = 0;
             viewport = GraphicsDevice.Viewport;
@@ -575,6 +586,29 @@ namespace Bugzzz
             }
         }
 
+        public void updatePickups()
+        {
+            Rectangle playerRect = new Rectangle(
+                    (int)player1.p_position.X,
+                    (int)player1.p_position.Y,
+                    player1.p_spriteB.Width,
+                    player1.p_spriteB.Height);
+            foreach (WeaponPickup pickup in pickups)
+            {
+                Rectangle pickupRect = new Rectangle(
+                  (int)pickup.position.X,
+                  (int)pickup.position.Y,
+                  pickup.sprite.Width,
+                  pickup.sprite.Height);
+
+                if (playerRect.Intersects(pickupRect))
+                {
+                    pickup.alive = false;
+                    player1.activeWeapon = pickup.weaponIndex;
+                    break;
+                }
+            }
+        }
 
         protected override void Update(GameTime gameTime)
         {
@@ -1030,6 +1064,13 @@ namespace Bugzzz
                 // TODO: Add your drawing code here
                 #region Drawing Code:Bullets, TurretBullets, Enemies, Scores
                 //player 1
+                foreach (WeaponPickup pickup in pickups)
+                {
+                    if (pickup.alive)
+                    {
+                        spriteBatch.Draw(pickup.sprite, pickup.position, Color.White);
+                    }
+                }
                 foreach (GameObject bullet in bullets)
                 {
                     if (bullet.alive)
