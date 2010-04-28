@@ -72,6 +72,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Turret.cs" />
+    <Compile Include="WeaponPickup.cs" />
     <Compile Include="Weapons.cs" />
   </ItemGroup>
   <ItemGroup>
