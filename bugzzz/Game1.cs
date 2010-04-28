@@ -602,17 +602,18 @@ namespace Bugzzz
             player1.p_position += player1.p_velocity;
             player2.p_position += player2.p_velocity;
 
-            if (player1.p_fire && elapsedTime >= player1.weapon.delays[player1.activeWeapon])
+            if ((elapsedTime >= player1.weapon.delays[player1.activeWeapon]) && player1.p_fire)
             {
-                Console.Write(elapsedTime);
+                
                 elapsedTime = 0.0f;
                 fireP1Bullets();
             }
-            if (player2.p_fire && elapsedTime2 >= player2.weapon.delays[player2.activeWeapon])
+            if ((elapsedTime2 >= player2.weapon.delays[player2.activeWeapon]) && player2.p_fire)
             {
                 elapsedTime2 = 0.0f;
                 fireP2Bullets();
             }
+       
             if (turret1.fire && t_elapsedTime >= fireDelay+.5 && turret1.placed)
             {
                 t_elapsedTime = 0.0f;
@@ -623,6 +624,7 @@ namespace Bugzzz
                 t2_elapsedTime = 0.0f;
                 fireTurretBullets2();
             }
+            
             base.Update(gameTime);
         }
 
