@@ -56,8 +56,8 @@ namespace Bugzzz
         float elapsedTime = 0;
         float elapsedTime2 = 0;
         float t_elapsedTime = 0;
-        float fireDelay = 0.15f;
         float t2_elapsedTime = 0;
+        float fireDelay = 0.15f;
         Texture2D healthBar;
 
         Weapons p1_w;
@@ -223,7 +223,7 @@ namespace Bugzzz
         public void fireP1Bullets()
         {
             //firing command
-            if (player1.weapon.id == 0)
+            if (player1.activeWeapon == 0)
             {
                 foreach (GameObject bullet in bullets)
                 {
@@ -236,7 +236,7 @@ namespace Bugzzz
                     }
                 }
             }
-            if (player1.weapon.id == 1)
+            if (player1.activeWeapon == 1)
             {
                 double spread = -0.2094;
                 foreach (GameObject bullet in bullets)
@@ -252,7 +252,7 @@ namespace Bugzzz
                     }
                 }
             }
-            if (player1.weapon.id == 2)
+            if (player1.activeWeapon == 2)
             {
                 double spread = 0;
                 int sign = 1;
@@ -274,20 +274,20 @@ namespace Bugzzz
         public void fireP2Bullets()
         {
             //firing command
-            if (player2.weapon.id == 0)
+            if (player2.activeWeapon == 0)
             {
                 foreach (GameObject bullet in bullets)
                 {
                     if (!bullet.alive)
                     {
                         bullet.alive = true;
-                        bullet.position = player1.p_position - bullet.center;
-                        bullet.velocity = new Vector2((float)Math.Cos(player1.p_rotation + Math.PI / 2), (float)Math.Sin(player1.p_rotation + Math.PI / 2)) * 8.0f;
+                        bullet.position = player2.p_position - bullet.center;
+                        bullet.velocity = new Vector2((float)Math.Cos(player2.p_rotation + Math.PI / 2), (float)Math.Sin(player2.p_rotation + Math.PI / 2)) * 8.0f;
                         return;
                     }
                 }
             }
-            if (player2.weapon.id == 1)
+            if (player2.activeWeapon == 1)
             {
                 double spread = -0.2094;
                 foreach (GameObject bullet in bullets)
@@ -295,15 +295,15 @@ namespace Bugzzz
                     if (!bullet.alive)
                     {
                         bullet.alive = true;
-                        bullet.position = player1.p_position - bullet.center;
-                        bullet.velocity = new Vector2((float)Math.Cos(player1.p_rotation + Math.PI / 2 + spread), (float)Math.Sin(player1.p_rotation + Math.PI / 2 + spread)) * 8.0f;
+                        bullet.position = player2.p_position - bullet.center;
+                        bullet.velocity = new Vector2((float)Math.Cos(player2.p_rotation + Math.PI / 2 + spread), (float)Math.Sin(player2.p_rotation + Math.PI / 2 + spread)) * 8.0f;
                         spread += .1047;
                         if (spread > .21)
                             return;
                     }
                 }
             }
-            if (player2.weapon.id == 2)
+            if (player2.activeWeapon == 2)
             {
                 double spread = Math.Sin(Math.PI / 4);
                 foreach (GameObject bullet in bullets)
@@ -311,8 +311,8 @@ namespace Bugzzz
                     if (!bullet.alive)
                     {
                         bullet.alive = true;
-                        bullet.position = player1.p_position - bullet.center;
-                        bullet.velocity = new Vector2((float)Math.Cos(player1.p_rotation + Math.PI / 2 + spread), (float)Math.Sin(player1.p_rotation + Math.PI / 2 + spread)) * 3.0f;
+                        bullet.position = player2.p_position - bullet.center;
+                        bullet.velocity = new Vector2((float)Math.Cos(player2.p_rotation + Math.PI / 2 + spread), (float)Math.Sin(player2.p_rotation + Math.PI / 2 + spread)) * 3.0f;
                         spread += Math.PI / 5;
                         if (spread > 4 * Math.PI)
                             return;
@@ -602,12 +602,13 @@ namespace Bugzzz
             player1.p_position += player1.p_velocity;
             player2.p_position += player2.p_velocity;
 
-            if (player1.p_fire && elapsedTime >= fireDelay)
+            if (player1.p_fire && elapsedTime >= player1.weapon.delays[player1.activeWeapon])
             {
+                Console.Write(elapsedTime);
                 elapsedTime = 0.0f;
                 fireP1Bullets();
             }
-            if (player2.p_fire && elapsedTime2 >= fireDelay)
+            if (player2.p_fire && elapsedTime2 >= player2.weapon.delays[player2.activeWeapon])
             {
                 elapsedTime2 = 0.0f;
                 fireP2Bullets();
