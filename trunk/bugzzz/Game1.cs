@@ -151,9 +151,10 @@ namespace Bugzzz
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            turret1 = new Turret(Content.Load<Texture2D>("sprites\\cannon"));
-            turret2 = new Turret(Content.Load<Texture2D>("sprites\\cannon"));
-
+            Texture2D temp = Content.Load<Texture2D>("sprites\\cannon");
+            turret1 = new Turret(temp);
+            turret2 = new Turret(temp);
+            
             healthBar = Content.Load<Texture2D>("sprites\\healthBar");
             current_fade=0;
             fade_in = true;
@@ -165,12 +166,16 @@ namespace Bugzzz
             enemies_level[2] = 500;
             enemies_level[3] = 1000;
 
+            temp = null;
+
+            temp = Content.Load<Texture2D>("sprites\\cannonball");
+
             pickups = new WeaponPickup[2];
-            pickups[0] = new WeaponPickup(Content.Load<Texture2D>("sprites\\cannonball"));
+            pickups[0] = new WeaponPickup(temp);
             pickups[0].alive = true;
             pickups[0].weaponIndex = 1;
             pickups[0].position = new Vector2(200.0f, 100.0f);
-            pickups[1] = new WeaponPickup(Content.Load<Texture2D>("sprites\\cannonball"));
+            pickups[1] = new WeaponPickup(temp);
             pickups[1].alive = true;
             pickups[1].weaponIndex = 2;
             pickups[1].position = new Vector2(600.0f, 300.0f);
@@ -179,35 +184,39 @@ namespace Bugzzz
             viewport = GraphicsDevice.Viewport;
             viewportRect = new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
 
-            p1_w = new Weapons(Content.Load<Texture2D>("sprites\\cannonball"), Content.Load<Texture2D>("sprites\\cannonball"), Content.Load<Texture2D>("sprites\\cannonball"));
-            p2_w = new Weapons(Content.Load<Texture2D>("sprites\\cannonball"), Content.Load<Texture2D>("sprites\\cannonball"), Content.Load<Texture2D>("sprites\\cannonball"));
-            
+            p1_w = new Weapons(temp, temp, temp);
+            p2_w = new Weapons(temp, temp, temp);
+
             //Initializes all of the bullets, enemies, etc.
             bullets = new GameObject[maxBullets];
             bullets2 = new GameObject[maxBullets];
             for (int i = 0; i < maxBullets; i++)
             {
-                bullets2[i] = new GameObject(Content.Load<Texture2D>("sprites\\cannonball"));
-                bullets[i] = new GameObject(Content.Load<Texture2D>("sprites\\cannonball"));
+                bullets2[i] = new GameObject(temp);
+                bullets[i] = new GameObject(temp);
             }
             turretBullets1 = new GameObject[maxBullets];
             turretBullets2 = new GameObject[maxBullets];
             for (int i = 0; i < maxBullets; i++)
             {
-                turretBullets1[i] = new GameObject(Content.Load<Texture2D>("sprites\\cannonball"));
-                turretBullets2[i] = new GameObject(Content.Load<Texture2D>("sprites\\cannonball"));
+                turretBullets1[i] = new GameObject(temp);
+                turretBullets2[i] = new GameObject(temp);
             }
+
+            temp = Content.Load<Texture2D>("sprites\\enemy");
             enemies = new GameObject[maxEnemies];
             for (int j = 0; j < maxEnemies; j++)
             {
-                enemies[j] = new GameObject(Content.Load<Texture2D>("sprites\\enemy"));
+                enemies[j] = new GameObject(temp);
             }
+
+            temp = Content.Load<Texture2D>("sprites\\cannon");
+            player1 = new Player(1, temp, Content.Load<Texture2D>("sprites\\smiley1"), p1_w);
+            player2 = new Player(2, temp, Content.Load<Texture2D>("sprites\\smiley1"), p2_w);
+
 
             // The maximum amount of scores to display on screen is the maximum number of dead enemies
             score = new ArrayList();
-
-            player1 = new Player(1, Content.Load<Texture2D>("sprites\\cannon"), Content.Load<Texture2D>("sprites\\smiley1"), p1_w);
-            player2 = new Player(2, Content.Load<Texture2D>("sprites\\cannon"), Content.Load<Texture2D>("sprites\\smiley1"), p2_w);
 
             // Loading in the font we will use for showing the killed enemies score value
             scorefont = Content.Load<SpriteFont>("ScoreFont");
@@ -620,50 +629,53 @@ namespace Bugzzz
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
-            if (GamePad.GetState(PlayerIndex.One).Buttons.A == ButtonState.Pressed)
-                player1.deploy = true;
-            if (GamePad.GetState(PlayerIndex.Two).Buttons.A == ButtonState.Pressed)
-                player2.deploy = true;
+            if (!act_fade)
+            {
+                if (GamePad.GetState(PlayerIndex.One).Buttons.A == ButtonState.Pressed)
+                    player1.deploy = true;
+                if (GamePad.GetState(PlayerIndex.Two).Buttons.A == ButtonState.Pressed)
+                    player2.deploy = true;
 
-            float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            elapsedTime += elapsed;
-            elapsedTime2 += elapsed;
-            t_elapsedTime += elapsed;
-            t2_elapsedTime += elapsed;
-            // TODO: Add your update logic here
-            UpdateTurret(turret1,player1);
-            UpdateTurret(turret2,player2);
-            UpdateInput();
-            updateBullets();
-            updateEnemies();
-            updatePickups();
+                float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+                elapsedTime += elapsed;
+                elapsedTime2 += elapsed;
+                t_elapsedTime += elapsed;
+                t2_elapsedTime += elapsed;
+                // TODO: Add your update logic here
+                UpdateTurret(turret1, player1);
+                UpdateTurret(turret2, player2);
+                UpdateInput();
+                updateBullets();
+                updateEnemies();
+                updatePickups();
 
-            player1.p_position += player1.p_velocity;
-            player2.p_position += player2.p_velocity;
+                player1.p_position += player1.p_velocity;
+                player2.p_position += player2.p_velocity;
 
-            if ((elapsedTime >= player1.weapon.delays[player1.activeWeapon]) && player1.p_fire)
-            {
-                
-                elapsedTime = 0.0f;
-                fireP1Bullets();
+                if ((elapsedTime >= player1.weapon.delays[player1.activeWeapon]) && player1.p_fire)
+                {
+
+                    elapsedTime = 0.0f;
+                    fireP1Bullets();
+                }
+                if ((elapsedTime2 >= player2.weapon.delays[player2.activeWeapon]) && player2.p_fire)
+                {
+                    elapsedTime2 = 0.0f;
+                    fireP2Bullets();
+                }
+
+                if (turret1.fire && t_elapsedTime >= fireDelay + .5 && turret1.placed)
+                {
+                    t_elapsedTime = 0.0f;
+                    fireTurretBullets1();
+                }
+                if (turret2.fire && t2_elapsedTime >= fireDelay + .5 && turret2.placed)
+                {
+                    t2_elapsedTime = 0.0f;
+                    fireTurretBullets2();
+                }
+
             }
-            if ((elapsedTime2 >= player2.weapon.delays[player2.activeWeapon]) && player2.p_fire)
-            {
-                elapsedTime2 = 0.0f;
-                fireP2Bullets();
-            }
-       
-            if (turret1.fire && t_elapsedTime >= fireDelay+.5 && turret1.placed)
-            {
-                t_elapsedTime = 0.0f;
-                fireTurretBullets1();
-            }
-            if (turret2.fire && t2_elapsedTime >= fireDelay + .5 && turret2.placed)
-            {
-                t2_elapsedTime = 0.0f;
-                fireTurretBullets2();
-            }
-            
             base.Update(gameTime);
         }
 
@@ -951,8 +963,11 @@ namespace Bugzzz
         {
             if (enemies_level[level] == enemies_killed && !act_fade)
             {
-                ls = new LevelScore(this.level, player1, player2, true, 200, levelfont, GraphicsDevice);
+                ls = new LevelScore(this.level, player1, player2, true, 200, levelfont, GraphicsDevice, this.healthBar);
                 act_fade = true;
+                enemies_killed = 0;
+                for (int i = 0; i < maxEnemies; i++)
+                    enemies[i] = null;
             }
 
             if (act_fade)
@@ -983,7 +998,7 @@ namespace Bugzzz
                 if (scoreScreen)
                 {
                     //TODO: Add Score Screen Here
-                    ls.Draw(healthBar,this.viewport);
+                    ls.Draw(this.viewport);
                     if (!GamePad.GetState(PlayerIndex.One).IsConnected)
                     {
                         if (Keyboard.GetState().IsKeyDown(Keys.Z))
