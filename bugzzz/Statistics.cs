@@ -2,22 +2,33 @@ using System;
 using System.Collections;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.GamerServices;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
+using Microsoft.Xna.Framework.Net;
+using Microsoft.Xna.Framework.Storage;
 
 namespace Bugzzz
 {
     class Statistics
     {
         #region Fields startTime, currentTime, started, spreeLength, lifeTimes
-        private int startTime;
-        private int currentTime;
+        private TimeSpan startTime;
+        private TimeSpan currentTime;
         private bool started;
         private int spreeLength;            //Number of enemies killed in one life?
+        private int maxSpreeLength;
         private ArrayList lifeTimes;        //Length of each life
         private int wepSwitch;              //Number of times player switched their weapon
+
         #endregion
 
         #region Accessors StartTime, Started, SpreeLength, WepSwitch
-        public int StartTime
+        public TimeSpan StartTime
         {
             get { return startTime; }
             set { startTime = value; }
@@ -29,10 +40,9 @@ namespace Bugzzz
             set { started = value; }
         }
 
-        public int SpreeLength
+        public int MaxSpreeLength
         {
-            get { return spreeLength; }
-            set { spreeLength = value; }
+            get { return maxSpreeLength; }
         }
 
         //Setter for wepSwitch doesn't actually set, just increments value
@@ -50,19 +60,52 @@ namespace Bugzzz
         #endregion
 
         #region Main Methods Constructor, updateStatistics
-        public Statistics(int startTime,bool started)
+        public Statistics(bool started)
         {
-            this.startTime = startTime;
             this.started = started;
             this.spreeLength = 0;
             this.lifeTimes = new ArrayList();
-            this.currentTime = startTime;
+            this.startTime = new TimeSpan(0);
+            this.currentTime = new TimeSpan(0);
         }
 
-        public void updateStatistics()
+        public void enemeyKilled()
         {
-           // should be set to the current game time 
-           // currentTime = 0;
+            spreeLength++;
+            if(spreeLength>maxSpreeLength){
+                maxSpreeLength = spreeLength;
+            }
+        }
+
+        public void playerDied()
+        {
+            spreeLength = 0;
+            lifeTimes.Add(currentTime - startTime);
+            Console.WriteLine("Player Died: " + (currentTime - startTime));
+            startTime = currentTime;
+            averageLifeTime();
+        }
+
+        public void updateStatisticsTime(GameTime time)
+        {
+           // set the current time to the current game time;
+            currentTime = time.TotalGameTime;
+        }
+        #endregion
+
+        #region Generated Statistics
+        
+        // Returns the average lifetime in seconds
+        public double averageLifeTime()
+        {
+            int count = 0;
+            TimeSpan totalLifeTime = new TimeSpan(0);
+            foreach (TimeSpan i in lifeTimes){
+                totalLifeTime+=i;
+                count++;
+            }
+            Console.WriteLine("Average life of player:" + (totalLifeTime.TotalSeconds / count));
+            return totalLifeTime.TotalSeconds / count;
         }
         #endregion
     }
