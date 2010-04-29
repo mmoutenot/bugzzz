@@ -14,7 +14,7 @@ using Microsoft.Xna.Framework.Storage;
 
 namespace Bugzzz
 {
-    class Score
+    class ScoreDisplay
     {
         #region Fields
         // How much the score entity is worth in points
@@ -87,7 +87,7 @@ namespace Bugzzz
         }
         #endregion
 
-        public Score(int pointVal, int time, Vector2 position, bool alive, int player)
+        public ScoreDisplay(int pointVal, int time, Vector2 position, bool alive, int player)
         {
             this.pointVal = pointVal;
             this.time = time;
