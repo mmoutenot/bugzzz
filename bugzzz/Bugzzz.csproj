@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Character.cs" />
+    <Compile Include="Statistics.cs" />
     <Compile Include="LevelScore.cs" />
     <Compile Include="ScoreDisplay.cs" />
     <Compile Include="GameObject.cs" />

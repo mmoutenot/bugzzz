@@ -64,6 +64,9 @@
     <Compile Include="Program.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="ScoreDisplay.cs" />
+    <Compile Include="Statistics.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Turret.cs" />
     <Compile Include="WeaponPickup.cs" />
     <Compile Include="Weapons.cs" />
