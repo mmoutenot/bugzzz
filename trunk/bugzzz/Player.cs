@@ -29,8 +29,10 @@ namespace Bugzzz
         public int score;
         public Weapons weapon;
         public int activeWeapon;
+        public Statistics p_stat;
+        public int livesLeft;
 
-        public Player(int id, Texture2D spriteT, Texture2D spriteB, Weapons w, Vector2 pos)
+        public Player(int id, Texture2D spriteT, Texture2D spriteB, Weapons w, Vector2 pos, Statistics stat)
         {
             deploy = false;
             p_id = id; 
@@ -44,6 +46,8 @@ namespace Bugzzz
             health = 100;
             weapon = w;
             activeWeapon = 0;
+            p_stat = stat;
+            livesLeft = 5;
         }
     }
 }

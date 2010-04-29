@@ -73,6 +73,8 @@ namespace Bugzzz
         KeyboardState previousKeyboardState = Keyboard.GetState();
         MouseState previousMouseState = Mouse.GetState();
 
+        GameTime gt;
+
 
         public Game1()
         {
@@ -133,7 +135,7 @@ namespace Bugzzz
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
         /// This is where it can query for any required services and load any non-graphic
-        /// related content.  Calling base.Initialize will enumerate through any components
+        /// related content.  Calling base.Infitialize will enumerate through any components
         /// and initialize them as well.
         /// </summary>
         protected override void Initialize()
@@ -211,8 +213,8 @@ namespace Bugzzz
             }
 
             temp = Content.Load<Texture2D>("sprites\\cannon");
-            player1 = new Player(1, temp, Content.Load<Texture2D>("sprites\\smiley1"), p1_w, new Vector2(viewport.Width*7/15,viewport.Height/2));
-            player2 = new Player(2, temp, Content.Load<Texture2D>("sprites\\smiley1"), p2_w, new Vector2(viewport.Width*8/15, viewport.Height/2));
+            player1 = new Player(1, temp, Content.Load<Texture2D>("sprites\\smiley1"), p1_w, new Vector2(viewport.Width*7/15,viewport.Height/2), new Statistics(false));
+            player2 = new Player(2, temp, Content.Load<Texture2D>("sprites\\smiley1"), p2_w, new Vector2(viewport.Width*8/15, viewport.Height/2), new Statistics(false));
 
 
             // The maximum amount of scores to display on screen is the maximum number of dead enemies
@@ -544,7 +546,23 @@ namespace Bugzzz
                     {
                         //p_alive = false;
                         enemy.alive = false;
-                        player1.health -= 25;
+                        if (player1.health > 0)
+                        {
+                            player1.health -= 25;
+                        }
+                        else
+                        {
+                            if (player1.livesLeft > 0)
+                            {
+                                player1.livesLeft--;
+                                player1.p_stat.playerDied();
+                                player1.health = 100;
+                            }
+                            else
+                            {
+                                // Game over
+                            }
+                        }
                         enemies_killed++;
                         
                         break;
@@ -555,7 +573,23 @@ namespace Bugzzz
                     {
                         //p_alive = false;
                         enemy.alive = false;
-                        player2.health -= 25;
+                        if (player2.health > 0)
+                        {
+                            player2.health -= 25;
+                        }
+                        else
+                        {
+                            if (player2.livesLeft > 0)
+                            {
+                                player2.livesLeft--;
+                                player2.p_stat.playerDied();
+                                player2.health = 100;
+                            }
+                            else
+                            {
+                                // Game over
+                            }
+                        }
                         enemies_killed++;
                         
                         break;
@@ -642,6 +676,7 @@ namespace Bugzzz
                     player2.deploy = true;
 
                 float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+                gt = gameTime;
                 elapsedTime += elapsed;
                 elapsedTime2 += elapsed;
                 t_elapsedTime += elapsed;
@@ -681,6 +716,11 @@ namespace Bugzzz
                 }
 
             }
+
+            // Update the statistical time used to calculate player statistics
+            player1.p_stat.updateStatisticsTime(gameTime);
+            player2.p_stat.updateStatisticsTime(gameTime);
+
             base.Update(gameTime);
         }
 
