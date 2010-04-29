@@ -81,9 +81,8 @@ namespace Bugzzz
         {
             spreeLength = 0;
             lifeTimes.Add(currentTime - startTime);
-            Console.WriteLine("Player Died: " + (currentTime - startTime));
+            //Console.WriteLine("Player Died: " + (currentTime - startTime));
             startTime = currentTime;
-            averageLifeTime();
         }
 
         public void updateStatisticsTime(GameTime time)
@@ -96,7 +95,7 @@ namespace Bugzzz
         #region Generated Statistics
         
         // Returns the average lifetime in seconds
-        public double averageLifeTime()
+        public float averageLifeTime()
         {
             int count = 0;
             TimeSpan totalLifeTime = new TimeSpan(0);
@@ -104,8 +103,10 @@ namespace Bugzzz
                 totalLifeTime+=i;
                 count++;
             }
-            Console.WriteLine("Average life of player:" + (totalLifeTime.TotalSeconds / count));
-            return totalLifeTime.TotalSeconds / count;
+            //Console.WriteLine("Average life of player:" + (totalLifeTime.TotalSeconds / count));
+            double avgMillis = totalLifeTime.TotalMilliseconds / count;
+            float avgSec = (float)avgMillis / 1000;
+            return avgSec;
         }
         #endregion
     }

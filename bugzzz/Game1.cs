@@ -182,7 +182,7 @@ namespace Bugzzz
             pickups[1].weaponIndex = 2;
             pickups[1].position = new Vector2(600.0f, 300.0f);
 
-            level = 0;
+            level = 1;
             viewport = GraphicsDevice.Viewport;
             viewportRect = new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
 
@@ -1006,7 +1006,7 @@ namespace Bugzzz
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            if (enemies_level[level] == enemies_killed && !act_fade)
+            if (enemies_level[level-1] == enemies_killed && !act_fade)
             {
                 ls = new LevelScore(this.level, player1, player2, true, 200, levelfont, GraphicsDevice, this.healthBar);
                 act_fade = true;
@@ -1027,7 +1027,7 @@ namespace Bugzzz
                     {
                         current_fade += fade_increment;
                     }
-                    Console.Out.WriteLine(current_fade);
+                    //Console.Out.WriteLine(current_fade);
                     if (current_fade == 22)
                     {
                         scoreScreen = true;
