@@ -24,6 +24,7 @@ namespace Bugzzz
         SpriteFont levelfont;
         public int tempscore;
         public bool player2_drawScore;
+        public bool player1_drawScore;
 
         public LevelScore(int level, Player player1, Player player2, bool alive, int scrolltime)
         {
@@ -33,13 +34,14 @@ namespace Bugzzz
             this.alive = alive;
             this.scrolltime = scrolltime;
             this.tempscore = 0;
-            player2_drawScore = false;
+            this.player1_drawScore = true;
+            this.player2_drawScore = false;
         }
 
         public void Draw(SpriteBatch s,Texture2D h, Viewport viewport, SpriteFont levelfont)
         {
             //s.Draw(h, new Rectangle(viewport.Width / 4, viewport.Height / 4, viewport.Width / 2, viewport.Height / 2), new Color(Color.DarkBlue, (byte)(255)));
-                if(tempscore<player1.score){
+                if(player1_drawScore && tempscore<player1.score){
                     s.DrawString(levelfont, "Player 1 Score: "+tempscore,new Vector2((viewport.Width/4)+10,(viewport.Height/4)+10),new Color(Color.Yellow,(byte)(200)));
                     tempscore += 8;
                 }
@@ -47,6 +49,7 @@ namespace Bugzzz
                 {
                     s.DrawString(levelfont, "Player 1 Score: " + player1.score, new Vector2((viewport.Width / 4) + 10, (viewport.Height / 4) + 10), new Color(Color.Yellow, (byte)(200)));
                     player2_drawScore = true;
+                    player1_drawScore = false;
                     tempscore = 0;
                }
                 if (player2_drawScore && tempscore < player2.score)
