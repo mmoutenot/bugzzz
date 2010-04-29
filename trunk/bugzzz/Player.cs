@@ -30,13 +30,12 @@ namespace Bugzzz
         public Weapons weapon;
         public int activeWeapon;
 
-        public Player(int id, Texture2D spriteT, Texture2D spriteB, Weapons w)
+        public Player(int id, Texture2D spriteT, Texture2D spriteB, Weapons w, Vector2 pos)
         {
             deploy = false;
             p_id = id; 
             p_fire = false;
-            p_position.X = 200;
-            p_position.Y = 200;
+            p_position = pos;
             p_velocity = Vector2.Zero;
             p_spriteT = spriteT;
             p_spriteB = spriteB;
