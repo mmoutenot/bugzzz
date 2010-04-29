@@ -74,7 +74,7 @@ namespace Bugzzz
                 position = value;
             }
         }
-        private int Player
+        public int Player
         {
             get
             {

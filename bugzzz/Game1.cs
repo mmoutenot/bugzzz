@@ -1123,19 +1123,19 @@ namespace Bugzzz
                 //Output Scores
                 foreach (Score s in score)
                 {
-                    if (s.alive)
+                    if (s.Alive)
                     {
-                        if (s.time > 0)
+                        if (s.Time > 0)
                         {
-                            if (s.player == 1)
-                                spriteBatch.DrawString(scorefont, s.pointVal.ToString(), s.position, new Color(Color.Red, (byte)(s.time * 2.5)));
+                            if (s.Player == 1)
+                                spriteBatch.DrawString(scorefont, s.PointVal.ToString(), s.Position, new Color(Color.Red, (byte)(s.Time * 2.5)));
                             else
-                                spriteBatch.DrawString(scorefont, s.pointVal.ToString(), s.position, new Color(Color.Green, (byte)(s.time * 2.5)));
-                            s.time--;
+                                spriteBatch.DrawString(scorefont, s.PointVal.ToString(), s.Position, new Color(Color.Green, (byte)(s.Time * 2.5)));
+                            s.Time--;
                         }
                         else
                         {
-                            s.alive = false;
+                            s.Alive = false;
                             deadScores.Add(s);
                         }
                     }
