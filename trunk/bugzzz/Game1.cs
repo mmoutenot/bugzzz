@@ -536,8 +536,10 @@ namespace Bugzzz
                 if (enemy.alive)
                 {
                     //checks for collision with the player
+
                     Rectangle playerRect = new Rectangle((int)player1.p_position.X - player1.p_spriteB.Width / 2, (int)player1.p_position.Y - player1.p_spriteB.Height/2, player1.p_spriteB.Width, player1.p_spriteB.Height);
                     Rectangle enemyRect = new Rectangle((int)enemy.position.X,(int)enemy.position.Y,enemy.sprite.Width,enemy.sprite.Height);
+                    
                     if (playerRect.Intersects(enemyRect))
                     {
                         //p_alive = false;
@@ -558,32 +560,31 @@ namespace Bugzzz
                         
                         break;
                     }
-                    if (!viewportRect.Contains(new Point((int)enemy.position.X, (int)enemy.position.Y)))
-                    {
-                        enemy.alive = false;
-                    }
                 }
                 else
                 {
-                   // Console.WriteLine("made an enemy");
                     enemy.alive = true;
-                    int side = rand.Next(4);
-                    if (side == 0)
+
+                    int rand1 = rand.Next(100);
+                    int rand2 = rand.Next(100);
+                    if (rand1 < 33)
                     {
-                        enemy.position = new Vector2(viewportRect.Left, MathHelper.Lerp(0.0f, (float)viewportRect.Height, (float)rand.NextDouble()));
+                        enemy.position.X = -enemy.sprite.Width - 5;
+                        enemy.position.Y = rand.Next(viewport.Height);
                     }
-                    else if (side == 1)
+                    else if (rand1 < 66)
                     {
-                        enemy.position = new Vector2(viewportRect.Top, MathHelper.Lerp(0.0f, (float)viewportRect.Width, (float)rand.NextDouble()));
+                        enemy.position.X = rand.Next(viewport.Width);
+                        if (rand2 < 50)
+                            enemy.position.Y = -enemy.sprite.Height + 5;
+                        else
+                            enemy.position.Y = viewport.Height + 4;
                     }
-                    else if (side == 2)
-                    {
-                        enemy.position = new Vector2(viewportRect.Right, MathHelper.Lerp(0.0f, (float)viewportRect.Height, (float)rand.NextDouble()));
+                    else{
+                        enemy.position.X = viewport.Width + 4;
+                        enemy.position.Y = rand.Next(viewport.Height);
                     }
-                    else
-                    {
-                        enemy.position = new Vector2(viewportRect.Bottom, MathHelper.Lerp(0.0f, (float)viewportRect.Width, (float)rand.NextDouble()));
-                    }
+
                 }
                 //makes enemies move towards the player
                 Vector2 target;
@@ -596,6 +597,10 @@ namespace Bugzzz
                 enemy.velocity = target - enemy.position;
                 enemy.velocity.Normalize();
                 enemy.position += enemy.velocity * 2;
+                float angle = (float)(-1 * (Math.PI/2 + Math.Atan2(enemy.velocity.X, enemy.velocity.Y)));
+
+                if (angle != enemy.rotation)
+                    enemy.rotation = MathFns.Clerp(enemy.rotation, angle, angle_rot);
             }
         }
 
@@ -1127,7 +1132,7 @@ namespace Bugzzz
                 {
                     if (enemy.alive)
                     {
-                        spriteBatch.Draw(enemy.sprite, enemy.position, Color.White);
+                        spriteBatch.Draw(enemy.sprite, new Rectangle((int)enemy.position.X, (int)enemy.position.Y, enemy.sprite.Width, enemy.sprite.Height), null, Color.White, (float)(enemy.rotation+Math.PI/2), new Vector2(enemy.sprite.Width/2, enemy.sprite.Height/2),SpriteEffects.None, 0);
                     }
                 }
                 ArrayList deadScores = new ArrayList(); //Used for determing what scores need to be deleted. 
