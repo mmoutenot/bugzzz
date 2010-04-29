@@ -292,7 +292,7 @@ namespace Bugzzz
             //firing command
             if (player2.activeWeapon == 0)
             {
-                foreach (GameObject bullet in bullets)
+                foreach (GameObject bullet in bullets2)
                 {
                     if (!bullet.alive)
                     {
@@ -407,7 +407,7 @@ namespace Bugzzz
                         {
                             bullet.alive = false;
                             enemy.alive = false;
-                            score.Add(new Score(20, SCORE_TIME, enemy.position, true, 1));
+                            score.Add(new ScoreDisplay(20, SCORE_TIME, enemy.position, true, 1));
                             player1.score += 20;
                             enemies_killed++;
                             break;
@@ -445,7 +445,7 @@ namespace Bugzzz
                         {
                             bullet.alive = false;
                             enemy.alive = false;
-                            score.Add(new Score(20, SCORE_TIME, enemy.position, true, 2));
+                            score.Add(new ScoreDisplay(20, SCORE_TIME, enemy.position, true, 2));
                             player2.score += 20;
                             break;
                         }
@@ -482,7 +482,7 @@ namespace Bugzzz
                         {
                             bullet.alive = false;
                             enemy.alive = false;
-                            score.Add(new Score(10, SCORE_TIME, enemy.position, true, 1));
+                            score.Add(new ScoreDisplay(10, SCORE_TIME, enemy.position, true, 1));
                             player1.score += 10;
                             break;
                         }
@@ -519,7 +519,7 @@ namespace Bugzzz
                         {
                             bullet.alive = false;
                             enemy.alive = false;
-                            score.Add(new Score(10, SCORE_TIME, enemy.position, true, 2));
+                            score.Add(new ScoreDisplay(10, SCORE_TIME, enemy.position, true, 2));
                             player2.score += 10;
                             break;
                         }
@@ -1134,7 +1134,7 @@ namespace Bugzzz
                 }
                 ArrayList deadScores = new ArrayList(); //Used for determing what scores need to be deleted. 
                 //Output Scores
-                foreach (Score s in score)
+                foreach (ScoreDisplay s in score)
                 {
                     if (s.Alive)
                     {
@@ -1154,7 +1154,7 @@ namespace Bugzzz
                     }
                 }
                 //Remove Scores
-                foreach (Score s in deadScores)
+                foreach (ScoreDisplay s in deadScores)
                 {
                     score.Remove(s);
                 }
