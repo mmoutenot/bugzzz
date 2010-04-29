@@ -7,21 +7,16 @@ namespace Bugzzz
 {
     class Statistics
     {
+        #region Fields startTime, currentTime, started, spreeLength, lifeTimes
         private int startTime;
         private int currentTime;
         private bool started;
-        private int spreeLength;
-        private ArrayList lifeTimes;
+        private int spreeLength;            //Number of enemies killed in one life?
+        private ArrayList lifeTimes;        //Length of each life
+        private int wepSwitch;              //Number of times player switched their weapon
+        #endregion
 
-        public Statistics(int startTime,bool started)
-        {
-            this.startTime = startTime;
-            this.started = started;
-            this.spreeLength = 0;
-            this.lifeTimes = new ArrayList();
-            this.currentTime = startTime;
-        }
-
+        #region Accessors StartTime, Started, SpreeLength, WepSwitch
         public int StartTime
         {
             get { return startTime; }
@@ -40,10 +35,35 @@ namespace Bugzzz
             set { spreeLength = value; }
         }
 
+        //Setter for wepSwitch doesn't actually set, just increments value
+        public int WepSwitch
+        {
+            get
+            {
+                return wepSwitch;
+            }
+            set
+            {
+                wepSwitch = wepSwitch + 1;
+            }
+        }
+        #endregion
+
+        #region Main Methods Constructor, updateStatistics
+        public Statistics(int startTime,bool started)
+        {
+            this.startTime = startTime;
+            this.started = started;
+            this.spreeLength = 0;
+            this.lifeTimes = new ArrayList();
+            this.currentTime = startTime;
+        }
+
         public void updateStatistics()
         {
            // should be set to the current game time 
            // currentTime = 0;
         }
+        #endregion
     }
 }
