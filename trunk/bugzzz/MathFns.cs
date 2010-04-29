@@ -148,15 +148,15 @@ namespace Bugzzz
          RotateVector2DClockwise(C, rr2.ang);
 
          // calculate vertices of (moved and axis-aligned := 'ma') rr2
-         TR = C;
-         BL = TR;
+         TR = C + C/ 2;
+         BL = C - C / 2;
          SubVectors2D(BL, rr2.S);
          AddVectors2D(TR, rr2.S);
 
          // calculate vertices of (rotated := 'r') rr1
-         A.X = -rr1.S.Y*sina; 
-         B.X = A.X; t = rr1.S.X*cosa; A.X += t; B.X -= t;
-         A.Y =  rr1.S.Y*cosa; B.Y = A.Y; t = rr1.S.X*sina; A.Y += t; B.Y -= t;
+         A.X = -(rr1.S.Y/2)*sina; 
+         B.X = A.X; t = (rr1.S.X/2)*cosa; A.X += t; B.X -= t;
+         A.Y =  (rr1.S.Y/2)*cosa; B.Y = A.Y; t = (rr1.S.X/2)*sina; A.Y += t; B.Y -= t;
 
          t = sina*cosa;
 
