@@ -966,8 +966,6 @@ namespace Bugzzz
                 ls = new LevelScore(this.level, player1, player2, true, 200, levelfont, GraphicsDevice, this.healthBar);
                 act_fade = true;
                 enemies_killed = 0;
-                for (int i = 0; i < maxEnemies; i++)
-                    enemies[i] = null;
             }
 
             if (act_fade)
