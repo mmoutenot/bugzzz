@@ -951,7 +951,7 @@ namespace Bugzzz
         {
             if (enemies_level[level] == enemies_killed && !act_fade)
             {
-                ls = new LevelScore(this.level, player1, player2, true, 200);
+                ls = new LevelScore(this.level, player1, player2, true, 200, levelfont, GraphicsDevice);
                 act_fade = true;
             }
 
@@ -983,9 +983,7 @@ namespace Bugzzz
                 if (scoreScreen)
                 {
                     //TODO: Add Score Screen Here
-                    spriteBatch.Draw(healthBar, new Rectangle(this.viewport.Width/4, this.viewport.Height/4, this.viewport.Width/2, this.viewport.Height/2), new Color(Color.DarkBlue, (byte)(32)));
-                    
-                    ls.Draw(spriteBatch,healthBar,this.viewport);
+                    ls.Draw(healthBar,this.viewport);
                     if (!GamePad.GetState(PlayerIndex.One).IsConnected)
                     {
                         if (Keyboard.GetState().IsKeyDown(Keys.Z))

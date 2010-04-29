@@ -22,11 +22,12 @@ namespace Bugzzz
         public bool alive;
         public int scrolltime;
         SpriteFont levelfont;
+        SpriteBatch s;
         public int tempscore;
         public bool player2_drawScore;
         public bool player1_drawScore;
 
-        public LevelScore(int level, Player player1, Player player2, bool alive, int scrolltime)
+        public LevelScore(int level, Player player1, Player player2, bool alive, int scrolltime, SpriteFont levelfont, GraphicsDevice gDevice)
         {
             this.level = level;
             this.player1 = player1;
@@ -34,33 +35,34 @@ namespace Bugzzz
             this.alive = alive;
             this.scrolltime = scrolltime;
             this.tempscore = 0;
+            this.levelfont = levelfont;
             this.player1_drawScore = true;
             this.player2_drawScore = false;
+            this.s = new SpriteBatch(gDevice);
         }
 
-        public void Draw(SpriteBatch s,Texture2D h, Viewport viewport)
+        public void Draw(Texture2D h, Viewport viewport)
         {
-            //s.Draw(h, new Rectangle(viewport.Width / 4, viewport.Height / 4, viewport.Width / 2, viewport.Height / 2), new Color(Color.DarkBlue, (byte)(255)));
-                if(player1_drawScore && tempscore<player1.score){
-                    s.DrawString(levelfont, "Player 1 Score: " + tempscore,new Vector2((viewport.Width/4)+10,(viewport.Height/4)+10),new Color(Color.Yellow,(byte)(200)));
-                    tempscore += 8;
-                }
-                else
-                {
-                    s.DrawString(levelfont, "Player 1 Score: " + player1.score, new Vector2((viewport.Width / 4) + 10, (viewport.Height / 4) + 10), new Color(Color.Yellow, (byte)(200)));
-                    player2_drawScore = true;
-                    player1_drawScore = false;
-                    tempscore = 0;
-               }
-                if (player2_drawScore && tempscore < player2.score)
-                {
-                    s.DrawString(levelfont, "Player 2 Score: " + tempscore, new Vector2((viewport.Width / 4) + 10, (viewport.Height / 4) + 50), new Color(Color.Yellow, (byte)(200)));
-                    tempscore += 8;
-                }
-                else
-                {
-                    s.DrawString(levelfont, "Player 2 Score: " + player2.score, new Vector2((viewport.Width / 4) + 10, (viewport.Height / 4) + 50), new Color(Color.Yellow, (byte)(200)));
-                }
+            s.Begin();
+            int s1, s2;
+            if(tempscore < player1.score || tempscore < player2.score){
+                if (tempscore <= player1.score)
+                    s1 = tempscore;
+                else 
+                    s1 = player1.score;
+                if (tempscore <= player2.score)
+                    s2 = tempscore;
+                else 
+                    s2 = player2.score;
+
+
+                s.Draw(healthBar, new Rectangle(this.viewport.Width / 4, this.viewport.Height / 4, this.viewport.Width / 2, this.viewport.Height / 2), new Color(Color.DarkBlue, (byte)(32)));
+                    
+                s.DrawString(levelfont, "Player 1 Score: " + s1, new Vector2((viewport.Width/4)+10,(viewport.Height/4)+10),new Color(Color.Yellow,(byte)(200)));
+                s.DrawString(levelfont, "Player 2 Score: " + s2, new Vector2((viewport.Width / 4) + 10, (viewport.Height / 4) + 50), new Color(Color.Yellow, (byte)(200)));
+                tempscore += 8;
+            }
+            s.End();
         }
     }
 }
