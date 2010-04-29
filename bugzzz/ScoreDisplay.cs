@@ -16,20 +16,76 @@ namespace Bugzzz
 {
     class Score
     {
+        #region Fields
         // How much the score entity is worth in points
-        public int pointVal;
-        
+        private int pointVal;
         // How long the score should remain on screen
-        public int time;
-
+        private int time;
         // Should the score be drawn on screen
-        public bool alive;
-
+        private bool alive;
         // Position of Score to be drawn
-        public Vector2 position;
-
+        private Vector2 position;
         // Player Score done by
-        public int player;
+        private int player;
+        #endregion
+
+        #region Accessors
+        public int PointVal
+        {
+            get
+            {
+                return pointVal;
+            }
+            set
+            {
+                pointVal = value;
+            }
+        }
+        public int Time
+        {
+            get
+            {
+                return time;
+            }
+            set
+            {
+                time = value;
+            }
+        }
+        public bool Alive
+        {
+            get
+            {
+                return alive;
+            }
+            set
+            {
+                alive = value;
+            }
+        }
+        public Vector2 Position
+        {
+            get
+            {
+                return position;
+            }
+            set 
+            {
+                position = value;
+            }
+        }
+        private int Player
+        {
+            get
+            {
+                return player;
+            }
+            set
+            {
+                player = value;
+            }
+        }
+        #endregion
 
         public Score(int pointVal, int time, Vector2 position, bool alive, int player)
         {

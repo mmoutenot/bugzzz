@@ -38,11 +38,11 @@ namespace Bugzzz
             this.player2_drawScore = false;
         }
 
-        public void Draw(SpriteBatch s,Texture2D h, Viewport viewport, SpriteFont levelfont)
+        public void Draw(SpriteBatch s,Texture2D h, Viewport viewport)
         {
             //s.Draw(h, new Rectangle(viewport.Width / 4, viewport.Height / 4, viewport.Width / 2, viewport.Height / 2), new Color(Color.DarkBlue, (byte)(255)));
                 if(player1_drawScore && tempscore<player1.score){
-                    s.DrawString(levelfont, "Player 1 Score: "+tempscore,new Vector2((viewport.Width/4)+10,(viewport.Height/4)+10),new Color(Color.Yellow,(byte)(200)));
+                    s.DrawString(levelfont, "Player 1 Score: " + tempscore,new Vector2((viewport.Width/4)+10,(viewport.Height/4)+10),new Color(Color.Yellow,(byte)(200)));
                     tempscore += 8;
                 }
                 else

@@ -985,7 +985,7 @@ namespace Bugzzz
                     //TODO: Add Score Screen Here
                     spriteBatch.Draw(healthBar, new Rectangle(this.viewport.Width/4, this.viewport.Height/4, this.viewport.Width/2, this.viewport.Height/2), new Color(Color.DarkBlue, (byte)(32)));
                     
-                    ls.Draw(spriteBatch,healthBar,this.viewport,this.levelfont);
+                    ls.Draw(spriteBatch,healthBar,this.viewport);
                     if (!GamePad.GetState(PlayerIndex.One).IsConnected)
                     {
                         if (Keyboard.GetState().IsKeyDown(Keys.Z))
@@ -1030,7 +1030,7 @@ namespace Bugzzz
                     spriteBatch.Draw(healthBar, new Rectangle(0, 0, this.viewport.Width, this.viewport.Height), new Color(Color.Black, (byte)(current_fade)));
                     if (elapsed >= fade_length/10)
                         current_fade -= fade_increment;
-                    Console.Out.WriteLine(current_fade);
+
                     if (current_fade <= 0)
                     {
                         level++; //TODO: Will crash after 5 levels.
