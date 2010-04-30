@@ -84,6 +84,7 @@ namespace Bugzzz
 
         GameTime gt;
 
+        Texture2D[] level_backgrounds;
 
         public Game1()
         {
@@ -206,6 +207,8 @@ namespace Bugzzz
             pickups[1].position = new Vector2(600.0f, 300.0f);
             //Initializes all of the bullets, enemies, etc.
 
+            level_backgrounds = new Texture2D[5];
+            level_backgrounds[0] = Content.Load<Texture2D>("sprites\\level1_background");
 
             for (int i = 0; i < maxBullets; i++)
             {
@@ -1188,7 +1191,7 @@ namespace Bugzzz
                 spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
 
                 //
-           
+                spriteBatch.Draw(level_backgrounds[0], new Rectangle(0, 0, viewport.Width, viewport.Height), Color.White);
                 spriteBatch.Draw(healthBar, new Rectangle(this.viewport.Width / 15, this.viewport.Height / 15, (int)this.viewport.Width * player1.health / 600, this.viewport.Height / 30), Color.Red);
                 spriteBatch.Draw(healthBar, new Rectangle(this.viewport.Width * 12 / 16, this.viewport.Height / 15, (int)this.viewport.Width * player2.health / 600, this.viewport.Height / 30), Color.Red);
                 spriteBatch.DrawString(scorefont, "Player 1 Score: " + player1.score.ToString(), new Vector2(this.viewport.Width / 15, this.viewport.Height / 60), new Color(Color.White, (byte)130));
