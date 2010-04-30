@@ -23,6 +23,8 @@ namespace Bugzzz
         public Vector2 velocity = Vector2.Zero;
         public Vector2 position = Vector2.Zero;
 
+        public int type;
+
         public bool fire;
         public bool move1;
         public bool move2;
@@ -40,7 +42,7 @@ namespace Bugzzz
         public Statistics stat;
         public int livesLeft;
 
-        public Player(int i, Texture2D t, Texture2D b, Weapons w, Vector2 pos, Statistics s)
+        public Player(int i, Texture2D t, Texture2D b, Weapons w, Vector2 pos, int ty, Statistics s)
         {
             energy = 100;
             deploy = false;
@@ -62,6 +64,8 @@ namespace Bugzzz
             activeWeapon = 0;
             stat = s;
             livesLeft = 5;
+
+            type = ty;
         }
     }
 }
