@@ -3,6 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.GamerServices;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
+using Microsoft.Xna.Framework.Net;
+using Microsoft.Xna.Framework.Storage;
 
 namespace Bugzzz
 {
@@ -64,7 +72,7 @@ namespace Bugzzz
 
             //determine which direction to rotate
             if ((end - start) < -half)
-            {
+           { 
                 diff = ((max_angle - start) + end) * value;
                 retval = start + diff;
             }
@@ -84,130 +92,228 @@ namespace Bugzzz
             return (float)Math.Sqrt(Math.Pow(A.X-B.X,2) + Math.Pow(A.Y-B.Y,2));
         }
 
-        /// <summary>
-        /// Calculates if a collision occurs between two rotated rectangles
-        /// </summary>
-        /// <param name="A">Rectangle 1</param>
-        /// <param name="a">Rectangle 1's Rotation</param>
-        /// <param name="B">Rectangle 2</param>
-        /// <param name="b">Rectangle 2's Rotation</param>
-        public static bool rotRectCollision(Rectangle A, float a, Rectangle B, float b)
+        public static Vector2 newPoint(Vector2 center, Vector2 original, float angle)
         {
-            //Create new rect structs for code
-            rect2 A1 = new rect2();
-            A1.ang = a;
-            A1.C = new Vector2(A.X+A.Width/2,A.Y+A.Height/2);
-            A1.S = new Vector2(A.Width/2, A.Height/2);
-            rect2 B1 = new rect2();
-            B1.ang = b;
-            B1.C = new Vector2(B.X+B.Width/2,B.Y+B.Height/2);
-            B1.S = new Vector2(B.Width/2, A.Height/2);
+            float x = (float)(center.X - (original.X - center.X) * Math.Cos(angle) + (original.Y - center.Y) * Math.Sin(angle));
+            float y = (float)(center.Y + (original.X - center.X) * Math.Sin(angle) + (original.Y - center.Y) * Math.Cos(angle));
+            Vector2 ret = new Vector2(x, y);
+            return ret;
 
-            return RotRectsCollision(A1,B1);
-        }
-        
-        private static void AddVectors2D(Vector2 v1, Vector2 v2)
-        { 
-            v1.X += v2.X; 
-            v1.Y += v2.Y; 
         }
 
-        private static void SubVectors2D(Vector2 v1, Vector2 v2)
+        public static bool broadPhaseCollision(Rectangle a, float angleA, Rectangle b, float angleB)
         {
-            v1.X -= v2.X; 
-            v1.Y -= v2.Y; 
+            Vector2 CenterA = new Vector2(a.Center.X, a.Center.Y);
+            Vector2 CenterB = new Vector2(b.X, b.Y);
+
+            Vector2 UL1 = new Vector2(a.Left, a.Top);
+            UL1 = newPoint(CenterA, UL1, angleA);
+            //s.Draw(l, UL1, Color.White);
+            Vector2 BL1 = new Vector2(a.Left,a.Bottom);
+            BL1 = newPoint(CenterA, BL1, angleA);
+            Vector2 UR1 = new Vector2(a.Right,a.Top);
+            UR1 = newPoint(CenterA, UR1, angleA);
+            Vector2 BR1 = new Vector2(a.Right,a.Bottom);
+            BR1 = newPoint(CenterA, BR1, angleA);
+
+            //calculate new corners for rect b
+            Vector2 UL2 = new Vector2(b.Left-b.Width/2, b.Top-b.Height/2);
+            UL2 = newPoint(CenterB, UL2, angleB);
+            Vector2 BL2 = new Vector2(b.Left-b.Width/2, b.Top+b.Height/2);
+            BL2 = newPoint(CenterB, BL2, angleB);
+            Vector2 UR2 = new Vector2(b.X+b.Width/2, b.Y-b.Height/2);
+            UR2 = newPoint(CenterB, UR2, angleB);
+            Vector2 BR2 = new Vector2(b.X+b.Width/2, b.Y+b.Height/2);
+            BR2 = newPoint(CenterB, BR2, angleB);
+
+            //find max and mins for Rect 1
+            #region
+            float maxX1 = UL1.X, maxY1 = UL1.Y, minX1 = UL1.X, minY1 = UL1.Y;
+            if (BL1.X > maxX1)
+                maxX1 = BL1.X;
+            if (BL1.X < minX1)
+                minX1 = BL1.X;
+            if (BL1.Y > maxY1)
+                maxY1 = BL1.Y;
+            if (BL1.Y < minY1)
+                minY1 = BL1.Y;
+
+            if (UR1.X > maxX1)
+                maxX1 = UR1.X;
+            if (UR1.X < minX1)
+                minX1 = UR1.X;
+            if (UR1.Y > maxY1)
+                maxY1 = UR1.Y;
+            if (UR1.Y < minY1)
+                minY1 = UR1.Y;
+
+            if (BR1.X > maxX1)
+                maxX1 = BR1.X;
+            if (BR1.X < minX1)
+                minX1 = BR1.X;
+            if (BR1.Y > maxY1)
+                maxY1 = BR1.Y;
+            if (BR1.Y < minY1)
+                minY1 = BR1.Y;
+            #endregion
+            //find max and minx for Rect 2
+            #region
+            float maxX2 = UL2.X, maxY2 = UL2.Y, minX2 = UL2.X, minY2 = UL2.Y;
+            if (BL2.X > maxX2)
+                maxX2 = BL2.X;
+            if (BL2.X < minX2)
+                minX2 = BL2.X;
+            if (BL2.Y > maxY2)
+                maxY2 = BL2.Y;
+            if (BL2.Y < minY2)
+                minY2 = BL2.Y;
+
+            if (UR2.X > maxX2)
+                maxX2 = UR2.X;
+            if (UR2.X < minX2)
+                minX2 = UR2.X;
+            if (UR2.Y > maxY2)
+                maxY2 = UR2.Y;
+            if (UR2.Y < minY2)
+                minY2 = UR2.Y;
+
+            if (BR2.X > maxX2)
+                maxX2 = BR2.X;
+            if (BR2.X < minX2)
+                minX2 = BR2.X;
+            if (BR2.Y > maxY2)
+                maxY2 = BR2.Y;
+            if (BR2.Y < minY2)
+                minY2 = BR2.Y;
+            #endregion
+
+            //Console.Out.WriteLine(minX1 + " " + maxX1);
+            //Console.Out.WriteLine(b.X);
+            Rectangle r1 = new Rectangle((int)minX1, (int)minY1, (int)(maxX1 - minX1), (int)(maxY1- minY1));
+            Rectangle r2 = new Rectangle((int)minX2, (int)minY2, (int)(maxX2 - minX2), (int)(maxY2- minY2));
+            return r1.Intersects(r2);
+
+
+
         }
-        
-        public static void RotateVector2DClockwise(Vector2 v, float ang)
+        public static bool narrowPhaseCollision(Rectangle a, float angleA, Rectangle b, float angleB)
         {
-            float t;
-            t = v.X;
-            v.X = (float)(t*Math.Cos(ang) + v.Y*Math.Sin(ang));
-            v.Y = (float)(-t*Math.Sin(ang) + v.Y*Math.Cos(ang));
+            Vector2 CenterA = new Vector2(a.Center.X, a.Center.Y);
+            Vector2 CenterB = new Vector2(b.X, b.Y);
+
+            Vector2 UL1 = new Vector2(a.Left, a.Top);
+            UL1 = newPoint(CenterA, UL1, angleA);
+            //s.Draw(l, UL1, Color.White);
+            Vector2 BL1 = new Vector2(a.Left, a.Bottom);
+            BL1 = newPoint(CenterA, BL1, angleA);
+            Vector2 UR1 = new Vector2(a.Right, a.Top);
+            UR1 = newPoint(CenterA, UR1, angleA);
+            Vector2 BR1 = new Vector2(a.Right, a.Bottom);
+            BR1 = newPoint(CenterA, BR1, angleA);
+
+            //calculate new corners for rect b
+            Vector2 UL2 = new Vector2(b.Left - b.Width / 2, b.Top - b.Height / 2);
+            UL2 = newPoint(CenterB, UL2, angleB);
+            Vector2 BL2 = new Vector2(b.Left - b.Width / 2, b.Top + b.Height / 2);
+            BL2 = newPoint(CenterB, BL2, angleB);
+            Vector2 UR2 = new Vector2(b.X + b.Width / 2, b.Y - b.Height / 2);
+            UR2 = newPoint(CenterB, UR2, angleB);
+            Vector2 BR2 = new Vector2(b.X + b.Width / 2, b.Y + b.Height / 2);
+            BR2 = newPoint(CenterB, BR2, angleB);
+
+            Vector2 Axis = UR1 - UL1;
+            if (!nPCHelpers(UR1, UR2, UL1, UL2, BL1, BL2, BR1, BR2, Axis))
+                return false;
+
+            Axis = UR1 - BR1;
+            if (!nPCHelpers(UR1, UR2, UL1, UL2, BL1, BL2, BR1, BR2, Axis))
+                return false;
+
+            Axis = UL2 - BL2;
+            if (!nPCHelpers(UR1, UR2, UL1, UL2, BL1, BL2, BR1, BR2, Axis))
+                return false;
+
+            Axis = UL2 - UR2;
+            if (!nPCHelpers(UR1, UR2, UL1, UL2, BL1, BL2, BR1, BR2, Axis))
+                return false;
+
+            return true;
         }
-        
-        public static bool RotRectsCollision(rect2 rr1, rect2 rr2)
+        public static bool nPCHelpers(Vector2 UR1, Vector2 UR2, Vector2 UL1, Vector2 UL2, Vector2 BL1, Vector2 BL2,Vector2 BR1,Vector2 BR2,Vector2 Axis)
         {
-         Vector2 A, B,   // vertices of the rotated rr2
-	           C,      // center of rr2
-	           BL, TR; // vertices of rr2 (bottom-left, top-right)
 
-         float ang = rr1.ang - rr2.ang, // orientation of rotated rr1
-               cosa = (float)(Math.Cos(ang)),           // precalculated trigonometic -
-               sina = (float)(Math.Sin(ang));           // - values for repeated use
+            //calculate vector projections on axis
+            Vector2 pUR1 = project(Axis, UR1);
+            Vector2 pUR2 = project(Axis, UR2);
+            Vector2 pUL1 = project(Axis, UL1);
+            Vector2 pUL2 = project(Axis, UL2);
+            Vector2 pBL1 = project(Axis, BL1);
+            Vector2 pBL2 = project(Axis, BL2);
+            Vector2 pBR1 = project(Axis, BR1);
+            Vector2 pBR2 = project(Axis, BR2);
 
-         float t, x, a;      // temporary variables for various uses
-         float dx;           // deltaX for linear equations
-         float ext1, ext2;   // min/max vertical values
+            //calculate dot products (scalar values)
+            float urv1, urv2, ulv1, ulv2, blv1, blv2, brv1, brv2;
+            urv1 = DP(Axis, pUR1);
+            urv2 = DP(Axis, pUR2);
+            ulv1 = DP(Axis, pUL1);
+            ulv2 = DP(Axis, pUL2);
+            brv1 = DP(Axis, pBR1);
+            brv2 = DP(Axis, pBR2);
+            blv1 = DP(Axis, pBL1);
+            blv2 = DP(Axis, pBL2);
 
-         // move rr2 to make rr1 cannonic
-         C = rr2.C;
-         SubVectors2D(C, rr1.C);
+            //Calculate min values on axis
+            float maxA=urv1, minA=urv1, maxB=urv2, minB=urv2;
+            if (brv1 > maxA)
+                maxA = brv1;
+            else if (brv1 < minA)
+                minA = brv1;
+            if (blv1 > maxA)
+                maxA = blv1;
+            else if (blv1 < minA)
+                minA = blv1;
+            if (ulv1 > maxA)
+                maxA = ulv1;
+            else if (ulv1 < minA)
+                minA = ulv1;
 
-         // rotate rr2 clockwise by rr2.ang to make rr2 axis-aligned
-         RotateVector2DClockwise(C, rr2.ang);
+            if (brv2 > maxA)
+                maxA = brv2;
+            else if (brv2 < minA)
+                minA = brv2;
+            if (blv2 > maxA)
+                maxA = blv2;
+            else if (blv2 < minA)
+                minA = blv2;
+            if (ulv2 > maxA)
+                maxA = ulv2;
+            else if (ulv2 < minA)
+                minA = ulv2;
 
-         // calculate vertices of (moved and axis-aligned := 'ma') rr2
-         TR = C + C/ 2;
-         BL = C - C / 2;
-         SubVectors2D(BL, rr2.S);
-         AddVectors2D(TR, rr2.S);
+            if (minA < minB && minB < maxA)
+                return true;
+            if (minA < maxB && maxB < maxA)
+                return true;
+            if (minB < minA && minA < maxB)
+                return true;
+            if (minB < maxA && maxA < maxB)
+                return true;
 
-         // calculate vertices of (rotated := 'r') rr1
-         A.X = -(rr1.S.Y/2)*sina; 
-         B.X = A.X; t = (rr1.S.X/2)*cosa; A.X += t; B.X -= t;
-         A.Y =  (rr1.S.Y/2)*cosa; B.Y = A.Y; t = (rr1.S.X/2)*sina; A.Y += t; B.Y -= t;
+            return false;
+        }
 
-         t = sina*cosa;
+        public static Vector2 project(Vector2 Axis, Vector2 pt)
+        {
+            Vector2 ret = new Vector2();
+            ret.X = (float)((pt.X * Axis.X + pt.Y * Axis.Y) * Axis.X / (Math.Pow(Axis.X, 2) + Math.Pow(Axis.Y, 2)));
+            ret.Y = (float)((pt.X * Axis.X + pt.Y * Axis.Y) * Axis.Y / (Math.Pow(Axis.X, 2) + Math.Pow(Axis.Y, 2)));
+            return ret;
+        }
 
-         // verify that A is vertical min/max, B is horizontal min/max
-         if (t < 0)
-         {
-          t = A.X; A.X = B.X; B.X = t;
-          t = A.Y; A.Y = B.Y; B.Y = t;
-         }
-
-         // verify that B is horizontal minimum (leftest-vertex)
-         if (sina < 0) { B.X = -B.X; B.Y = -B.Y; }
-
-         // if rr2(ma) isn't in the horizontal range of
-         // colliding with rr1(r), collision is impossible
-         if (B.X > TR.X || B.X > -BL.X) return false;
-
-         // if rr1(r) is axis-aligned, vertical min/max are easy to get
-         if (t == 0) {ext1 = A.Y; ext2 = -ext1; }
-         // else, find vertical min/max in the range [BL.x, TR.x]
-         else
-         {
-          x = BL.X-A.X; a = TR.X-A.X;
-          ext1 = A.Y;
-          // if the first vertical min/max isn't in (BL.x, TR.x), then
-          // find the vertical min/max on BL.x or on TR.x
-          if (a*x > 0)
-          {
-           dx = A.X;
-           if (x < 0) { dx -= B.X; ext1 -= B.Y; x = a; }
-           else       { dx += B.X; ext1 += B.Y; }
-           ext1 *= x; ext1 /= dx; ext1 += A.Y;
-          }
-          
-          x = BL.X+A.X; a = TR.X+A.X;
-          ext2 = -A.Y;
-          // if the second vertical min/max isn't in (BL.x, TR.x), then
-          // find the local vertical min/max on BL.x or on TR.x
-          if (a*x > 0)
-          {
-           dx = -A.X;
-           if (x < 0) { dx -= B.X; ext2 -= B.Y; x = a; }
-           else       { dx += B.X; ext2 += B.Y; }
-           ext2 *= x; ext2 /= dx; ext2 -= A.Y;
-          }
-         }
-
-         // check whether rr2(ma) is in the vertical range of colliding with rr1(r)
-         // (for the horizontal range of rr2)
-         return !((ext1 < BL.Y && ext2 < BL.Y) ||
-	          (ext1 > TR.Y && ext2 > TR.Y));
+        public static float DP(Vector2 A, Vector2 B)
+        {
+            return A.X * B.X + A.Y * B.Y;
         }
     }
 }
