@@ -538,39 +538,44 @@ namespace Bugzzz
                 if (enemy.alive)
                 {
                     //checks for collision with the player
-
+                    
                     Rectangle playerRect = new Rectangle((int)player1.p_position.X - player1.p_spriteB.Width / 2, (int)player1.p_position.Y - player1.p_spriteB.Height/2, player1.p_spriteB.Width, player1.p_spriteB.Height);
                     Rectangle enemyRect = new Rectangle((int)enemy.position.X,(int)enemy.position.Y,enemy.sprite.Width,enemy.sprite.Height);
-                    
-                    if (playerRect.Intersects(enemyRect))
-                    {
-                        //p_alive = false;
-                        enemy.alive = false;
-                        if (player1.health > 0)
+
+                   if (MathFns.broadPhaseCollision(playerRect, 0, enemyRect, enemy.rotation))
+                   {
+                        if (MathFns.narrowPhaseCollision(playerRect, 0, enemyRect, enemy.rotation))
                         {
-                            player1.health -= 25;
-                        }
-                        else
-                        {
-                            if (player1.livesLeft > 0)
+                            //p_alive = false;
+                            enemy.alive = false;
+                            if (player1.health > 0)
                             {
-                                player1.livesLeft--;
-                                player1.p_stat.playerDied();
-                                player1.health = 100;
+                                player1.health -= 25;
                             }
                             else
                             {
-                                // Game over
+                                if (player1.livesLeft > 0)
+                                {
+                                    player1.livesLeft--;
+                                    player1.p_stat.playerDied();
+                                    player1.health = 100;
+                                }
+                                else
+                                {
+                                    // Game over
+                                }
                             }
+                            enemies_killed++;
+
+                            break;
                         }
-                        enemies_killed++;
-                        
-                        break;
-                    }
+                   }
                     playerRect = new Rectangle((int)player2.p_position.X - player2.p_spriteB.Width / 2, (int)player2.p_position.Y - player2.p_spriteB.Height / 2, player2.p_spriteB.Width, player2.p_spriteB.Height);
                     
-                    if (playerRect.Intersects(enemyRect))
-                    {
+                   if (MathFns.broadPhaseCollision(playerRect,0,enemyRect,enemy.rotation))
+                   {
+                        if (MathFns.narrowPhaseCollision(playerRect, 0, enemyRect, enemy.rotation))
+                        {
                         //p_alive = false;
                         enemy.alive = false;
                         if (player2.health > 0)
@@ -593,7 +598,8 @@ namespace Bugzzz
                         enemies_killed++;
                         
                         break;
-                    }
+                        }
+                   }
                 }
                 else
                 {
@@ -1107,6 +1113,9 @@ namespace Bugzzz
                 scoreScreen = false;
                 GraphicsDevice.Clear(Color.CornflowerBlue);
                 spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
+
+                //
+           
                 spriteBatch.Draw(healthBar, new Rectangle(this.viewport.Width / 15, this.viewport.Height / 15, (int)this.viewport.Width * player1.health / 600, this.viewport.Height / 30), Color.Red);
                 spriteBatch.Draw(healthBar, new Rectangle(this.viewport.Width * 12 / 16, this.viewport.Height / 15, (int)this.viewport.Width * player2.health / 600, this.viewport.Height / 30), Color.Red);
                 spriteBatch.DrawString(scorefont, "Player 1 Score: " + player1.score.ToString(), new Vector2(this.viewport.Width / 15, this.viewport.Height / 60), new Color(Color.White, (byte)130));
@@ -1116,7 +1125,8 @@ namespace Bugzzz
                 spriteBatch.Draw(player1.p_spriteT, new Rectangle((int)player1.p_position.X, (int)player1.p_position.Y, player1.p_spriteT.Width, player1.p_spriteT.Height), null, Color.White, (float)(player1.p_rotation + .5 * Math.PI), new Vector2(player1.p_spriteT.Width / 2, player1.p_spriteT.Height / 2), SpriteEffects.None, 0);
                 spriteBatch.Draw(player2.p_spriteB, new Rectangle((int)player2.p_position.X, (int)player2.p_position.Y, player2.p_spriteB.Width, player2.p_spriteB.Height), null, Color.Red, player2.p_rotation_b, new Vector2(player2.p_spriteB.Width / 2, player2.p_spriteB.Height / 2), SpriteEffects.None, 0);
                 spriteBatch.Draw(player2.p_spriteT, new Rectangle((int)player2.p_position.X, (int)player2.p_position.Y, player2.p_spriteT.Width, player2.p_spriteT.Height), null, Color.Red, (float)(player2.p_rotation + .5 * Math.PI), new Vector2(player2.p_spriteT.Width / 2, player2.p_spriteT.Height / 2), SpriteEffects.None, 0);
-
+                
+                
                 if (turret1.placed)
                 {
                     spriteBatch.Draw(turret1.sprite, new Rectangle((int)turret1.position.X, (int)turret1.position.Y, turret1.sprite.Width, turret1.sprite.Height), null, Color.White, (float)(turret1.rotation + .5 * Math.PI), new Vector2(turret1.sprite.Width / 2, turret1.sprite.Height / 2), SpriteEffects.None, 0);
@@ -1202,7 +1212,13 @@ namespace Bugzzz
                     score.Remove(s);
                 }
                 #endregion
+                //
 
+               // Rectangle playerRect = new Rectangle((int)player1.p_position.X - player1.p_spriteB.Width / 2, (int)player1.p_position.Y - player1.p_spriteB.Height / 2, player1.p_spriteB.Width, player1.p_spriteB.Height);
+               //// Rectangle enemyRect = new Rectangle((int)enemies[0].position.X, (int)enemies[0].position.Y, enemies[0].sprite.Width, enemies[0].sprite.Height);
+               // bool wer = MathFns.broadPhaseCollision(playerRect, 0, enemyRect, (float)(enemies[0].rotation+Math.PI/2));
+                //
+                
                 spriteBatch.End();
                 base.Draw(gameTime);
             }
