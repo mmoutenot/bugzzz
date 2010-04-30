@@ -5,6 +5,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bugzzz", "bugzzz\Bugzzz.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Windows Copy of Bugzzz", "bugzzz\Windows Copy of Bugzzz.csproj", "{189ECD0B-0A61-468E-853F-34110B428FEA}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "References", "References", "{9C6AD0EC-592E-4726-B62D-0B8BFF403B5D}"
+	ProjectSection(SolutionItems) = preProject
+		bugzzz\References\ProjectMercury.dll = bugzzz\References\ProjectMercury.dll
+		bugzzz\References\ProjectMercuryXbox.dll = bugzzz\References\ProjectMercuryXbox.dll
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True

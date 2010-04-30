@@ -12,6 +12,11 @@ using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
+using ProjectMercury;
+using ProjectMercury.Emitters;
+using ProjectMercury.Modifiers;
+using ProjectMercury.Renderers;
+
 namespace Bugzzz
 {
     /// <summary>
@@ -73,14 +78,16 @@ namespace Bugzzz
         KeyboardState previousKeyboardState = Keyboard.GetState();
         MouseState previousMouseState = Mouse.GetState();
 
+        //particle effects zomg!
+        ParticleEffect particleEffect;
+        PointSpriteRenderer particleRenderer;
+
         GameTime gt;
 
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-            
-            
             Content.RootDirectory = "Content";
         }
 
@@ -205,7 +212,7 @@ namespace Bugzzz
                 turretBullets2[i] = new GameObject(temp);
             }
 
-            temp = Content.Load<Texture2D>("sprites\\enemy");
+            temp = Content.Load<Texture2D>("sprites\\roach");
             enemies = new GameObject[maxEnemies];
             for (int j = 0; j < maxEnemies; j++)
             {
@@ -224,6 +231,46 @@ namespace Bugzzz
             scorefont = Content.Load<SpriteFont>("ScoreFont");
             levelfont = Content.Load<SpriteFont>("LevelFont");
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            particleEffect = new ParticleEffect
+            {
+                new Emitter
+                {
+                    Budget = 1000,
+                    Term = 3f,
+
+                    Name = "TestEmitter",
+                    BlendMode = BlendMode.Alpha,
+                    ReleaseQuantity = 3,
+                    ReleaseRotation = new VariableFloat { Value = 0f, Variation = MathHelper.Pi },
+                    ReleaseScale = 64f,
+                    ReleaseSpeed = new VariableFloat { Value = 64f, Variation = 32f },
+                    ParticleTextureAssetName = "Particle003",
+                    Modifiers = new ModifierCollection
+                    {
+                        new OpacityModifier
+                        {
+                            Initial = 1f,
+                            Ultimate = 0f,
+                        },
+                        new ColourModifier
+                        {
+                            InitialColour = Color.Tomato.ToVector3(),
+                            UltimateColour = Color.Lime.ToVector3(),
+                        },
+                    },
+                },
+            };
+
+            particleRenderer = new PointSpriteRenderer
+            {
+                GraphicsDeviceService = graphics
+            };
+
+            particleEffect.Initialise();
+
+            particleEffect.LoadContent(Content);
+            particleRenderer.LoadContent(Content);
 
             // TODO: use this.Content to load your game content here
         }
@@ -409,6 +456,10 @@ namespace Bugzzz
                         {
                             bullet.alive = false;
                             enemy.alive = false;
+
+                            // particle test
+                            particleEffect.Trigger(new Vector2(enemy.position.X, enemy.position.Y));
+
                             score.Add(new ScoreDisplay(20, SCORE_TIME, enemy.position, true, 1));
                             player1.score += 20;
                             enemies_killed++;
@@ -721,11 +772,16 @@ namespace Bugzzz
                     fireTurretBullets2();
                 }
 
+                
             }
 
             // Update the statistical time used to calculate player statistics
             player1.p_stat.updateStatisticsTime(gameTime);
             player2.p_stat.updateStatisticsTime(gameTime);
+
+            // particle test
+            float deltaSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            particleEffect.Update(deltaSeconds);
 
             base.Update(gameTime);
         }
@@ -1220,6 +1276,9 @@ namespace Bugzzz
                 //
                 
                 spriteBatch.End();
+
+                particleRenderer.RenderEffect(particleEffect);
+
                 base.Draw(gameTime);
             }
         }
