@@ -56,8 +56,8 @@ namespace Bugzzz
  
             s.DrawString(levelfont,levelStr,textCenter - (textSize / 2), new Color(Color.Yellow,(byte)(200)));
             s.Draw(healthBar, new Rectangle(viewport.Width / 4, viewport.Height / 4, viewport.Width / 2, viewport.Height / 2), new Color(Color.DarkBlue, (byte)(50)));
-            string avgLifeP1 = string.Format("{0:0.0}", player1.p_stat.averageLifeTime());
-            string avgLifeP2 = string.Format("{0:0.0}", player2.p_stat.averageLifeTime());
+            string avgLifeP1 = string.Format("{0:0.0}", player1.stat.averageLifeTime());
+            string avgLifeP2 = string.Format("{0:0.0}", player2.stat.averageLifeTime());
             s.DrawString(levelfont, "Player 1", new Vector2((viewport.Width/4)+150,(viewport.Height/4)+40),new Color(Color.Yellow,(byte)(200)));
             s.DrawString(levelfont, "Player 2", new Vector2(((3*viewport.Width)/4)-(levelfont.MeasureString("Player 2").X)-50, (viewport.Height / 4) + 40), new Color(Color.Yellow, (byte)(200)));
             s.DrawString(levelfont, "Score:      " + s1 + "                   " + s2, new Vector2((viewport.Width / 4) + 10, (viewport.Height / 4) + 100), new Color(Color.Red, (byte)(200)));

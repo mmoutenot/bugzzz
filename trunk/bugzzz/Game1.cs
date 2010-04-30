@@ -150,7 +150,30 @@ namespace Bugzzz
             // TODO: Add your initialization logic here
             //player's stating position
             InitGraphicsMode(1280, 720, false);
+            current_fade = 0;
+            fade_in = true;
+            rand = new Random();
+            enemies_killed = 0;
+            enemies_level = new int[4];
+            enemies_level[0] = 100;
+            enemies_level[1] = 250;
+            enemies_level[2] = 500;
+            enemies_level[3] = 1000;
+
+
+            level = 1;
+            viewport = GraphicsDevice.Viewport;
+            viewportRect = new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+
+            bullets = new GameObject[maxBullets];
+            bullets2 = new GameObject[maxBullets];
+
+            turretBullets1 = new GameObject[maxBullets];
+            turretBullets2 = new GameObject[maxBullets];
+
+            enemies = new GameObject[maxEnemies];
             base.Initialize();
+
         }
 
         /// <summary>
@@ -165,19 +188,12 @@ namespace Bugzzz
             turret2 = new Turret(temp);
             
             healthBar = Content.Load<Texture2D>("sprites\\healthBar");
-            current_fade=0;
-            fade_in = true;
-            rand= new Random();
-            enemies_killed = 0;
-            enemies_level  = new int[4];
-            enemies_level[0] = 100;
-            enemies_level[1] = 250;
-            enemies_level[2] = 500;
-            enemies_level[3] = 1000;
-
             temp = null;
-
             temp = Content.Load<Texture2D>("sprites\\cannonball");
+
+            p1_w = new Weapons(temp, temp, temp);
+            p2_w = new Weapons(temp, temp, temp);
+
 
             pickups = new WeaponPickup[2];
             pickups[0] = new WeaponPickup(temp);
@@ -188,24 +204,15 @@ namespace Bugzzz
             pickups[1].alive = true;
             pickups[1].weaponIndex = 2;
             pickups[1].position = new Vector2(600.0f, 300.0f);
-
-            level = 1;
-            viewport = GraphicsDevice.Viewport;
-            viewportRect = new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
-
-            p1_w = new Weapons(temp, temp, temp);
-            p2_w = new Weapons(temp, temp, temp);
-
             //Initializes all of the bullets, enemies, etc.
-            bullets = new GameObject[maxBullets];
-            bullets2 = new GameObject[maxBullets];
+
+
             for (int i = 0; i < maxBullets; i++)
             {
                 bullets2[i] = new GameObject(temp);
                 bullets[i] = new GameObject(temp);
             }
-            turretBullets1 = new GameObject[maxBullets];
-            turretBullets2 = new GameObject[maxBullets];
+
             for (int i = 0; i < maxBullets; i++)
             {
                 turretBullets1[i] = new GameObject(temp);
@@ -213,7 +220,7 @@ namespace Bugzzz
             }
 
             temp = Content.Load<Texture2D>("sprites\\roach");
-            enemies = new GameObject[maxEnemies];
+
             for (int j = 0; j < maxEnemies; j++)
             {
                 enemies[j] = new GameObject(temp);
@@ -223,7 +230,7 @@ namespace Bugzzz
             player1 = new Player(1, temp, Content.Load<Texture2D>("sprites\\smiley1"), p1_w, new Vector2(viewport.Width*7/15,viewport.Height/2), new Statistics(false));
             player2 = new Player(2, temp, Content.Load<Texture2D>("sprites\\smiley1"), p2_w, new Vector2(viewport.Width*8/15, viewport.Height/2), new Statistics(false));
 
-
+            
             // The maximum amount of scores to display on screen is the maximum number of dead enemies
             score = new ArrayList();
 
@@ -301,8 +308,8 @@ namespace Bugzzz
                     if (!bullet.alive)
                     {
                         bullet.alive = true;
-                        bullet.position = player1.p_position - bullet.center;
-                        bullet.velocity = new Vector2((float)Math.Cos(player1.p_rotation + Math.PI / 2), (float)Math.Sin(player1.p_rotation + Math.PI / 2)) * 8.0f;
+                        bullet.position = player1.position - bullet.center;
+                        bullet.velocity = new Vector2((float)Math.Cos(player1.rotation + Math.PI / 2), (float)Math.Sin(player1.rotation + Math.PI / 2)) * 8.0f;
                         return;
                     }
                 }
@@ -315,8 +322,8 @@ namespace Bugzzz
                     if (!bullet.alive)
                     {
                         bullet.alive = true;
-                        bullet.position = player1.p_position - bullet.center;
-                        bullet.velocity = new Vector2((float)Math.Cos(player1.p_rotation + Math.PI / 2 + spread), (float)Math.Sin(player1.p_rotation + Math.PI / 2 + spread)) * 8.0f;
+                        bullet.position = player1.position - bullet.center;
+                        bullet.velocity = new Vector2((float)Math.Cos(player1.rotation + Math.PI / 2 + spread), (float)Math.Sin(player1.rotation + Math.PI / 2 + spread)) * 8.0f;
                         spread += .1047;
                         if (spread > .21)
                             return;
@@ -329,8 +336,8 @@ namespace Bugzzz
                     if (!bullet.alive)
                     {
                         bullet.alive = true;
-                        bullet.position = player1.p_position - bullet.center;
-                        bullet.velocity = new Vector2((float)Math.Cos(player1.p_rotation + Math.PI / 2 + rand.NextDouble()), (float)Math.Sin(player1.p_rotation + Math.PI / 2 + rand.NextDouble())) * 3.0f;
+                        bullet.position = player1.position - bullet.center;
+                        bullet.velocity = new Vector2((float)Math.Cos(player1.rotation + Math.PI / 2 + rand.NextDouble()), (float)Math.Sin(player1.rotation + Math.PI / 2 + rand.NextDouble())) * 3.0f;
                         return;
                     }
                 }
@@ -346,8 +353,8 @@ namespace Bugzzz
                     if (!bullet.alive)
                     {
                         bullet.alive = true;
-                        bullet.position = player2.p_position - bullet.center;
-                        bullet.velocity = new Vector2((float)Math.Cos(player2.p_rotation + Math.PI / 2), (float)Math.Sin(player2.p_rotation + Math.PI / 2)) * 8.0f;
+                        bullet.position = player2.position - bullet.center;
+                        bullet.velocity = new Vector2((float)Math.Cos(player2.rotation + Math.PI / 2), (float)Math.Sin(player2.rotation + Math.PI / 2)) * 8.0f;
                         return;
                     }
                 }
@@ -360,8 +367,8 @@ namespace Bugzzz
                     if (!bullet.alive)
                     {
                         bullet.alive = true;
-                        bullet.position = player2.p_position - bullet.center;
-                        bullet.velocity = new Vector2((float)Math.Cos(player2.p_rotation + Math.PI / 2 + spread), (float)Math.Sin(player2.p_rotation + Math.PI / 2 + spread)) * 8.0f;
+                        bullet.position = player2.position - bullet.center;
+                        bullet.velocity = new Vector2((float)Math.Cos(player2.rotation + Math.PI / 2 + spread), (float)Math.Sin(player2.rotation + Math.PI / 2 + spread)) * 8.0f;
                         spread += .1047;
                         if (spread > .21)
                             return;
@@ -376,8 +383,8 @@ namespace Bugzzz
                     if (!bullet.alive)
                     {
                         bullet.alive = true;
-                        bullet.position = player2.p_position - bullet.center;
-                        bullet.velocity = new Vector2((float)Math.Cos(player2.p_rotation + Math.PI / 2 + spread), (float)Math.Sin(player2.p_rotation + Math.PI / 2 + spread)) * 3.0f;
+                        bullet.position = player2.position - bullet.center;
+                        bullet.velocity = new Vector2((float)Math.Cos(player2.rotation + Math.PI / 2 + spread), (float)Math.Sin(player2.rotation + Math.PI / 2 + spread)) * 3.0f;
                         spread += Math.PI / 5;
                         if (spread > 4 * Math.PI)
                             return;
@@ -426,7 +433,7 @@ namespace Bugzzz
                 {
                     if (player1.activeWeapon == 2)
                     {
-                        Rectangle flameRect = new Rectangle((int)player1.p_position.X-100, (int)player1.p_position.Y-100, 200, 200);
+                        Rectangle flameRect = new Rectangle((int)player1.position.X-100, (int)player1.position.Y-100, 200, 200);
                         Rectangle flameBulletRect = new Rectangle((int)bullet.position.X, (int)bullet.position.Y, bullet.sprite.Width, bullet.sprite.Height);
                         if (!flameRect.Intersects(flameBulletRect))
                             bullet.alive = false;
@@ -590,14 +597,14 @@ namespace Bugzzz
                 {
                     //checks for collision with the player
                     
-                    Rectangle playerRect = new Rectangle((int)player1.p_position.X - player1.p_spriteB.Width / 2, (int)player1.p_position.Y - player1.p_spriteB.Height/2, player1.p_spriteB.Width, player1.p_spriteB.Height);
+                    Rectangle playerRect = new Rectangle((int)player1.position.X - player1.spriteB.Width / 2, (int)player1.position.Y - player1.spriteB.Height/2, player1.spriteB.Width, player1.spriteB.Height);
                     Rectangle enemyRect = new Rectangle((int)enemy.position.X,(int)enemy.position.Y,enemy.sprite.Width,enemy.sprite.Height);
 
                    if (MathFns.broadPhaseCollision(playerRect, 0, enemyRect, enemy.rotation))
                    {
                         if (MathFns.narrowPhaseCollision(playerRect, 0, enemyRect, enemy.rotation))
                         {
-                            //p_alive = false;
+                            //alive = false;
                             enemy.alive = false;
                             if (player1.health > 0)
                             {
@@ -608,7 +615,7 @@ namespace Bugzzz
                                 if (player1.livesLeft > 0)
                                 {
                                     player1.livesLeft--;
-                                    player1.p_stat.playerDied();
+                                    player1.stat.playerDied();
                                     player1.health = 100;
                                 }
                                 else
@@ -621,13 +628,13 @@ namespace Bugzzz
                             break;
                         }
                    }
-                    playerRect = new Rectangle((int)player2.p_position.X - player2.p_spriteB.Width / 2, (int)player2.p_position.Y - player2.p_spriteB.Height / 2, player2.p_spriteB.Width, player2.p_spriteB.Height);
+                    playerRect = new Rectangle((int)player2.position.X - player2.spriteB.Width / 2, (int)player2.position.Y - player2.spriteB.Height / 2, player2.spriteB.Width, player2.spriteB.Height);
                     
                    if (MathFns.broadPhaseCollision(playerRect,0,enemyRect,enemy.rotation))
                    {
                         if (MathFns.narrowPhaseCollision(playerRect, 0, enemyRect, enemy.rotation))
                         {
-                        //p_alive = false;
+                        //alive = false;
                         enemy.alive = false;
                         if (player2.health > 0)
                         {
@@ -638,7 +645,7 @@ namespace Bugzzz
                             if (player2.livesLeft > 0)
                             {
                                 player2.livesLeft--;
-                                player2.p_stat.playerDied();
+                                player2.stat.playerDied();
                                 player2.health = 100;
                             }
                             else
@@ -680,10 +687,10 @@ namespace Bugzzz
                 //makes enemies move towards the player
                 Vector2 target;
 
-                if (MathFns.Distance(enemy.position, player1.p_position) > MathFns.Distance(enemy.position, player2.p_position))
-                    target = player2.p_position;
+                if (MathFns.Distance(enemy.position, player1.position) > MathFns.Distance(enemy.position, player2.position))
+                    target = player2.position;
                 else
-                    target = player1.p_position;
+                    target = player1.position;
 
                 enemy.velocity = target - enemy.position;
                 enemy.velocity.Normalize();
@@ -698,10 +705,10 @@ namespace Bugzzz
         public void updatePickups()
         {
             Rectangle playerRect = new Rectangle(
-                    (int)player1.p_position.X,
-                    (int)player1.p_position.Y,
-                    player1.p_spriteB.Width,
-                    player1.p_spriteB.Height);
+                    (int)player1.position.X,
+                    (int)player1.position.Y,
+                    player1.spriteB.Width,
+                    player1.spriteB.Height);
             foreach (WeaponPickup pickup in pickups)
             {
                 Rectangle pickupRect = new Rectangle(
@@ -746,16 +753,26 @@ namespace Bugzzz
                 updateEnemies();
                 updatePickups();
 
-                player1.p_position += player1.p_velocity;
-                player2.p_position += player2.p_velocity;
+                player1.position += player1.velocity;
+                player2.position += player2.velocity;
+                
+                if (player1.energy < 100)
+                {
+                    player1.energy += 1;
+                }
+                if (player2.energy < 100)
+                {
+                    player2.energy += 1;
+                }
 
-                if ((elapsedTime >= player1.weapon.delays[player1.activeWeapon]) && player1.p_fire)
+
+                if ((elapsedTime >= player1.weapon.delays[player1.activeWeapon]) && player1.fire)
                 {
 
                     elapsedTime = 0.0f;
                     fireP1Bullets();
                 }
-                if ((elapsedTime2 >= player2.weapon.delays[player2.activeWeapon]) && player2.p_fire)
+                if ((elapsedTime2 >= player2.weapon.delays[player2.activeWeapon]) && player2.fire)
                 {
                     elapsedTime2 = 0.0f;
                     fireP2Bullets();
@@ -776,8 +793,8 @@ namespace Bugzzz
             }
 
             // Update the statistical time used to calculate player statistics
-            player1.p_stat.updateStatisticsTime(gameTime);
-            player2.p_stat.updateStatisticsTime(gameTime);
+            player1.stat.updateStatisticsTime(gameTime);
+            player2.stat.updateStatisticsTime(gameTime);
 
             // particle test
             float deltaSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -794,7 +811,7 @@ namespace Bugzzz
 
                 if (player.deploy)
                 {
-                    turret.position = player.p_position;
+                    turret.position = player.position;
                     turret.rotation = 0f;
                     turret.placed = true;
                     player.deploy = false;
@@ -857,18 +874,18 @@ namespace Bugzzz
             if (currentState.IsConnected)
             {
                 #region XBox Controls Player1
-                player1.p_velocity.X = currentState.ThumbSticks.Left.X * 5;
-                player1.p_velocity.Y = -currentState.ThumbSticks.Left.Y * 5;
-                //player1.p_rotation = -(float)((Math.Tan(currentState.ThumbSticks.Right.Y / currentState.ThumbSticks.Right.X)*2*Math.PI)/180);
+                player1.velocity.X = currentState.ThumbSticks.Left.X * 5;
+                player1.velocity.Y = -currentState.ThumbSticks.Left.Y * 5;
+                //player1.rotation = -(float)((Math.Tan(currentState.ThumbSticks.Right.Y / currentState.ThumbSticks.Right.X)*2*Math.PI)/180);
                 const float DEADZONE = 0.2f;
                 const float FIREDEADZONE = 0.3f;
 
                 Vector2 direction = GamePad.GetState(PlayerIndex.One).ThumbSticks.Right;
                 float magnitude = direction.Length();
-                player1.p_fire = false;
+                player1.fire = false;
                 if (GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.Length() > DEADZONE)
                 {
-                    player1.p_rotation_b = (float)(-1 * (3.14 / 2 + Math.Atan2(currentState.ThumbSticks.Left.Y, currentState.ThumbSticks.Left.X)));
+                    player1.rotation_b = (float)(-1 * (3.14 / 2 + Math.Atan2(currentState.ThumbSticks.Left.Y, currentState.ThumbSticks.Left.X)));
                 }
 
                 if (magnitude > DEADZONE)
@@ -876,12 +893,12 @@ namespace Bugzzz
                     //Smooth Rotation
                     float angle = (float)(-1 * (3.14 / 2 + Math.Atan2(currentState.ThumbSticks.Right.Y, currentState.ThumbSticks.Right.X)));
 
-                    if (angle != player1.p_rotation)
-                        player1.p_rotation = MathFns.Clerp(player1.p_rotation, angle, angle_rot);
+                    if (angle != player1.rotation)
+                        player1.rotation = MathFns.Clerp(player1.rotation, angle, angle_rot);
 
                     if (magnitude > FIREDEADZONE)
                     {
-                        player1.p_fire = true;
+                        player1.fire = true;
                     }
                 }
                 #endregion
@@ -891,50 +908,50 @@ namespace Bugzzz
             else
             {
                 #region Keyboard Controls Player1
-                //player1.p_fire = false;
+                //player1.fire = false;
                 KeyboardState keyboardState = Keyboard.GetState();
                 MouseState mouse = Mouse.GetState();
-                float XDistance = player1.p_position.X - mouse.X;
-                float YDistance = player1.p_position.Y - mouse.Y;
+                float XDistance = player1.position.X - mouse.X;
+                float YDistance = player1.position.Y - mouse.Y;
                 float xdim = 800;
                 float ydim = 800;
 
                 float rotation = (float)(Math.Atan2(YDistance, XDistance) + Math.PI / 2);
-                player1.p_rotation = rotation;
+                player1.rotation = rotation;
 
                 if (mouse.LeftButton == ButtonState.Pressed)
                 {
-                    player1.p_fire = true;
+                    player1.fire = true;
                     xdim = mouse.X;
                     ydim = mouse.Y;
                 }
                 else
                 {
-                    player1.p_fire = false;
+                    player1.fire = false;
                 }
                 if (keyboardState.IsKeyDown(Keys.Left))
                 {
-                    player1.p_velocity.X = -5;
+                    player1.velocity.X = -5;
                 }
                 else if (keyboardState.IsKeyDown(Keys.Right))
                 {
-                    player1.p_velocity.X = 5;
+                    player1.velocity.X = 5;
                 }
                 else
                 {
-                    player1.p_velocity.X = 0;
+                    player1.velocity.X = 0;
                 }
                 if (keyboardState.IsKeyDown(Keys.Up))
                 {
-                    player1.p_velocity.Y = -5;
+                    player1.velocity.Y = -5;
                 }
                 else if (keyboardState.IsKeyDown(Keys.Down))
                 {
-                    player1.p_velocity.Y = 5;
+                    player1.velocity.Y = 5;
                 }
                 else
                 {
-                    player1.p_velocity.Y = 0;
+                    player1.velocity.Y = 0;
                 }
                 if (keyboardState.IsKeyDown(Keys.Z))
                 {
@@ -962,18 +979,18 @@ namespace Bugzzz
             if (currentState.IsConnected)
             {
                 #region XBox Controller Controls Player 2
-                player2.p_velocity.X = currentState.ThumbSticks.Left.X * 5;
-                player2.p_velocity.Y = -currentState.ThumbSticks.Left.Y * 5;
-                //player2.p_rotation = -(float)((Math.Tan(currentState.ThumbSticks.Right.Y / currentState.ThumbSticks.Right.X)*2*Math.PI)/180);
+                player2.velocity.X = currentState.ThumbSticks.Left.X * 5;
+                player2.velocity.Y = -currentState.ThumbSticks.Left.Y * 5;
+                //player2.rotation = -(float)((Math.Tan(currentState.ThumbSticks.Right.Y / currentState.ThumbSticks.Right.X)*2*Math.PI)/180);
                 const float DEADZONE = 0.2f;
                 const float FIREDEADZONE = 0.3f;
 
                 Vector2 direction = GamePad.GetState(PlayerIndex.Two).ThumbSticks.Right;
                 float magnitude = direction.Length();
-                player2.p_fire = false;
+                player2.fire = false;
                 if (GamePad.GetState(PlayerIndex.Two).ThumbSticks.Left.Length() > DEADZONE)
                 {
-                    player2.p_rotation_b = (float)(-1 * (3.14 / 2 + Math.Atan2(currentState.ThumbSticks.Left.Y, currentState.ThumbSticks.Left.X)));
+                    player2.rotation_b = (float)(-1 * (3.14 / 2 + Math.Atan2(currentState.ThumbSticks.Left.Y, currentState.ThumbSticks.Left.X)));
                 }
 
                 if (magnitude > DEADZONE)
@@ -981,12 +998,12 @@ namespace Bugzzz
                     //Smooth Rotation
                     float angle = (float)(-1 * (3.14 / 2 + Math.Atan2(currentState.ThumbSticks.Right.Y, currentState.ThumbSticks.Right.X)));
 
-                    if (angle != player2.p_rotation)
-                        player2.p_rotation = MathFns.Clerp(player2.p_rotation, angle, angle_rot);
+                    if (angle != player2.rotation)
+                        player2.rotation = MathFns.Clerp(player2.rotation, angle, angle_rot);
 
                     if (magnitude > FIREDEADZONE)
                     {
-                        player2.p_fire = true;
+                        player2.fire = true;
                     }
                 }
                 #endregion
@@ -997,50 +1014,50 @@ namespace Bugzzz
             {
                 #region Keyboard Controls Player 2
 
-                //player2.p_fire = false;
+                //player2.fire = false;
                 KeyboardState keyboardState = Keyboard.GetState();
                 MouseState mouse = Mouse.GetState();
-                float XDistance = player2.p_position.X - mouse.X;
-                float YDistance = player2.p_position.Y - mouse.Y;
+                float XDistance = player2.position.X - mouse.X;
+                float YDistance = player2.position.Y - mouse.Y;
                 float xdim = 800;
                 float ydim = 800;
 
                 float rotation = (float)(Math.Atan2(YDistance, XDistance) + Math.PI / 2);
-                player2.p_rotation = rotation;
+                player2.rotation = rotation;
 
                 if (keyboardState.IsKeyDown(Keys.Space))
                 {
-                    player2.p_fire = true;
+                    player2.fire = true;
                     xdim = mouse.X;
                     ydim = mouse.Y;
                 }
                 else
                 {
-                    player2.p_fire = false;
+                    player2.fire = false;
                 }
                 if (keyboardState.IsKeyDown(Keys.A))
                 {
-                    player2.p_velocity.X = -5;
+                    player2.velocity.X = -5;
                 }
                 else if (keyboardState.IsKeyDown(Keys.D))
                 {
-                    player2.p_velocity.X = 5;
+                    player2.velocity.X = 5;
                 }
                 else
                 {
-                    player2.p_velocity.X = 0;
+                    player2.velocity.X = 0;
                 }
                 if (keyboardState.IsKeyDown(Keys.W))
                 {
-                    player2.p_velocity.Y = -5;
+                    player2.velocity.Y = -5;
                 }
                 else if (keyboardState.IsKeyDown(Keys.S))
                 {
-                    player2.p_velocity.Y = 5;
+                    player2.velocity.Y = 5;
                 }
                 else
                 {
-                    player2.p_velocity.Y = 0;
+                    player2.velocity.Y = 0;
                 }
                 if (keyboardState.IsKeyDown(Keys.Q))
                 {
@@ -1177,10 +1194,10 @@ namespace Bugzzz
                 spriteBatch.DrawString(scorefont, "Player 1 Score: " + player1.score.ToString(), new Vector2(this.viewport.Width / 15, this.viewport.Height / 60), new Color(Color.White, (byte)130));
                 spriteBatch.DrawString(scorefont, "Player 2 Score: " + player2.score.ToString(), new Vector2(this.viewport.Width * 12 / 16, this.viewport.Height / 60), new Color(Color.White, (byte)130));
                 spriteBatch.DrawString(scorefont, "Enemies Killed: " + enemies_killed.ToString(), new Vector2(this.viewport.Width * 7 / 16, this.viewport.Height / 60), new Color(Color.Beige, (byte)130));
-                spriteBatch.Draw(player1.p_spriteB, new Rectangle((int)player1.p_position.X, (int)player1.p_position.Y, player1.p_spriteB.Width, player1.p_spriteB.Height), null, Color.White, player1.p_rotation_b, new Vector2(player1.p_spriteB.Width / 2, player1.p_spriteB.Height / 2), SpriteEffects.None, 0);
-                spriteBatch.Draw(player1.p_spriteT, new Rectangle((int)player1.p_position.X, (int)player1.p_position.Y, player1.p_spriteT.Width, player1.p_spriteT.Height), null, Color.White, (float)(player1.p_rotation + .5 * Math.PI), new Vector2(player1.p_spriteT.Width / 2, player1.p_spriteT.Height / 2), SpriteEffects.None, 0);
-                spriteBatch.Draw(player2.p_spriteB, new Rectangle((int)player2.p_position.X, (int)player2.p_position.Y, player2.p_spriteB.Width, player2.p_spriteB.Height), null, Color.Red, player2.p_rotation_b, new Vector2(player2.p_spriteB.Width / 2, player2.p_spriteB.Height / 2), SpriteEffects.None, 0);
-                spriteBatch.Draw(player2.p_spriteT, new Rectangle((int)player2.p_position.X, (int)player2.p_position.Y, player2.p_spriteT.Width, player2.p_spriteT.Height), null, Color.Red, (float)(player2.p_rotation + .5 * Math.PI), new Vector2(player2.p_spriteT.Width / 2, player2.p_spriteT.Height / 2), SpriteEffects.None, 0);
+                spriteBatch.Draw(player1.spriteB, new Rectangle((int)player1.position.X, (int)player1.position.Y, player1.spriteB.Width, player1.spriteB.Height), null, Color.White, player1.rotation_b, new Vector2(player1.spriteB.Width / 2, player1.spriteB.Height / 2), SpriteEffects.None, 0);
+                spriteBatch.Draw(player1.spriteT, new Rectangle((int)player1.position.X, (int)player1.position.Y, player1.spriteT.Width, player1.spriteT.Height), null, Color.White, (float)(player1.rotation + .5 * Math.PI), new Vector2(player1.spriteT.Width / 2, player1.spriteT.Height / 2), SpriteEffects.None, 0);
+                spriteBatch.Draw(player2.spriteB, new Rectangle((int)player2.position.X, (int)player2.position.Y, player2.spriteB.Width, player2.spriteB.Height), null, Color.Red, player2.rotation_b, new Vector2(player2.spriteB.Width / 2, player2.spriteB.Height / 2), SpriteEffects.None, 0);
+                spriteBatch.Draw(player2.spriteT, new Rectangle((int)player2.position.X, (int)player2.position.Y, player2.spriteT.Width, player2.spriteT.Height), null, Color.Red, (float)(player2.rotation + .5 * Math.PI), new Vector2(player2.spriteT.Width / 2, player2.spriteT.Height / 2), SpriteEffects.None, 0);
                 
                 
                 if (turret1.placed)
@@ -1270,7 +1287,7 @@ namespace Bugzzz
                 #endregion
                 //
 
-               // Rectangle playerRect = new Rectangle((int)player1.p_position.X - player1.p_spriteB.Width / 2, (int)player1.p_position.Y - player1.p_spriteB.Height / 2, player1.p_spriteB.Width, player1.p_spriteB.Height);
+               // Rectangle playerRect = new Rectangle((int)player1.position.X - player1.spriteB.Width / 2, (int)player1.position.Y - player1.spriteB.Height / 2, player1.spriteB.Width, player1.spriteB.Height);
                //// Rectangle enemyRect = new Rectangle((int)enemies[0].position.X, (int)enemies[0].position.Y, enemies[0].sprite.Width, enemies[0].sprite.Height);
                // bool wer = MathFns.broadPhaseCollision(playerRect, 0, enemyRect, (float)(enemies[0].rotation+Math.PI/2));
                 //
