@@ -88,7 +88,8 @@ namespace Bugzzz
         public void updateStatisticsTime(GameTime time)
         {
            // set the current time to the current game time;
-            currentTime = time.TotalGameTime;
+            if(started)
+                currentTime = time.TotalGameTime;
         }
         #endregion
 
@@ -97,11 +98,22 @@ namespace Bugzzz
         // Returns the average lifetime in seconds
         public float averageLifeTime()
         {
-            int count = 0;
+            int count = 1;
             TimeSpan totalLifeTime = new TimeSpan(0);
-            foreach (TimeSpan i in lifeTimes){
-                totalLifeTime+=i;
-                count++;
+            // If the player died we want to sum their lifetimes
+            // and divide by number of deaths
+            if (lifeTimes.Count > 0)
+            {
+                foreach (TimeSpan i in lifeTimes)
+                {
+                    totalLifeTime += i;
+                    count++;
+                }
+            }
+            // otherwise their totalLifeTime is the level time and we divide by 1
+            else
+            {
+                totalLifeTime = currentTime - startTime;
             }
             //Console.WriteLine("Average life of player:" + (totalLifeTime.TotalSeconds / count));
             double avgMillis = totalLifeTime.TotalMilliseconds / count;
