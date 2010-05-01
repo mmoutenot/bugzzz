@@ -56,6 +56,11 @@ namespace Bugzzz
  
             s.DrawString(levelfont,levelStr,textCenter - (textSize / 2), new Color(Color.Yellow,(byte)(200)));
             s.Draw(healthBar, new Rectangle(viewport.Width / 4, viewport.Height / 4, viewport.Width / 2, viewport.Height / 2), new Color(Color.DarkBlue, (byte)(50)));
+            
+            // At the end of the level, halt the stats for p1,p2
+            player1.stat.Started = false;
+            player2.stat.Started = false;
+            
             string avgLifeP1 = string.Format("{0:0.0}", player1.stat.averageLifeTime());
             string avgLifeP2 = string.Format("{0:0.0}", player2.stat.averageLifeTime());
             s.DrawString(levelfont, "Player 1", new Vector2((viewport.Width/4)+150,(viewport.Height/4)+40),new Color(Color.Yellow,(byte)(200)));
@@ -63,7 +68,12 @@ namespace Bugzzz
             s.DrawString(levelfont, "Score:      " + s1 + "                   " + s2, new Vector2((viewport.Width / 4) + 10, (viewport.Height / 4) + 100), new Color(Color.Red, (byte)(200)));
             s.DrawString(levelfont, "Avg Life:  " + avgLifeP1 + "s                  " + avgLifeP2+"s", new Vector2((viewport.Width / 4) + 10, (viewport.Height / 4) + 150), new Color(Color.Red, (byte)(200)));
             if(tempscore < player1.score || tempscore < player2.score){
-                tempscore += 5;
+                if (tempscore < 200)
+                    tempscore += 5;
+                else if (tempscore < 500)
+                    tempscore += 10;
+                else
+                    tempscore += 20;
             }
 
             s.End();
