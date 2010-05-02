@@ -101,6 +101,7 @@ namespace Bugzzz
 
         }
 
+
         public static bool broadPhaseCollision(Rectangle a, Rectangle b, float angleB)
         {
             Vector2 CenterA = new Vector2(a.Center.X, a.Center.Y);

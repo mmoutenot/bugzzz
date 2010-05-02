@@ -162,7 +162,7 @@ namespace Bugzzz
             enemies_level[3] = 1000;
 
 
-            level = 1;
+            level = 0;
             viewport = GraphicsDevice.Viewport;
             viewportRect = new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
 
@@ -510,6 +510,7 @@ namespace Bugzzz
                             enemy.alive = false;
                             score.Add(new ScoreDisplay(20, SCORE_TIME, enemy.position, true, 2));
                             player2.score += 20;
+                            enemies_killed++;
                             break;
                         }
                     }
@@ -547,6 +548,7 @@ namespace Bugzzz
                             enemy.alive = false;
                             score.Add(new ScoreDisplay(10, SCORE_TIME, enemy.position, true, 1));
                             player1.score += 10;
+                            enemies_killed++;
                             break;
                         }
                     }
@@ -584,6 +586,7 @@ namespace Bugzzz
                             enemy.alive = false;
                             score.Add(new ScoreDisplay(10, SCORE_TIME, enemy.position, true, 2));
                             player2.score += 10;
+                            enemies_killed++;
                             break;
                         }
                     }
@@ -603,6 +606,7 @@ namespace Bugzzz
                     Rectangle playerRect = new Rectangle((int)player1.position.X - player1.spriteB.Width / 2, (int)player1.position.Y - player1.spriteB.Height/2, player1.spriteB.Width, player1.spriteB.Height);
                     Rectangle enemyRect = new Rectangle((int)enemy.position.X,(int)enemy.position.Y,enemy.sprite.Width,enemy.sprite.Height);
 
+                    //detect p1 collision
                    if (MathFns.broadPhaseCollision(playerRect, enemyRect, (float)(enemy.rotation+Math.PI/2)))
                    {
                             //alive = false;
@@ -630,8 +634,9 @@ namespace Bugzzz
                    }
                     playerRect = new Rectangle((int)player2.position.X - player2.spriteB.Width / 2, (int)player2.position.Y - player2.spriteB.Height / 2, player2.spriteB.Width, player2.spriteB.Height);
                     
-                   if (MathFns.broadPhaseCollision(playerRect,enemyRect,(float)(enemy.rotation+Math.PI/2)))
-                   {
+                    //detect p2 collision
+                    if (MathFns.broadPhaseCollision(playerRect, enemyRect, (float)(enemy.rotation + Math.PI / 2)))
+                    {
                         //alive = false;
                         enemy.alive = false;
                         if (player2.health > 0)
@@ -652,50 +657,59 @@ namespace Bugzzz
                             }
                         }
                         enemies_killed++;
-                        
+
                         break;
+                    }
+                }
+                else 
+                { 
+                    //limits number of enemies to number per level
+                    if (enemies_killed  < (enemies_level[level]-maxEnemies+1))
+                    {
+                        enemy.alive = true;
+
+                        int rand1 = rand.Next(100);
+                        int rand2 = rand.Next(100);
+                        if (rand1 < 33)
+                        {
+                            enemy.position.X = -enemy.sprite.Width - 5;
+                            enemy.position.Y = rand.Next(viewport.Height);
                         }
-                }
-                else
-                {
-                    enemy.alive = true;
-
-                    int rand1 = rand.Next(100);
-                    int rand2 = rand.Next(100);
-                    if (rand1 < 33)
-                    {
-                        enemy.position.X = -enemy.sprite.Width - 5;
-                        enemy.position.Y = rand.Next(viewport.Height);
-                    }
-                    else if (rand1 < 66)
-                    {
-                        enemy.position.X = rand.Next(viewport.Width);
-                        if (rand2 < 50)
-                            enemy.position.Y = -enemy.sprite.Height + 5;
+                        else if (rand1 < 66)
+                        {
+                            enemy.position.X = rand.Next(viewport.Width);
+                            if (rand2 < 50)
+                                enemy.position.Y = -enemy.sprite.Height + 5;
+                            else
+                                enemy.position.Y = viewport.Height + 4;
+                        }
                         else
-                            enemy.position.Y = viewport.Height + 4;
-                    }
-                    else{
-                        enemy.position.X = viewport.Width + 4;
-                        enemy.position.Y = rand.Next(viewport.Height);
+                        {
+                            enemy.position.X = viewport.Width + 4;
+                            enemy.position.Y = rand.Next(viewport.Height);
+                        }
                     }
 
                 }
-                //makes enemies move towards the player
-                Vector2 target;
+                //only update movement if enemy is alive
+                if (enemy.alive)
+                {
+                    //makes enemies move towards the player
+                    Vector2 target;
 
-                if (MathFns.Distance(enemy.position, player1.position) > MathFns.Distance(enemy.position, player2.position))
-                    target = player2.position;
-                else
-                    target = player1.position;
+                    if (MathFns.Distance(enemy.position, player1.position) > MathFns.Distance(enemy.position, player2.position))
+                        target = player2.position;
+                    else
+                        target = player1.position;
 
-                enemy.velocity = target - enemy.position;
-                enemy.velocity.Normalize();
-                enemy.position += enemy.velocity * 2;
-                float angle = (float)(-1 * (Math.PI/2 + Math.Atan2(enemy.velocity.X, enemy.velocity.Y)));
+                    enemy.velocity = target - enemy.position;
+                    enemy.velocity.Normalize();
+                    enemy.position += enemy.velocity * 2;
+                    float angle = (float)(-1 * (Math.PI / 2 + Math.Atan2(enemy.velocity.X, enemy.velocity.Y)));
 
-                if (angle != enemy.rotation)
-                    enemy.rotation = MathFns.Clerp(enemy.rotation, angle, angle_rot);
+                    if (angle != enemy.rotation)
+                        enemy.rotation = MathFns.Clerp(enemy.rotation, angle, angle_rot);
+                }
             }
         }
 
@@ -1082,9 +1096,9 @@ namespace Bugzzz
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            if (enemies_level[level-1] == enemies_killed && !act_fade)
+            if (enemies_level[level] == enemies_killed && !act_fade)
             {
-                ls = new LevelScore(this.level, player1, player2, true, 200, levelfont, GraphicsDevice, this.healthBar);
+                ls = new LevelScore(this.level+1, player1, player2, true, 200, levelfont, GraphicsDevice, this.healthBar);
                 act_fade = true;
                 enemies_killed = 0;
             }
