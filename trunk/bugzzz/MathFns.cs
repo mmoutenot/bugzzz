@@ -101,20 +101,21 @@ namespace Bugzzz
 
         }
 
-        public static bool broadPhaseCollision(Rectangle a, float angleA, Rectangle b, float angleB)
+        public static bool broadPhaseCollision(Rectangle a, Rectangle b, float angleB)
         {
             Vector2 CenterA = new Vector2(a.Center.X, a.Center.Y);
             Vector2 CenterB = new Vector2(b.X, b.Y);
 
+
             Vector2 UL1 = new Vector2(a.Left, a.Top);
-            UL1 = newPoint(CenterA, UL1, angleA);
+            UL1 = newPoint(CenterA, UL1, 0);
             //s.Draw(l, UL1, Color.White);
             Vector2 BL1 = new Vector2(a.Left,a.Bottom);
-            BL1 = newPoint(CenterA, BL1, angleA);
+            BL1 = newPoint(CenterA, BL1, 0);
             Vector2 UR1 = new Vector2(a.Right,a.Top);
-            UR1 = newPoint(CenterA, UR1, angleA);
+            UR1 = newPoint(CenterA, UR1, 0);
             Vector2 BR1 = new Vector2(a.Right,a.Bottom);
-            BR1 = newPoint(CenterA, BR1, angleA);
+            BR1 = newPoint(CenterA, BR1, 0);
 
             //calculate new corners for rect b
             Vector2 UL2 = new Vector2(b.Left-b.Width/2, b.Top-b.Height/2);
@@ -191,53 +192,38 @@ namespace Bugzzz
             //Console.Out.WriteLine(b.X);
             Rectangle r1 = new Rectangle((int)minX1, (int)minY1, (int)(maxX1 - minX1), (int)(maxY1- minY1));
             Rectangle r2 = new Rectangle((int)minX2, (int)minY2, (int)(maxX2 - minX2), (int)(maxY2- minY2));
-            return r1.Intersects(r2);
+           // s.Begin(SpriteBlendMode.AlphaBlend);
+           // s.Draw(t,r2,new Color(Color.White, (byte)50));
+           // s.End();
+
+            if (!r1.Intersects(r2))
+                return false;
+            else return narrowPhaseCollision(UL2, BL2, UR2, BR2, a);
 
 
 
         }
-        public static bool narrowPhaseCollision(Rectangle a, float angleA, Rectangle b, float angleB)
+        public static bool narrowPhaseCollision(Vector2 UL2, Vector2 BL2, Vector2 UR2,Vector2 BR2, Rectangle other)
         {
-            Vector2 CenterA = new Vector2(a.Center.X, a.Center.Y);
-            Vector2 CenterB = new Vector2(b.X, b.Y);
+            
+            if (other.Contains((int)((UL2.X + UR2.X) / 2), (int)((UL2.Y + UR2.Y) / 2)))
+                return true;
+            if (other.Contains((int)((UL2.X + BL2.X) / 2), (int)(((UL2.Y + BL2.Y) / 2))))
+                return true;
+            if (other.Contains((int)((BL2.X + BR2.X) / 2), (int)(((BL2.Y + BR2.Y) / 2))))
+                return true;
+            if (other.Contains((int)((UR2.X + BR2.X) / 2), (int)(((UR2.Y + BR2.Y) / 2))))
+                return true;
+            if (other.Contains((int)UL2.X, (int)UL2.Y))
+                return true;
+            if (other.Contains((int)BL2.X, (int)BL2.Y))
+                return true;
+            if (other.Contains((int)BR2.X, (int)BR2.Y))
+                return true;
+            if (other.Contains((int)UR2.X, (int)UR2.Y))
+                return true;
 
-            Vector2 UL1 = new Vector2(a.Left, a.Top);
-            UL1 = newPoint(CenterA, UL1, angleA);
-            //s.Draw(l, UL1, Color.White);
-            Vector2 BL1 = new Vector2(a.Left, a.Bottom);
-            BL1 = newPoint(CenterA, BL1, angleA);
-            Vector2 UR1 = new Vector2(a.Right, a.Top);
-            UR1 = newPoint(CenterA, UR1, angleA);
-            Vector2 BR1 = new Vector2(a.Right, a.Bottom);
-            BR1 = newPoint(CenterA, BR1, angleA);
-
-            //calculate new corners for rect b
-            Vector2 UL2 = new Vector2(b.Left - b.Width / 2, b.Top - b.Height / 2);
-            UL2 = newPoint(CenterB, UL2, angleB);
-            Vector2 BL2 = new Vector2(b.Left - b.Width / 2, b.Top + b.Height / 2);
-            BL2 = newPoint(CenterB, BL2, angleB);
-            Vector2 UR2 = new Vector2(b.X + b.Width / 2, b.Y - b.Height / 2);
-            UR2 = newPoint(CenterB, UR2, angleB);
-            Vector2 BR2 = new Vector2(b.X + b.Width / 2, b.Y + b.Height / 2);
-            BR2 = newPoint(CenterB, BR2, angleB);
-
-            Vector2 Axis = UR1 - UL1;
-            if (!nPCHelpers(UR1, UR2, UL1, UL2, BL1, BL2, BR1, BR2, Axis))
-                return false;
-
-            Axis = UR1 - BR1;
-            if (!nPCHelpers(UR1, UR2, UL1, UL2, BL1, BL2, BR1, BR2, Axis))
-                return false;
-
-            Axis = UL2 - BL2;
-            if (!nPCHelpers(UR1, UR2, UL1, UL2, BL1, BL2, BR1, BR2, Axis))
-                return false;
-
-            Axis = UL2 - UR2;
-            if (!nPCHelpers(UR1, UR2, UL1, UL2, BL1, BL2, BR1, BR2, Axis))
-                return false;
-
-            return true;
+            return false;
         }
         public static bool nPCHelpers(Vector2 UR1, Vector2 UR2, Vector2 UL1, Vector2 UL2, Vector2 BL1, Vector2 BL2,Vector2 BR1,Vector2 BR2,Vector2 Axis)
         {
@@ -265,6 +251,7 @@ namespace Bugzzz
 
             //Calculate min values on axis
             float maxA=urv1, minA=urv1, maxB=urv2, minB=urv2;
+
             if (brv1 > maxA)
                 maxA = brv1;
             else if (brv1 < minA)
@@ -306,8 +293,8 @@ namespace Bugzzz
         public static Vector2 project(Vector2 Axis, Vector2 pt)
         {
             Vector2 ret = new Vector2();
-            ret.X = (float)((pt.X * Axis.X + pt.Y * Axis.Y) * Axis.X / (Math.Pow(Axis.X, 2) + Math.Pow(Axis.Y, 2)));
-            ret.Y = (float)((pt.X * Axis.X + pt.Y * Axis.Y) * Axis.Y / (Math.Pow(Axis.X, 2) + Math.Pow(Axis.Y, 2)));
+            ret.X = (float)(((pt.X * Axis.X + pt.Y * Axis.Y)/ (Math.Pow(Axis.X, 2) + Math.Pow(Axis.Y, 2)))*Axis.X);
+            ret.Y = (float)(((pt.X * Axis.X + pt.Y * Axis.Y)  / (Math.Pow(Axis.X, 2) + Math.Pow(Axis.Y, 2)))* Axis.Y);
             return ret;
         }
 
