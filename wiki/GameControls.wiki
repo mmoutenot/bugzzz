@@ -1,0 +1,25 @@
+#summary Description of Character Controls
+
+= Introduction =
+The following article describes player controls for the XNA game Bugzzz.
+
+
+= Details =
+*bold* Movement *bold*
+  * Player Movement:
+      Use the left joystick to move the player around the screen
+  * Turret Movement: 
+      To use the turret, press the right joystick in the direction you want to fire. 
+
+*bold* Other Controls *bold*
+  * A Button - Deploy Turret
+  * D- Pad Up - Open Player Menu
+  * D-Pad Down - Close Player Menu
+  * Right and Left Triggers - Rotate through Player Menu Spells
+  * B Button - Activate Player Menu Spell
+
+
+Add your content here.  Format your content with:
+  * Text in *bold* or _italic_
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
