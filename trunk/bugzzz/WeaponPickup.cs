@@ -18,15 +18,13 @@ namespace Bugzzz
     {
         public Texture2D sprite;
         public Vector2 position;
-        public bool alive;
         public int weaponIndex;
 
-        public WeaponPickup(Texture2D loadedTexture)
+        public WeaponPickup(Texture2D loadedTexture,Vector2 pos, int index)
         {
             sprite = loadedTexture;
-            alive = false;
-            position = Vector2.Zero;
-            weaponIndex = 0;
+            position = pos;
+            weaponIndex = index;
         }
     }
 }

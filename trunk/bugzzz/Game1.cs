@@ -32,7 +32,7 @@ namespace Bugzzz
         GameObject[] turretBullets1;
         GameObject[] turretBullets2;
         GameObject[] enemies;
-        WeaponPickup[] pickups;
+        ArrayList pickups;
         ArrayList score;
         Turret turret1; //Player 1 turret
         Turret turret2; //Player 2 turret
@@ -196,15 +196,7 @@ namespace Bugzzz
             p2_w = new Weapons(temp, temp, temp);
 
 
-            pickups = new WeaponPickup[2];
-            pickups[0] = new WeaponPickup(temp);
-            pickups[0].alive = true;
-            pickups[0].weaponIndex = 1;
-            pickups[0].position = new Vector2(200.0f, 100.0f);
-            pickups[1] = new WeaponPickup(temp);
-            pickups[1].alive = true;
-            pickups[1].weaponIndex = 2;
-            pickups[1].position = new Vector2(600.0f, 300.0f);
+            pickups = new ArrayList();
             //Initializes all of the bullets, enemies, etc.
 
             level_backgrounds = new Texture2D[5];
@@ -475,6 +467,13 @@ namespace Bugzzz
                                 score.Add(new ScoreDisplay(20, SCORE_TIME, enemy.position, true, 1));
                                 player1.score += 20;
                                 enemies_killed++;
+
+                                // Possibly Generate a new WeaponPickup
+                                int wpn_pickup_prob = rand.Next(100);
+                                if (wpn_pickup_prob < 10)
+                                {
+                                    generateWeaponPickup(enemy.position);
+                                }
                                 break;
                             }
                         }
@@ -516,6 +515,13 @@ namespace Bugzzz
                                 score.Add(new ScoreDisplay(20, SCORE_TIME, enemy.position, true, 2));
                                 player2.score += 20;
                                 enemies_killed++;
+
+                                // Possibly Generate a new WeaponPickup
+                                int wpn_pickup_prob = rand.Next(100);
+                                if (wpn_pickup_prob < 10)
+                                {
+                                    generateWeaponPickup(enemy.position);
+                                }
                                 break;
                             }
                         }
@@ -725,17 +731,24 @@ namespace Bugzzz
             }
         }
 
-        public void updatePickups()
+        private void generateWeaponPickup(Vector2 pos)
         {
+            Console.WriteLine("A new pickup was created"+pos);
+            Texture2D sample_weapon = Content.Load<Texture2D>("sprites\\cannonball");
+            pickups.Add(new WeaponPickup(sample_weapon, pos, rand.Next(2)));
+        }
+
+        private void updatePickups(Player p)
+        {
+            WeaponPickup destroyedPickup = null;
+
             Rectangle playerRect = new Rectangle(
-                    (int)player1.position.X,
-                    (int)player1.position.Y,
-                    player1.spriteB.Width,
-                    player1.spriteB.Height);
+                    (int)p.position.X,
+                    (int)p.position.Y,
+                    p.spriteB.Width,
+                    p.spriteB.Height);
             foreach (WeaponPickup pickup in pickups)
             {
-                if (pickup.alive)
-                {
                     Rectangle pickupRect = new Rectangle(
                       (int)pickup.position.X,
                       (int)pickup.position.Y,
@@ -744,12 +757,13 @@ namespace Bugzzz
 
                     if (playerRect.Intersects(pickupRect))
                     {
-                        pickup.alive = false;
-                        player1.activeWeapon = pickup.weaponIndex;
+                        destroyedPickup = pickup;
+                        p.activeWeapon = pickup.weaponIndex;
                         break;
                     }
-                }
-            }
+                } 
+            if (destroyedPickup != null)
+             pickups.Remove(destroyedPickup);
         }
 
         protected override void Update(GameTime gameTime)
@@ -777,7 +791,8 @@ namespace Bugzzz
                 UpdateInput();
                 updateBullets();
                 updateEnemies();
-                updatePickups();
+                updatePickups(player1);
+                updatePickups(player2);
 
                 player1.position += player1.velocity;
                 player2.position += player2.velocity;
@@ -1241,10 +1256,7 @@ namespace Bugzzz
                 //player 1
                 foreach (WeaponPickup pickup in pickups)
                 {
-                    if (pickup.alive)
-                    {
                         spriteBatch.Draw(pickup.sprite, pickup.position, Color.White);
-                    }
                 }
                 foreach (GameObject bullet in bullets)
                 {
