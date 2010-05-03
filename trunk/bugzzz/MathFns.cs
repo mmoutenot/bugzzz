@@ -215,6 +215,22 @@ namespace Bugzzz
                 return true;
             if (other.Contains((int)((UR2.X + BR2.X) / 2), (int)(((UR2.Y + BR2.Y) / 2))))
                 return true;
+            if (other.Contains((int)((UL2.X + UR2.X) / 2 - Math.Abs(UL2.X - UR2.X) / 4), (int)(((UL2.Y + UR2.Y) / 2 - Math.Abs(UL2.Y - UR2.Y) / 4))))
+                return true;
+            if (other.Contains((int)((UL2.X + BL2.X) / 2 - Math.Abs(UL2.X - BL2.X) / 4), (int)(((UL2.Y + BL2.Y) / 2 - Math.Abs(UL2.Y - BL2.Y) / 4))))
+                return true;
+            if (other.Contains((int)((BL2.X + BR2.X) / 2 - Math.Abs(BL2.X - BR2.X) / 4), (int)(((BL2.Y + BR2.Y) / 2 - Math.Abs(BL2.Y - BR2.Y) / 4))))
+                return true;
+            if (other.Contains((int)((UR2.X + BR2.X) / 2 - Math.Abs(UR2.X - BR2.X) / 4), (int)(((UR2.Y + BR2.Y) / 2 - Math.Abs(UR2.Y - BR2.Y) / 4))))
+                return true;
+            if (other.Contains((int)((UL2.X + UR2.X) / 2 + Math.Abs(UL2.X - UR2.X) / 4), (int)(((UL2.Y + UR2.Y) / 2 + Math.Abs(UL2.Y - UR2.Y) / 4))))
+                return true;
+            if (other.Contains((int)((UL2.X + BL2.X) / 2 + Math.Abs(UL2.X - BL2.X) / 4), (int)(((UL2.Y + BL2.Y) / 2 + Math.Abs(UL2.Y - BL2.Y) / 4))))
+                return true;
+            if (other.Contains((int)((BL2.X + BR2.X) / 2 + Math.Abs(BL2.X - BR2.X) / 4), (int)(((BL2.Y + BR2.Y) / 2 + Math.Abs(BL2.Y - BR2.Y) / 4))))
+                return true;
+            if (other.Contains((int)((UR2.X + BR2.X) / 2 + Math.Abs(UR2.X - BR2.X) / 4), (int)(((UR2.Y + BR2.Y) / 2 + Math.Abs(UR2.Y - BR2.Y) / 4))))
+                return true;
             if (other.Contains((int)UL2.X, (int)UL2.Y))
                 return true;
             if (other.Contains((int)BL2.X, (int)BL2.Y))
