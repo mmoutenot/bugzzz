@@ -734,17 +734,20 @@ namespace Bugzzz
                     player1.spriteB.Height);
             foreach (WeaponPickup pickup in pickups)
             {
-                Rectangle pickupRect = new Rectangle(
-                  (int)pickup.position.X,
-                  (int)pickup.position.Y,
-                  pickup.sprite.Width,
-                  pickup.sprite.Height);
-
-                if (playerRect.Intersects(pickupRect))
+                if (pickup.alive)
                 {
-                    pickup.alive = false;
-                    player1.activeWeapon = pickup.weaponIndex;
-                    break;
+                    Rectangle pickupRect = new Rectangle(
+                      (int)pickup.position.X,
+                      (int)pickup.position.Y,
+                      pickup.sprite.Width,
+                      pickup.sprite.Height);
+
+                    if (playerRect.Intersects(pickupRect))
+                    {
+                        pickup.alive = false;
+                        player1.activeWeapon = pickup.weaponIndex;
+                        break;
+                    }
                 }
             }
         }
