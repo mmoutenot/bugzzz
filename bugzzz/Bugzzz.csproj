@@ -6,13 +6,15 @@
     <Platform Condition=" '$(Platform)' == '' ">Xbox 360</Platform>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>thrive_2</RootNamespace>
-    <AssemblyName>thrive_2</AssemblyName>
+    <RootNamespace>Bugzzz</RootNamespace>
+    <AssemblyName>Bugzzz</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <XnaFrameworkVersion>v3.1</XnaFrameworkVersion>
     <XnaPlatform>Xbox 360</XnaPlatform>
     <XnaCrossPlatformGroupID>672238cd-30f3-45ed-803b-1335210f613c</XnaCrossPlatformGroupID>
     <Thumbnail>GameThumbnail.png</Thumbnail>
+    <StartupObject>
+    </StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|Xbox 360' ">
     <DebugSymbols>true</DebugSymbols>

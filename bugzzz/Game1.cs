@@ -456,24 +456,27 @@ namespace Bugzzz
                     //enemy-bullet collision detection.
                     foreach (GameObject enemy in enemies)
                     {
-                        Rectangle enemyRect = new Rectangle(
-                            (int)enemy.position.X,
-                            (int)enemy.position.Y,
-                            enemy.sprite.Width,
-                            enemy.sprite.Height);
-
-                        if (MathFns.broadPhaseCollision(bulletRect, enemyRect, enemy.rotation))
+                        if (enemy.alive)
                         {
-                            bullet.alive = false;
-                            enemy.alive = false;
+                            Rectangle enemyRect = new Rectangle(
+                                (int)enemy.position.X,
+                                (int)enemy.position.Y,
+                                enemy.sprite.Width,
+                                enemy.sprite.Height);
 
-                            // particle test
-                            particleEffect.Trigger(new Vector2(enemy.position.X, enemy.position.Y));
+                            if (MathFns.broadPhaseCollision(bulletRect, enemyRect, enemy.rotation))
+                            {
+                                bullet.alive = false;
+                                enemy.alive = false;
 
-                            score.Add(new ScoreDisplay(20, SCORE_TIME, enemy.position, true, 1));
-                            player1.score += 20;
-                            enemies_killed++;
-                            break;
+                                // particle test
+                                particleEffect.Trigger(new Vector2(enemy.position.X, enemy.position.Y));
+
+                                score.Add(new ScoreDisplay(20, SCORE_TIME, enemy.position, true, 1));
+                                player1.score += 20;
+                                enemies_killed++;
+                                break;
+                            }
                         }
                     }
                 }
@@ -498,20 +501,23 @@ namespace Bugzzz
                     //enemy-bullet collision detection.
                     foreach (GameObject enemy in enemies)
                     {
-                        Rectangle enemyRect = new Rectangle(
-                            (int)enemy.position.X,
-                            (int)enemy.position.Y,
-                            enemy.sprite.Width,
-                            enemy.sprite.Height);
-
-                        if (MathFns.broadPhaseCollision(bulletRect, enemyRect, enemy.rotation))
+                        if (enemy.alive)
                         {
-                            bullet.alive = false;
-                            enemy.alive = false;
-                            score.Add(new ScoreDisplay(20, SCORE_TIME, enemy.position, true, 2));
-                            player2.score += 20;
-                            enemies_killed++;
-                            break;
+                            Rectangle enemyRect = new Rectangle(
+                                (int)enemy.position.X,
+                                (int)enemy.position.Y,
+                                enemy.sprite.Width,
+                                enemy.sprite.Height);
+
+                            if (MathFns.broadPhaseCollision(bulletRect, enemyRect, enemy.rotation))
+                            {
+                                bullet.alive = false;
+                                enemy.alive = false;
+                                score.Add(new ScoreDisplay(20, SCORE_TIME, enemy.position, true, 2));
+                                player2.score += 20;
+                                enemies_killed++;
+                                break;
+                            }
                         }
                     }
                 }
@@ -536,20 +542,23 @@ namespace Bugzzz
                     //enemy-bullet collision detection.
                     foreach (GameObject enemy in enemies)
                     {
-                        Rectangle enemyRect = new Rectangle(
-                            (int)enemy.position.X,
-                            (int)enemy.position.Y,
-                            enemy.sprite.Width,
-                            enemy.sprite.Height);
-
-                        if (MathFns.broadPhaseCollision(bulletRect, enemyRect, enemy.rotation))
+                        if (enemy.alive)
                         {
-                            bullet.alive = false;
-                            enemy.alive = false;
-                            score.Add(new ScoreDisplay(10, SCORE_TIME, enemy.position, true, 1));
-                            player1.score += 10;
-                            enemies_killed++;
-                            break;
+                            Rectangle enemyRect = new Rectangle(
+                                (int)enemy.position.X,
+                                (int)enemy.position.Y,
+                                enemy.sprite.Width,
+                                enemy.sprite.Height);
+
+                            if (MathFns.broadPhaseCollision(bulletRect, enemyRect, enemy.rotation))
+                            {
+                                bullet.alive = false;
+                                enemy.alive = false;
+                                score.Add(new ScoreDisplay(10, SCORE_TIME, enemy.position, true, 1));
+                                player1.score += 10;
+                                enemies_killed++;
+                                break;
+                            }
                         }
                     }
                 }
@@ -574,20 +583,23 @@ namespace Bugzzz
                     //enemy-bullet collision detection.
                     foreach (GameObject enemy in enemies)
                     {
-                        Rectangle enemyRect = new Rectangle(
-                            (int)enemy.position.X,
-                            (int)enemy.position.Y,
-                            enemy.sprite.Width,
-                            enemy.sprite.Height);
-
-                        if (MathFns.broadPhaseCollision(bulletRect, enemyRect, (float)(enemy.rotation+Math.PI/2)))
+                        if (enemy.alive)
                         {
-                            bullet.alive = false;
-                            enemy.alive = false;
-                            score.Add(new ScoreDisplay(10, SCORE_TIME, enemy.position, true, 2));
-                            player2.score += 10;
-                            enemies_killed++;
-                            break;
+                            Rectangle enemyRect = new Rectangle(
+                                (int)enemy.position.X,
+                                (int)enemy.position.Y,
+                                enemy.sprite.Width,
+                                enemy.sprite.Height);
+
+                            if (MathFns.broadPhaseCollision(bulletRect, enemyRect, (float)(enemy.rotation + Math.PI / 2)))
+                            {
+                                bullet.alive = false;
+                                enemy.alive = false;
+                                score.Add(new ScoreDisplay(10, SCORE_TIME, enemy.position, true, 2));
+                                player2.score += 10;
+                                enemies_killed++;
+                                break;
+                            }
                         }
                     }
                 }
