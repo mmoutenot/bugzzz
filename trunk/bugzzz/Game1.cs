@@ -794,8 +794,15 @@ namespace Bugzzz
                 updatePickups(player1);
                 updatePickups(player2);
 
-                player1.position += player1.velocity;
-                player2.position += player2.velocity;
+                // Border detection keeps players on the window
+                float xmove = player1.position.X + player1.velocity.X;
+                float ymove = player1.position.Y + player1.velocity.Y;
+                if( (xmove>(player1.spriteB.Width/2) && xmove<(viewport.Width-player1.spriteB.Width/2)) && (ymove>(player1.spriteB.Height/2) && ymove<(viewport.Height-player1.spriteB.Height/2)) )
+                    player1.position += player1.velocity;
+                xmove = player2.position.X + player2.velocity.X;
+                ymove = player2.position.Y + player2.velocity.Y;
+                if ((xmove > (player2.spriteB.Width / 2) && xmove < (viewport.Width - player2.spriteB.Width / 2)) && (ymove > (player2.spriteB.Height / 2) && ymove < (viewport.Height - player2.spriteB.Height / 2)))
+                    player2.position += player2.velocity;
                 
                 if (player1.energy < 100)
                 {
