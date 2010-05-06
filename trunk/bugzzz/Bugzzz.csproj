@@ -70,6 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Character.cs" />
+    <Compile Include="SpellMenu.cs" />
     <Compile Include="Statistics.cs" />
     <Compile Include="LevelScore.cs" />
     <Compile Include="ScoreDisplay.cs" />

@@ -41,8 +41,9 @@ namespace Bugzzz
         public int activeWeapon;
         public Statistics stat;
         public int livesLeft;
+        public SpellMenu spellMenu;
 
-        public Player(int i, Texture2D t, Texture2D b, Weapons w, Vector2 pos, int ty, Statistics s)
+        public Player(int i, Texture2D t, Texture2D b, Weapons w, Vector2 pos, int ty, Statistics s, Texture2D[] sMenu)
         {
             energy = 100;
             deploy = false;
@@ -66,6 +67,7 @@ namespace Bugzzz
             livesLeft = 5;
 
             type = ty;
+            spellMenu = new SpellMenu(sMenu);
         }
     }
 }

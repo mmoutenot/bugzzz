@@ -222,8 +222,15 @@ namespace Bugzzz
             }
 
             temp = Content.Load<Texture2D>("sprites\\cannon");
-            player1 = new Player(1, temp, Content.Load<Texture2D>("sprites\\smiley1"), p1_w, new Vector2(viewport.Width*7/15,viewport.Height/2), 1, new Statistics(true));
-            player2 = new Player(2, temp, Content.Load<Texture2D>("sprites\\smiley1"), p2_w, new Vector2(viewport.Width*8/15, viewport.Height/2), 2, new Statistics(true));
+            //spell menu textures
+            Texture2D[] sMenu = new Texture2D[4];
+            sMenu[0] = Content.Load<Texture2D>("SpellMenus\\SpiderBar1Active");
+            sMenu[1] = Content.Load<Texture2D>("SpellMenus\\SpiderBar2Active");
+            sMenu[2] = Content.Load<Texture2D>("SpellMenus\\SpiderBar3Active");
+            sMenu[3] = Content.Load<Texture2D>("SpellMenus\\SpiderBar4Active");
+
+            player1 = new Player(1, temp, Content.Load<Texture2D>("sprites\\smiley1"), p1_w, new Vector2(viewport.Width*7/15,viewport.Height/2), 1, new Statistics(true), sMenu);
+            player2 = new Player(2, temp, Content.Load<Texture2D>("sprites\\smiley1"), p2_w, new Vector2(viewport.Width*8/15, viewport.Height/2), 2, new Statistics(true), sMenu);
 
             
             // The maximum amount of scores to display on screen is the maximum number of dead enemies
