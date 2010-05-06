@@ -58,6 +58,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Character.cs" />
+    <Compile Include="SpellMenu.cs" />
     <Compile Include="GameObject.cs" />
     <Compile Include="LevelScore.cs" />
     <Compile Include="MathFns.cs" />
