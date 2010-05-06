@@ -18,8 +18,3 @@ The following article describes player controls for the XNA game Bugzzz.
   * Right and Left Triggers - Rotate through Player Menu Spells
   * B Button - Activate Player Menu Spell
 
-
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
