@@ -229,8 +229,8 @@ namespace Bugzzz
             sMenu[2] = Content.Load<Texture2D>("SpellMenus\\SpiderBar3Active");
             sMenu[3] = Content.Load<Texture2D>("SpellMenus\\SpiderBar4Active");
 
-            player1 = new Player(1, temp, Content.Load<Texture2D>("sprites\\smiley1"), p1_w, new Vector2(viewport.Width*7/15,viewport.Height/2), 1, new Statistics(true), sMenu);
-            player2 = new Player(2, temp, Content.Load<Texture2D>("sprites\\smiley1"), p2_w, new Vector2(viewport.Width*8/15, viewport.Height/2), 2, new Statistics(true), sMenu);
+            player1 = new Player(1, temp, Content.Load<Texture2D>("sprites\\smiley1"), p1_w, new Vector2(viewport.Width*7/15,viewport.Height/2), 1, new Statistics(true), sMenu, viewport);
+            player2 = new Player(2, temp, Content.Load<Texture2D>("sprites\\smiley1"), p2_w, new Vector2(viewport.Width*8/15, viewport.Height/2), 2, new Statistics(true), sMenu, viewport);
 
             
             // The maximum amount of scores to display on screen is the maximum number of dead enemies
@@ -770,7 +770,7 @@ namespace Bugzzz
                     }
                 } 
             if (destroyedPickup != null)
-             pickups.Remove(destroyedPickup);
+                pickups.Remove(destroyedPickup);
         }
 
         protected override void Update(GameTime gameTime)
@@ -785,7 +785,7 @@ namespace Bugzzz
                     player1.deploy = true;
                 if (GamePad.GetState(PlayerIndex.Two).Buttons.A == ButtonState.Pressed)
                     player2.deploy = true;
-
+                
                 float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
                 gt = gameTime;
                 elapsedTime += elapsed;
@@ -800,6 +800,20 @@ namespace Bugzzz
                 updateEnemies();
                 updatePickups(player1);
                 updatePickups(player2);
+
+                //player1 spell menu
+                if (player1.spellMenu.Active)
+                    player1.spellMenu.moveOn();
+                else if (!player1.spellMenu.Active)
+                    player1.spellMenu.moveOff();
+
+                //player2 spell menu
+
+                if (player2.spellMenu.Active)
+                    player2.spellMenu.moveOn();
+                else if (!player2.spellMenu.Active)
+                    player2.spellMenu.moveOff();
+
 
                 // Border detection keeps players on the window
                 float xmove = player1.position.X + player1.velocity.X;
@@ -820,7 +834,7 @@ namespace Bugzzz
                     player2.energy += 1;
                 }
 
-
+                #region Fire Delay
                 if ((elapsedTime >= player1.weapon.delays[player1.activeWeapon]) && player1.fire)
                 {
 
@@ -843,8 +857,9 @@ namespace Bugzzz
                     t2_elapsedTime = 0.0f;
                     fireTurretBullets2();
                 }
+                #endregion
 
-                
+
             }
 
             // Update the statistical time used to calculate player statistics
@@ -955,6 +970,19 @@ namespace Bugzzz
                     {
                         player1.fire = true;
                     }
+                    
+                }
+                if (GamePad.GetState(PlayerIndex.One).DPad.Up == ButtonState.Pressed)
+                    player1.spellMenu.Active = true;
+                if (GamePad.GetState(PlayerIndex.One).DPad.Down == ButtonState.Pressed)
+                    player2.spellMenu.Active = false;
+
+                if (player1.spellMenu.Active)
+                {
+                    if (GamePad.GetState(PlayerIndex.One).Buttons.RightShoulder == ButtonState.Pressed)
+                        player1.spellMenu.stateInc();
+                    if (GamePad.GetState(PlayerIndex.One).Buttons.LeftShoulder == ButtonState.Pressed)
+                        player1.spellMenu.stateDec();
                 }
                 #endregion
 
@@ -1015,6 +1043,21 @@ namespace Bugzzz
                 if (keyboardState.IsKeyDown(Keys.Escape))
                     this.Exit();
 
+                if (keyboardState.IsKeyDown(Keys.I))
+                    player1.spellMenu.Active = true;
+                if (keyboardState.IsKeyDown(Keys.K))
+                    player1.spellMenu.Active = false;
+
+
+                if (player1.spellMenu.Active)
+                {
+                    if (keyboardState.IsKeyDown(Keys.U))
+                        //TODO:: Fix from rotating through too fast
+                        player1.spellMenu.stateDec();
+                    else if (keyboardState.IsKeyDown(Keys.O))
+                        player1.spellMenu.stateInc();
+                }
+
 
 
                 
@@ -1061,6 +1104,22 @@ namespace Bugzzz
                         player2.fire = true;
                     }
                 }
+
+                if (GamePad.GetState(PlayerIndex.One).DPad.Up == ButtonState.Pressed)
+                    player1.spellMenu.Active = true;
+                if (GamePad.GetState(PlayerIndex.One).DPad.Down == ButtonState.Pressed)
+                    player2.spellMenu.Active = false;
+
+
+
+                if (player2.spellMenu.Active)
+                {
+                    if (GamePad.GetState(PlayerIndex.One).Buttons.RightShoulder == ButtonState.Pressed)
+                        player2.spellMenu.stateInc();
+                    if (GamePad.GetState(PlayerIndex.One).Buttons.LeftShoulder == ButtonState.Pressed)
+                        player2.spellMenu.stateDec();
+                }
+
                 #endregion
 
             }
@@ -1120,6 +1179,22 @@ namespace Bugzzz
                 }
                 if (keyboardState.IsKeyDown(Keys.Escape))
                     this.Exit();
+
+
+                if (keyboardState.IsKeyDown(Keys.NumPad8))
+                    player2.spellMenu.Active = true;
+                if (keyboardState.IsKeyDown(Keys.NumPad5))
+                    player2.spellMenu.Active = false;
+
+                if (player2.spellMenu.Active){
+                    if (keyboardState.IsKeyDown(Keys.NumPad7))
+                        //TODO:: Fix from rotating through too fast
+                        player2.spellMenu.stateDec();
+                    else if (keyboardState.IsKeyDown(Keys.NumPad9))
+                        player2.spellMenu.stateInc();
+                }
+
+
 
 
 
@@ -1254,7 +1329,9 @@ namespace Bugzzz
                 spriteBatch.Draw(player2.spriteB, new Rectangle((int)player2.position.X, (int)player2.position.Y, player2.spriteB.Width, player2.spriteB.Height), null, Color.Red, player2.rotation_b, new Vector2(player2.spriteB.Width / 2, player2.spriteB.Height / 2), SpriteEffects.None, 0);
                 spriteBatch.Draw(player2.spriteT, new Rectangle((int)player2.position.X, (int)player2.position.Y, player2.spriteT.Width, player2.spriteT.Height), null, Color.Red, (float)(player2.rotation + .5 * Math.PI), new Vector2(player2.spriteT.Width / 2, player2.spriteT.Height / 2), SpriteEffects.None, 0);
                 
-                
+                //draw spell menus
+                spriteBatch.Draw(player1.spellMenu.State, new Rectangle((int)player1.spellMenu.Position.X, (int)player1.spellMenu.Position.Y, player1.spellMenu.Width, player1.spellMenu.Height), new Color(Color.White, (byte)210));
+                spriteBatch.Draw(player2.spellMenu.State, new Rectangle((int)player2.spellMenu.Position.X, (int)player2.spellMenu.Position.Y, player2.spellMenu.Width, player2.spellMenu.Height), new Color(Color.White, (byte)210));
                 if (turret1.placed)
                 {
                     spriteBatch.Draw(turret1.sprite, new Rectangle((int)turret1.position.X, (int)turret1.position.Y, turret1.sprite.Width, turret1.sprite.Height), null, Color.White, (float)(turret1.rotation + .5 * Math.PI), new Vector2(turret1.sprite.Width / 2, turret1.sprite.Height / 2), SpriteEffects.None, 0);
