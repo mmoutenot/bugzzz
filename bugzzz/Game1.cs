@@ -41,6 +41,9 @@ namespace Bugzzz
         int[] enemies_level;
         int level;
         int enemies_killed;
+        bool press1a, press1b; //indicates if button already pressed
+        bool press2a, press2b;
+        
 
         // Score display time on screen as it fades out
         const int SCORE_TIME = 80;
@@ -160,6 +163,10 @@ namespace Bugzzz
             enemies_level[1] = 250;
             enemies_level[2] = 500;
             enemies_level[3] = 1000;
+            this.press1a = false;
+            this.press2a = false;
+            this.press1b = false;
+            this.press2b = false;
 
 
             level = 0;
@@ -938,23 +945,34 @@ namespace Bugzzz
                     }
                     
                 }
+                //move spell on/off
                 if (GamePad.GetState(PlayerIndex.One).DPad.Up == ButtonState.Pressed)
                     player1.spellMenu.Active = true;
                 if (GamePad.GetState(PlayerIndex.One).DPad.Down == ButtonState.Pressed)
                     player2.spellMenu.Active = false;
 
+                //move indication of spell
                 if (player1.spellMenu.Active)
                 {
-                    if (GamePad.GetState(PlayerIndex.One).Buttons.RightShoulder == ButtonState.Pressed)
+                    //move right
+                    if (GamePad.GetState(PlayerIndex.One).Buttons.RightShoulder == ButtonState.Pressed && !press1a)
                     {
                         player1.spellMenu.stateInc();
                         player1.activeWeapon = player1.spellMenu.CurState;
+                        press1a = true;
                     }
-                    if (GamePad.GetState(PlayerIndex.One).Buttons.LeftShoulder == ButtonState.Pressed)
+                    else if (GamePad.GetState(PlayerIndex.One).Buttons.RightShoulder == ButtonState.Released)
+                        press1a = false;
+
+                    //move left
+                    if (GamePad.GetState(PlayerIndex.One).Buttons.LeftShoulder == ButtonState.Pressed && !press1b)
                     {
                         player1.spellMenu.stateDec();
                         player1.activeWeapon = player1.spellMenu.CurState;
+                        press1b = true;
                     }
+                    else if (GamePad.GetState(PlayerIndex.One).Buttons.RightShoulder == ButtonState.Released)
+                        press1b = false;
                 }
                 #endregion
 
@@ -1015,6 +1033,7 @@ namespace Bugzzz
                 if (keyboardState.IsKeyDown(Keys.Escape))
                     this.Exit();
 
+                //move spell menu on/off
                 if (keyboardState.IsKeyDown(Keys.I))
                     player1.spellMenu.Active = true;
                 if (keyboardState.IsKeyDown(Keys.K))
@@ -1023,18 +1042,28 @@ namespace Bugzzz
 
                 if (player1.spellMenu.Active)
                 {
-                    if (keyboardState.IsKeyDown(Keys.U))
+                    //move left
+                    if (keyboardState.IsKeyDown(Keys.U) && !press1a)
                     {
                         //TODO:: Fix from rotating through too fast
                         player1.spellMenu.stateDec();
                         player1.activeWeapon = player1.spellMenu.CurState;
+                        press1a = true;
                     }
-                    else if (keyboardState.IsKeyDown(Keys.O))
+                    else if (keyboardState.IsKeyUp(Keys.U))
+                        press1a = false;
+
+                    //move right
+                    if (keyboardState.IsKeyDown(Keys.O)&& !press1b)
                     {
                         player1.spellMenu.stateInc();
                         player1.activeWeapon = player1.spellMenu.CurState;
+                        press1b = true;
                     }
+                    else if (keyboardState.IsKeyUp(Keys.O))
+                        press1b = false;
                 }
+                
 
 
 
@@ -1092,16 +1121,25 @@ namespace Bugzzz
 
                 if (player2.spellMenu.Active)
                 {
-                    if (GamePad.GetState(PlayerIndex.One).Buttons.RightShoulder == ButtonState.Pressed)
+                    //Move right
+                    if (GamePad.GetState(PlayerIndex.One).Buttons.RightShoulder == ButtonState.Pressed&& !press2a)
                     {
                         player2.spellMenu.stateInc();
                         player2.activeWeapon = player2.spellMenu.CurState;
+                        press2a = true;
                     }
-                    if (GamePad.GetState(PlayerIndex.One).Buttons.LeftShoulder == ButtonState.Pressed)
+                    else if (GamePad.GetState(PlayerIndex.Two).Buttons.LeftShoulder == ButtonState.Released)
+                        press2a = false;
+
+                    //move left
+                    if (GamePad.GetState(PlayerIndex.One).Buttons.LeftShoulder == ButtonState.Pressed && !press2b)
                     {
                         player2.spellMenu.stateDec();
                         player2.activeWeapon = player2.spellMenu.CurState;
+                        press2b = true;
                     }
+                    else if (GamePad.GetState(PlayerIndex.Two).Buttons.RightShoulder == ButtonState.Released)
+                        press2b = false;
                 }
 
                 #endregion
@@ -1171,17 +1209,25 @@ namespace Bugzzz
                     player2.spellMenu.Active = false;
 
                 if (player2.spellMenu.Active){
-                    if (keyboardState.IsKeyDown(Keys.NumPad7))
+                    if (keyboardState.IsKeyDown(Keys.NumPad7)&& !press2a)
                     {
                         //TODO:: Fix from rotating through too fast
                         player2.spellMenu.stateDec();
                         player2.activeWeapon = player2.spellMenu.CurState;
+                        press2a = true;
                     }
-                    else if (keyboardState.IsKeyDown(Keys.NumPad9))
+                    else if (keyboardState.IsKeyUp(Keys.NumPad7))
+                        press2a = false;
+                    
+                    //move right
+                    if (keyboardState.IsKeyDown(Keys.NumPad9) && !press2b)
                     {
                         player2.spellMenu.stateInc();
                         player2.activeWeapon = player2.spellMenu.CurState;
+                        press2b = true;
                     }
+                    else if(keyboardState.IsKeyUp(Keys.NumPad9))
+                        press2b = false;
                 }
 
 
