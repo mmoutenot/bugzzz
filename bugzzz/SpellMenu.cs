@@ -24,6 +24,7 @@ namespace Bugzzz
         
         //contains different images indicating what selection has been made
         private Texture2D[] state;
+        public int[] bulletsLeft;
 
         //index of current state
         private int curState;
@@ -99,11 +100,15 @@ namespace Bugzzz
         public SpellMenu(Texture2D[] states, Viewport vp, int id)
         {
             state = new Texture2D[4];
+            bulletsLeft = new int[4];
 
             for (int i = 0; i < 4; i++)
             {
+                bulletsLeft[i] = 0;
                 this.state[i] = states[i];
             }
+            bulletsLeft[0] = -1;
+
 
             this.active = false;
             curState = 0;
@@ -125,18 +130,30 @@ namespace Bugzzz
         //increments state (wraps around)
         public void stateInc()
         {
-            if (curState != 3)
-                curState++;
-            else
-                curState = 0;
+            //skips weapons that aren't active
+            while(true){
+                if (curState != 3)
+                    curState++;
+                else
+                    curState = 0;
+                if (bulletsLeft[curState] != 0)
+                    break;
+            }
         }
         //decrements state (wrap around)
         public void stateDec()
         {
-            if (curState != 0)
-                curState--;
-            else
-                curState = 3;
+            //skips weapons that aren't active
+            while (true)
+            {
+
+                if (curState != 0)
+                    curState--;
+                else
+                    curState = 3;
+                if (bulletsLeft[curState] != 0)
+                    break;
+            }
         }
 
         public void moveOn()
@@ -148,6 +165,10 @@ namespace Bugzzz
         {
             if (position != this.lockedOff)
                 this.position = new Vector2(position.X, position.Y + 8f);
+        }
+        public void stateReset()
+        {
+            curState = 0;
         }
 
         #endregion

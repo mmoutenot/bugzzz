@@ -301,9 +301,16 @@ namespace Bugzzz
         /// 
 
 
-        public void fireBullets(Player p)
+        private void fireBullets(Player p)
         {
             //firing command
+            //automatically resorts to unlimited weapon if current weapon is out of ammo
+            if (p.spellMenu.bulletsLeft[p.activeWeapon] == 0)
+            {
+                p.spellMenu.stateReset();
+                p.activeWeapon = 0;
+            }
+
             if (p.activeWeapon == 0)
             {
                 foreach (GameObject bullet in bullets)
@@ -328,6 +335,7 @@ namespace Bugzzz
                         bullet.position = p.position - bullet.center;
                         bullet.velocity = new Vector2((float)Math.Cos(p.rotation + Math.PI / 2 + spread), (float)Math.Sin(p.rotation + Math.PI / 2 + spread)) * 8.0f;
                         spread += .1047;
+                        p.spellMenu.bulletsLeft[p.spellMenu.CurState]--;
                         if (spread > .21)
                             return;
                     }
@@ -342,6 +350,7 @@ namespace Bugzzz
                         bullet.alive = true;
                         bullet.position = p.position - bullet.center;
                         bullet.velocity = new Vector2((float)Math.Cos(p.rotation + Math.PI / 2 + rand.NextDouble()), (float)Math.Sin(p.rotation + Math.PI / 2 + rand.NextDouble())) * 3.0f;
+                        p.spellMenu.bulletsLeft[p.spellMenu.CurState]--;
                         return;
                     }
                 }
@@ -720,7 +729,7 @@ namespace Bugzzz
                     if (playerRect.Intersects(pickupRect))
                     {
                         destroyedPickup = pickup;
-                        p.activeWeapon = pickup.weaponIndex;
+                        p.spellMenu.bulletsLeft[pickup.weaponIndex] += 20;
                         break;
                     }
                 } 
@@ -751,6 +760,8 @@ namespace Bugzzz
                 UpdateTurret(turret1, player1);
                 UpdateTurret(turret2, player2);
                 UpdateInput();
+                player1.activeWeapon = player1.spellMenu.CurState;
+                player2.activeWeapon = player2.spellMenu.CurState;
                 updateBullets();
                 updateEnemies();
                 updatePickups(player1);
@@ -935,9 +946,15 @@ namespace Bugzzz
                 if (player1.spellMenu.Active)
                 {
                     if (GamePad.GetState(PlayerIndex.One).Buttons.RightShoulder == ButtonState.Pressed)
+                    {
                         player1.spellMenu.stateInc();
+                        player1.activeWeapon = player1.spellMenu.CurState;
+                    }
                     if (GamePad.GetState(PlayerIndex.One).Buttons.LeftShoulder == ButtonState.Pressed)
+                    {
                         player1.spellMenu.stateDec();
+                        player1.activeWeapon = player1.spellMenu.CurState;
+                    }
                 }
                 #endregion
 
@@ -1007,10 +1024,16 @@ namespace Bugzzz
                 if (player1.spellMenu.Active)
                 {
                     if (keyboardState.IsKeyDown(Keys.U))
+                    {
                         //TODO:: Fix from rotating through too fast
                         player1.spellMenu.stateDec();
+                        player1.activeWeapon = player1.spellMenu.CurState;
+                    }
                     else if (keyboardState.IsKeyDown(Keys.O))
+                    {
                         player1.spellMenu.stateInc();
+                        player1.activeWeapon = player1.spellMenu.CurState;
+                    }
                 }
 
 
@@ -1070,9 +1093,15 @@ namespace Bugzzz
                 if (player2.spellMenu.Active)
                 {
                     if (GamePad.GetState(PlayerIndex.One).Buttons.RightShoulder == ButtonState.Pressed)
+                    {
                         player2.spellMenu.stateInc();
+                        player2.activeWeapon = player2.spellMenu.CurState;
+                    }
                     if (GamePad.GetState(PlayerIndex.One).Buttons.LeftShoulder == ButtonState.Pressed)
+                    {
                         player2.spellMenu.stateDec();
+                        player2.activeWeapon = player2.spellMenu.CurState;
+                    }
                 }
 
                 #endregion
@@ -1143,10 +1172,16 @@ namespace Bugzzz
 
                 if (player2.spellMenu.Active){
                     if (keyboardState.IsKeyDown(Keys.NumPad7))
+                    {
                         //TODO:: Fix from rotating through too fast
                         player2.spellMenu.stateDec();
+                        player2.activeWeapon = player2.spellMenu.CurState;
+                    }
                     else if (keyboardState.IsKeyDown(Keys.NumPad9))
+                    {
                         player2.spellMenu.stateInc();
+                        player2.activeWeapon = player2.spellMenu.CurState;
+                    }
                 }
 
 

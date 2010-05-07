@@ -39,6 +39,8 @@ namespace Bugzzz
             names[2] = "Flame Thrower";
             damages[2] = 100;
             delays[2] = 0.1f;
+
+            //TODO::Add Fourth Weapon
         }
     }
 }
