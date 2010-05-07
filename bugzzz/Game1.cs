@@ -300,23 +300,24 @@ namespace Bugzzz
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         /// 
 
-        public void fireP1Bullets()
+
+        public void fireBullets(Player p)
         {
             //firing command
-            if (player1.activeWeapon == 0)
+            if (p.activeWeapon == 0)
             {
                 foreach (GameObject bullet in bullets)
                 {
                     if (!bullet.alive)
                     {
                         bullet.alive = true;
-                        bullet.position = player1.position - bullet.center;
-                        bullet.velocity = new Vector2((float)Math.Cos(player1.rotation + Math.PI / 2), (float)Math.Sin(player1.rotation + Math.PI / 2)) * 8.0f;
+                        bullet.position = p.position - bullet.center;
+                        bullet.velocity = new Vector2((float)Math.Cos(p.rotation + Math.PI / 2), (float)Math.Sin(p.rotation + Math.PI / 2)) * 8.0f;
                         return;
                     }
                 }
             }
-            if (player1.activeWeapon == 1)
+            if (p.activeWeapon == 1)
             {
                 double spread = -0.2094;
                 foreach (GameObject bullet in bullets)
@@ -324,76 +325,30 @@ namespace Bugzzz
                     if (!bullet.alive)
                     {
                         bullet.alive = true;
-                        bullet.position = player1.position - bullet.center;
-                        bullet.velocity = new Vector2((float)Math.Cos(player1.rotation + Math.PI / 2 + spread), (float)Math.Sin(player1.rotation + Math.PI / 2 + spread)) * 8.0f;
+                        bullet.position = p.position - bullet.center;
+                        bullet.velocity = new Vector2((float)Math.Cos(p.rotation + Math.PI / 2 + spread), (float)Math.Sin(p.rotation + Math.PI / 2 + spread)) * 8.0f;
                         spread += .1047;
                         if (spread > .21)
                             return;
                     }
                 }
             }
-            if (player1.activeWeapon == 2)
+            if (p.activeWeapon == 2)
             {
-                foreach (GameObject bullet in bullets){
-                    if (!bullet.alive)
-                    {
-                        bullet.alive = true;
-                        bullet.position = player1.position - bullet.center;
-                        bullet.velocity = new Vector2((float)Math.Cos(player1.rotation + Math.PI / 2 + rand.NextDouble()), (float)Math.Sin(player1.rotation + Math.PI / 2 + rand.NextDouble())) * 3.0f;
-                        return;
-                    }
-                }
-            }
-        }
-        public void fireP2Bullets()
-        {
-            //firing command
-            if (player2.activeWeapon == 0)
-            {
-                foreach (GameObject bullet in bullets2)
-                {
-                    if (!bullet.alive)
-                    {
-                        bullet.alive = true;
-                        bullet.position = player2.position - bullet.center;
-                        bullet.velocity = new Vector2((float)Math.Cos(player2.rotation + Math.PI / 2), (float)Math.Sin(player2.rotation + Math.PI / 2)) * 8.0f;
-                        return;
-                    }
-                }
-            }
-            if (player2.activeWeapon == 1)
-            {
-                double spread = -0.2094;
                 foreach (GameObject bullet in bullets)
                 {
                     if (!bullet.alive)
                     {
                         bullet.alive = true;
-                        bullet.position = player2.position - bullet.center;
-                        bullet.velocity = new Vector2((float)Math.Cos(player2.rotation + Math.PI / 2 + spread), (float)Math.Sin(player2.rotation + Math.PI / 2 + spread)) * 8.0f;
-                        spread += .1047;
-                        if (spread > .21)
-                            return;
-                    }
-                }
-            }
-            if (player2.activeWeapon == 2)
-            {
-                double spread = Math.Sin(Math.PI / 4);
-                foreach (GameObject bullet in bullets)
-                {
-                    if (!bullet.alive)
-                    {
-                        bullet.alive = true;
-                        bullet.position = player2.position - bullet.center;
-                        bullet.velocity = new Vector2((float)Math.Cos(player2.rotation + Math.PI / 2 + spread), (float)Math.Sin(player2.rotation + Math.PI / 2 + spread)) * 3.0f;
-                        spread += Math.PI / 5;
-                        if (spread > 4 * Math.PI)
-                            return;
+                        bullet.position = p.position - bullet.center;
+                        bullet.velocity = new Vector2((float)Math.Cos(p.rotation + Math.PI / 2 + rand.NextDouble()), (float)Math.Sin(p.rotation + Math.PI / 2 + rand.NextDouble())) * 3.0f;
+                        return;
                     }
                 }
             }
         }
+
+
 
         public void fireTurretBullets1()
         {
@@ -839,12 +794,12 @@ namespace Bugzzz
                 {
 
                     elapsedTime = 0.0f;
-                    fireP1Bullets();
+                    fireBullets(player1);
                 }
                 if ((elapsedTime2 >= player2.weapon.delays[player2.activeWeapon]) && player2.fire)
                 {
                     elapsedTime2 = 0.0f;
-                    fireP2Bullets();
+                    fireBullets(player2);
                 }
 
                 if (turret1.fire && t_elapsedTime >= fireDelay + .5 && turret1.placed)
