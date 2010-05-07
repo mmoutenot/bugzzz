@@ -713,7 +713,7 @@ namespace Bugzzz
         {
             Console.WriteLine("A new pickup was created"+pos);
             Texture2D sample_weapon = Content.Load<Texture2D>("sprites\\cannonball");
-            pickups.Add(new WeaponPickup(sample_weapon, pos, rand.Next(2)));
+            pickups.Add(new WeaponPickup(sample_weapon, pos, rand.Next(2)+1));
         }
 
         private void updatePickups(Player p)
