@@ -16,7 +16,11 @@ namespace Bugzzz
 {
     class SpellMenu
     {
-        #region Fields
+        #region Fields (active, state, curState, position)
+
+        private bool active;
+        private int width;
+        private int height;
         
         //contains different images indicating what selection has been made
         private Texture2D[] state;
@@ -24,14 +28,75 @@ namespace Bugzzz
         //index of current state
         private int curState;
 
-        //position of top left corner of spell box
+        //current position of top left corner of spell box
         private Vector2 position;
+
+
+        //positions of box when it is locked on or off screen
+        private Vector2 lockedOff;
+        private Vector2 lockedOn;
+
+        #endregion
+
+        #region Accessors (Width, Height, State, Active, CurState, Position)
+
+        public int Width
+        {
+            get
+            {
+                return width;
+            }
+        }
+        public int Height
+        {
+            get
+            {
+                return height;
+            }
+        }
+        public Texture2D State
+        {
+            get
+            {
+                return state[curState];
+            }
+        }
+        public bool Active
+        {
+            get
+            {
+                return active;
+            }
+            set
+            {
+                active = value;
+            }
+        }
+        public int CurState
+        {
+            get
+            {
+                return curState;
+            }
+        }
+        public Vector2 Position
+        {
+            get
+            {
+                return this.position;
+            }
+            set
+            {
+                this.position = value;
+            }
+        }
 
         #endregion
 
 
-        #region Main Methods Constructor, returnState, stateInc, stateDec
-        public SpellMenu(Texture2D[] states)
+
+        #region Main Methods (Constructor, returnState, stateInc, stateDec)
+        public SpellMenu(Texture2D[] states, Viewport vp, int id)
         {
             state = new Texture2D[4];
 
@@ -40,13 +105,21 @@ namespace Bugzzz
                 this.state[i] = states[i];
             }
 
+            this.active = false;
             curState = 0;
+            if (id == 1)
+                position = new Vector2(100f, (float)vp.Height);
+            else
+                position = new Vector2((float)(vp.Width - 300f), (float)vp.Height);
 
-        }
+            lockedOff = position;
+            lockedOn = new Vector2(position.X, position.Y - 80f);
+            width = 200;
+            height = 75;
 
-        public int returnState()
-        {
-            return curState+1;
+
+
+
         }
 
         //increments state (wraps around)
@@ -66,6 +139,16 @@ namespace Bugzzz
                 curState = 3;
         }
 
+        public void moveOn()
+        {
+            if (position != this.lockedOn)
+                this.position = new Vector2(position.X, position.Y - 8f);
+        }
+        public void moveOff()
+        {
+            if (position != this.lockedOff)
+                this.position = new Vector2(position.X, position.Y + 8f);
+        }
 
         #endregion
 
