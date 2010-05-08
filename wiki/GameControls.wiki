@@ -13,8 +13,10 @@ The following article describes player controls for the XNA game Bugzzz.
 
 *Other Controls*
   * A Button - Deploy Turret
-  * D- Pad Up - Open Player Menu
+  * D-Pad Up - Open Player Menu
+    - While menu Open
+      * Right Bumper - Rotate to right through Weapons
+      * Left Bumper - Rotate to left through Weapons
   * D-Pad Down - Close Player Menu
-  * Right and Left Triggers - Rotate through Player Menu Spells
   * B Button - Activate Player Menu Spell
-
+  
