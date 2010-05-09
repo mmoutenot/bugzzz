@@ -214,13 +214,13 @@ namespace Bugzzz
             this.gm = new GameMenu(menus, viewport);
 
 
-            Texture2D temp = Content.Load<Texture2D>("sprites\\cannon");
+            Texture2D temp = Content.Load<Texture2D>("Sprites\\cannon");
             turret1 = new Turret(temp);
             turret2 = new Turret(temp);
             
-            healthBar = Content.Load<Texture2D>("sprites\\healthBar");
+            healthBar = Content.Load<Texture2D>("Sprites\\healthBar");
             temp = null;
-            temp = Content.Load<Texture2D>("sprites\\cannonball");
+            temp = Content.Load<Texture2D>("Sprites\\cannonball");
 
             p1_w = new Weapons(temp, temp, temp);
             p2_w = new Weapons(temp, temp, temp);
@@ -244,14 +244,14 @@ namespace Bugzzz
                 turretBullets2[i] = new GameObject(temp);
             }
 
-            temp = Content.Load<Texture2D>("sprites\\roach");
+            temp = Content.Load<Texture2D>("Sprites\\roach_sm");
 
             for (int j = 0; j < maxEnemies; j++)
             {
                 enemies[j] = new GameObject(temp);
             }
 
-            temp = Content.Load<Texture2D>("sprites\\cannon");
+            temp = Content.Load<Texture2D>("Sprites\\cannon");
             //spell menu textures
             Texture2D[] sMenu = new Texture2D[4];
             sMenu[0] = Content.Load<Texture2D>("SpellMenus\\SpiderBar1Active");
@@ -270,8 +270,8 @@ namespace Bugzzz
             getReady = Content.Load<Texture2D>("Backgrounds\\getready");
 
 
-            player1 = new Player(1, temp, Content.Load<Texture2D>("sprites\\smiley1"), p1_w, new Vector2(viewport.Width*7/15,viewport.Height/2), 1, new Statistics(true), sMenu, viewport, levelfont);
-            player2 = new Player(2, temp, Content.Load<Texture2D>("sprites\\smiley1"), p2_w, new Vector2(viewport.Width*8/15, viewport.Height/2), 2, new Statistics(true), sMenu, viewport, levelfont);
+            player1 = new Player(1, temp, Content.Load<Texture2D>("Sprites\\smiley1"), p1_w, new Vector2(viewport.Width*7/15,viewport.Height/2), 1, new Statistics(true), sMenu, viewport, levelfont);
+            player2 = new Player(2, temp, Content.Load<Texture2D>("Sprites\\smiley1"), p2_w, new Vector2(viewport.Width*8/15, viewport.Height/2), 2, new Statistics(true), sMenu, viewport, levelfont);
 
 
             particleEffect = Content.Load<ParticleEffect>("Particles\\bloody");
@@ -714,7 +714,7 @@ namespace Bugzzz
         private void generateWeaponPickup(Vector2 pos)
         {
             Console.WriteLine("A new pickup was created"+pos);
-            Texture2D sample_weapon = Content.Load<Texture2D>("sprites\\cannonball");
+            Texture2D sample_weapon = Content.Load<Texture2D>("Sprites\\cannonball");
             pickups.Add(new WeaponPickup(sample_weapon, pos, rand.Next(2)+1));
         }
 
