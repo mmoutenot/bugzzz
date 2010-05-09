@@ -79,6 +79,10 @@ namespace Bugzzz
             {
                 return curState;
             }
+            set
+            {
+                curState = value;
+            }
         }
         public Vector2 Position
         {

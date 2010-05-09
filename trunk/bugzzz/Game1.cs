@@ -765,6 +765,9 @@ namespace Bugzzz
                     {
                         destroyedPickup = pickup;
                         p.spellMenu.bulletsLeft[pickup.weaponIndex] += 20;
+                        p.spellMenu.Active = true;
+                        p.spellMenu.CurState = pickup.weaponIndex;
+                        p.activeWeapon = pickup.weaponIndex;
                         break;
                     }
                 } 
