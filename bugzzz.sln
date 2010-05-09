@@ -6,10 +6,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Windows Copy of Bugzzz", "bugzzz\Windows Copy of Bugzzz.csproj", "{189ECD0B-0A61-468E-853F-34110B428FEA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "References", "References", "{F4335D3A-27A9-4F4C-8B90-68F485D492F0}"
-	ProjectSection(SolutionItems) = preProject
-		bugzzz\References\x86\ProjectMercury.dll = bugzzz\References\x86\ProjectMercury.dll
-		bugzzz\References\Xbox\ProjectMercury.dll = bugzzz\References\Xbox\ProjectMercury.dll
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
