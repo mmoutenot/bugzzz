@@ -92,6 +92,8 @@ namespace Bugzzz
         Texture2D[] level_backgrounds;
         Texture2D getReady;
 
+        bool gameOver;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -183,6 +185,9 @@ namespace Bugzzz
             turretBullets2 = new GameObject[maxBullets];
 
             enemies = new GameObject[maxEnemies];
+
+            gameOver = false;
+
             base.Initialize();
 
         }
@@ -465,6 +470,8 @@ namespace Bugzzz
                                 player1.score += 20;
                                 enemies_killed++;
 
+                                player1.stat.enemyKilled();
+
                                 // Possibly Generate a new WeaponPickup
                                 int wpn_pickup_prob = rand.Next(100);
                                 if (wpn_pickup_prob < 10)
@@ -512,6 +519,8 @@ namespace Bugzzz
                                 score.Add(new ScoreDisplay(20, SCORE_TIME, enemy.position, true, 2));
                                 player2.score += 20;
                                 enemies_killed++;
+
+                                player2.stat.enemyKilled();
 
                                 // Possibly Generate a new WeaponPickup
                                 int wpn_pickup_prob = rand.Next(100);
@@ -765,6 +774,13 @@ namespace Bugzzz
 
         protected override void Update(GameTime gameTime)
         {
+            
+            // Checks for a game over condition which is either player losing all 5 lives
+            if (player1.livesLeft <= 0 || player2.livesLeft <= 0)
+            {
+                gameOver = true;
+            }
+            
             // Allows the game to exit
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
@@ -946,6 +962,11 @@ namespace Bugzzz
                         {
                             case 0:
                                 gm.Active = false;
+                                act_fade = true;
+                                fade_out = true;
+                                scoreScreen = false;
+                                fade_in = false;
+                                current_fade = 255;
                                 break;
                             default:
                                 Exit();
@@ -977,6 +998,11 @@ namespace Bugzzz
                         {
                             case 0:
                                 gm.Active = false;
+                                act_fade = true;
+                                fade_out = true;
+                                scoreScreen = false;
+                                fade_in = false;
+                                current_fade = 255;
                                 break;
                             default:
                                 Exit();
@@ -1347,6 +1373,13 @@ namespace Bugzzz
                 gm.Draw(spriteBatch);
                 spriteBatch.End();
             }
+            // Draw the game over screen which should lead back to the menu
+            else if (gameOver)
+            {
+                spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
+                spriteBatch.DrawString(levelfont, "Game Over", new Vector2(50, 50), Color.Red);
+                spriteBatch.End();
+            }
             else
             {
                 if (enemies_level[level] == enemies_killed && !act_fade)
@@ -1428,6 +1461,7 @@ namespace Bugzzz
                     #endregion
 
                     #region Fade Back In
+                    
                     if (fade_out)
                     {
                         spriteBatch.Draw(level_backgrounds[0], new Rectangle(0, 0, viewport.Width, viewport.Height), Color.White);
@@ -1437,7 +1471,7 @@ namespace Bugzzz
                         spriteBatch.Draw(player2.spriteT, new Rectangle((int)player2.position.X, (int)player2.position.Y, player2.spriteT.Width, player2.spriteT.Height), null, Color.Red, (float)(player2.rotation + .5 * Math.PI), new Vector2(player2.spriteT.Width / 2, player2.spriteT.Height / 2), SpriteEffects.None, 0);
                         spriteBatch.DrawString(scorefont, "Player 1 Score: " + player1.score.ToString(), new Vector2(this.viewport.Width / 15, this.viewport.Height / 60), new Color(Color.White, (byte)130));
                         spriteBatch.DrawString(scorefont, "Player 2 Score: " + player2.score.ToString(), new Vector2(this.viewport.Width * 12 / 16, this.viewport.Height / 60), new Color(Color.White, (byte)130));
-                        spriteBatch.DrawString(scorefont, "Enemies Killed: " + enemies_killed.ToString(), new Vector2(this.viewport.Width * 7 / 16, this.viewport.Height / 60), new Color(Color.Beige, (byte)130));
+                        spriteBatch.DrawString(scorefont, "Enemies Killed: " + enemies_killed.ToString() + "/" + enemies_level[level], new Vector2(this.viewport.Width * 7 / 16, this.viewport.Height / 60), new Color(Color.Beige, (byte)130));
                         foreach (WeaponPickup pickup in pickups)
                         {
                             spriteBatch.Draw(pickup.sprite, pickup.position, Color.White);
@@ -1479,16 +1513,23 @@ namespace Bugzzz
                     fade_in = true;
                     fade_out = false;
                     scoreScreen = false;
-                    GraphicsDevice.Clear(Color.CornflowerBlue);
+                    //GraphicsDevice.Clear(Color.CornflowerBlue);
                     spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
-
-                    //
                     spriteBatch.Draw(level_backgrounds[0], new Rectangle(0, 0, viewport.Width, viewport.Height), Color.White);
                     spriteBatch.Draw(healthBar, new Rectangle(this.viewport.Width / 15, this.viewport.Height / 15, (int)this.viewport.Width * player1.health / 600, this.viewport.Height / 30), Color.Red);
                     spriteBatch.Draw(healthBar, new Rectangle(this.viewport.Width * 12 / 16, this.viewport.Height / 15, (int)this.viewport.Width * player2.health / 600, this.viewport.Height / 30), Color.Red);
+                    
+                    // Draw lives left for player 1 and 2
+                    // Milas if you want to make a sprite to draw just replace "healthBar" with the sprite
+                    // And fudge the drawing math a bit and it will be all set to work
+                    for(int i = 0; i<player1.livesLeft; i++)
+                        spriteBatch.Draw(healthBar, new Rectangle(this.viewport.Width/15+((i*20)), (this.viewport.Height/15)+40, 10, 10), new Color(Color.DarkRed, (byte)200));
+                    for(int i = 0; i<player2.livesLeft; i++)
+                        spriteBatch.Draw(healthBar, new Rectangle(this.viewport.Width *12 / 16 + ((i * 20)), (this.viewport.Height / 15) + 40, 10, 10), new Color(Color.DarkRed, (byte)200));
+                    
                     spriteBatch.DrawString(scorefont, "Player 1 Score: " + player1.score.ToString(), new Vector2(this.viewport.Width / 15, this.viewport.Height / 60), new Color(Color.White, (byte)130));
                     spriteBatch.DrawString(scorefont, "Player 2 Score: " + player2.score.ToString(), new Vector2(this.viewport.Width * 12 / 16, this.viewport.Height / 60), new Color(Color.White, (byte)130));
-                    spriteBatch.DrawString(scorefont, "Enemies Killed: " + enemies_killed.ToString(), new Vector2(this.viewport.Width * 7 / 16, this.viewport.Height / 60), new Color(Color.Beige, (byte)130));
+                    spriteBatch.DrawString(scorefont, "Enemies Killed: " + enemies_killed.ToString() +  "/" + enemies_level[level], new Vector2(this.viewport.Width * 7 / 16, this.viewport.Height / 60), new Color(Color.Beige, (byte)130));
                     spriteBatch.Draw(player1.spriteB, new Rectangle((int)player1.position.X, (int)player1.position.Y, player1.spriteB.Width, player1.spriteB.Height), null, Color.White, player1.rotation_b, new Vector2(player1.spriteB.Width / 2, player1.spriteB.Height / 2), SpriteEffects.None, 0);
                     spriteBatch.Draw(player1.spriteT, new Rectangle((int)player1.position.X, (int)player1.position.Y, player1.spriteT.Width, player1.spriteT.Height), null, Color.White, (float)(player1.rotation + .5 * Math.PI), new Vector2(player1.spriteT.Width / 2, player1.spriteT.Height / 2), SpriteEffects.None, 0);
                     spriteBatch.Draw(player2.spriteB, new Rectangle((int)player2.position.X, (int)player2.position.Y, player2.spriteB.Width, player2.spriteB.Height), null, Color.Red, player2.rotation_b, new Vector2(player2.spriteB.Width / 2, player2.spriteB.Height / 2), SpriteEffects.None, 0);

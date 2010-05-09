@@ -69,7 +69,7 @@ namespace Bugzzz
             this.currentTime = new TimeSpan(0);
         }
 
-        public void enemeyKilled()
+        public void enemyKilled()
         {
             spreeLength++;
             if(spreeLength>maxSpreeLength){
