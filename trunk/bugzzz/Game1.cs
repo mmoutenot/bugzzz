@@ -230,7 +230,7 @@ namespace Bugzzz
             //Initializes all of the bullets, enemies, etc.
 
             level_backgrounds = new Texture2D[5];
-            level_backgrounds[0] = Content.Load<Texture2D>("sprites\\level1_background");
+            level_backgrounds[0] = Content.Load<Texture2D>("Backgrounds\\grass_bg");
 
             for (int i = 0; i < maxBullets; i++)
             {
@@ -267,42 +267,14 @@ namespace Bugzzz
             scorefont = Content.Load<SpriteFont>("ScoreFont");
             levelfont = Content.Load<SpriteFont>("LevelFont");
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            getReady = Content.Load<Texture2D>("getready");
+            getReady = Content.Load<Texture2D>("Backgrounds\\getready");
 
 
             player1 = new Player(1, temp, Content.Load<Texture2D>("sprites\\smiley1"), p1_w, new Vector2(viewport.Width*7/15,viewport.Height/2), 1, new Statistics(true), sMenu, viewport, levelfont);
             player2 = new Player(2, temp, Content.Load<Texture2D>("sprites\\smiley1"), p2_w, new Vector2(viewport.Width*8/15, viewport.Height/2), 2, new Statistics(true), sMenu, viewport, levelfont);
 
-            
-            particleEffect = new ParticleEffect
-            {
-                new Emitter
-                {
-                    Budget = 1000,
-                    Term = 3f,
 
-                    Name = "TestEmitter",
-                    BlendMode = BlendMode.Alpha,
-                    ReleaseQuantity = 3,
-                    ReleaseRotation = new VariableFloat { Value = 0f, Variation = MathHelper.Pi },
-                    ReleaseScale = 64f,
-                    ReleaseSpeed = new VariableFloat { Value = 64f, Variation = 32f },
-                    ParticleTextureAssetName = "Particle003",
-                    Modifiers = new ModifierCollection
-                    {
-                        new OpacityModifier
-                        {
-                            Initial = 1f,
-                            Ultimate = 0f,
-                        },
-                        new ColourModifier
-                        {
-                            InitialColour = Color.Tomato.ToVector3(),
-                            UltimateColour = Color.Lime.ToVector3(),
-                        },
-                    },
-                },
-            };
+            particleEffect = Content.Load<ParticleEffect>("Particles\\bloody");
 
             particleRenderer = new PointSpriteRenderer
             {
