@@ -1364,6 +1364,98 @@ namespace Bugzzz
             }
         }
 
+
+        private void DrawPlayers(SpriteBatch s)
+        {
+            s.Draw(player1.spriteB, new Rectangle((int)player1.position.X, (int)player1.position.Y, player1.spriteB.Width, player1.spriteB.Height), null, Color.White, player1.rotation_b, new Vector2(player1.spriteB.Width / 2, player1.spriteB.Height / 2), SpriteEffects.None, 0);
+            s.Draw(player1.spriteT, new Rectangle((int)player1.position.X, (int)player1.position.Y, player1.spriteT.Width, player1.spriteT.Height), null, Color.White, (float)(player1.rotation + .5 * Math.PI), new Vector2(player1.spriteT.Width / 2, player1.spriteT.Height / 2), SpriteEffects.None, 0);
+            s.Draw(player2.spriteB, new Rectangle((int)player2.position.X, (int)player2.position.Y, player2.spriteB.Width, player2.spriteB.Height), null, Color.Red, player2.rotation_b, new Vector2(player2.spriteB.Width / 2, player2.spriteB.Height / 2), SpriteEffects.None, 0);
+            s.Draw(player2.spriteT, new Rectangle((int)player2.position.X, (int)player2.position.Y, player2.spriteT.Width, player2.spriteT.Height), null, Color.Red, (float)(player2.rotation + .5 * Math.PI), new Vector2(player2.spriteT.Width / 2, player2.spriteT.Height / 2), SpriteEffects.None, 0);
+            if (turret1.placed)
+                s.Draw(turret1.sprite, new Rectangle((int)turret1.position.X, (int)turret1.position.Y, turret1.sprite.Width, turret1.sprite.Height), null, Color.White, (float)(turret1.rotation + .5 * Math.PI), new Vector2(turret1.sprite.Width / 2, turret1.sprite.Height / 2), SpriteEffects.None, 0);
+            if (turret2.placed)
+                s.Draw(turret2.sprite, new Rectangle((int)turret2.position.X, (int)turret2.position.Y, turret2.sprite.Width, turret2.sprite.Height), null, Color.White, (float)(turret2.rotation + .5 * Math.PI), new Vector2(turret2.sprite.Width / 2, turret2.sprite.Height / 2), SpriteEffects.None, 0);
+        }
+        private void DrawInformation(SpriteBatch s)
+        {
+            s.DrawString(scorefont, "Player 1 Score: " + player1.score.ToString(), new Vector2(this.viewport.Width / 15, this.viewport.Height / 60), new Color(Color.White, (byte)130));
+            s.DrawString(scorefont, "Player 2 Score: " + player2.score.ToString(), new Vector2(this.viewport.Width * 12 / 16, this.viewport.Height / 60), new Color(Color.White, (byte)130));
+            s.DrawString(scorefont, "Enemies Killed: " + enemies_killed.ToString() + "/" + enemies_level[level], new Vector2(this.viewport.Width * 7 / 16, this.viewport.Height / 60), new Color(Color.Beige, (byte)130));
+            s.Draw(healthBar, new Rectangle(this.viewport.Width / 15, this.viewport.Height / 15, (int)this.viewport.Width * player1.health / 600, this.viewport.Height / 30), Color.Red);
+            s.Draw(healthBar, new Rectangle(this.viewport.Width * 12 / 16, this.viewport.Height / 15, (int)this.viewport.Width * player2.health / 600, this.viewport.Height / 30), Color.Red);
+
+            // Draw lives left for player 1 and 2
+            // Milas if you want to make a sprite to draw just replace "healthBar" with the sprite
+            // And fudge the drawing math a bit and it will be all set to work
+            for (int i = 0; i < player1.livesLeft; i++)
+                s.Draw(healthBar, new Rectangle(this.viewport.Width / 15 + ((i * 20)), (this.viewport.Height / 15) + 40, 10, 10), new Color(Color.DarkRed, (byte)200));
+            for (int i = 0; i < player2.livesLeft; i++)
+                s.Draw(healthBar, new Rectangle(this.viewport.Width * 12 / 16 + ((i * 20)), (this.viewport.Height / 15) + 40, 10, 10), new Color(Color.DarkRed, (byte)200));
+
+            //draw spell menus
+            spriteBatch.Draw(player1.spellMenu.State, new Rectangle((int)player1.spellMenu.Position.X, (int)player1.spellMenu.Position.Y, player1.spellMenu.Width, player1.spellMenu.Height), new Color(Color.White, (byte)210));
+            spriteBatch.Draw(player2.spellMenu.State, new Rectangle((int)player2.spellMenu.Position.X, (int)player2.spellMenu.Position.Y, player2.spellMenu.Width, player2.spellMenu.Height), new Color(Color.White, (byte)210));
+                         
+        }
+        private void DrawPickups(SpriteBatch s)
+        {
+            foreach (WeaponPickup pickup in pickups)
+                s.Draw(pickup.sprite, pickup.position, Color.White);
+        }
+        private void DrawBullets(SpriteBatch s)
+        {
+            //player 1
+            foreach (GameObject bullet in bullets)
+                if (bullet.alive)
+                    s.Draw(bullet.sprite, bullet.position, Color.White);
+            //player 2
+            foreach (GameObject bullet in bullets2)
+                if (bullet.alive)
+                    s.Draw(bullet.sprite, bullet.position, Color.White);
+            //turret 1
+            foreach (GameObject bullet in turretBullets1)
+                if (bullet.alive)
+                    s.Draw(bullet.sprite, bullet.position, Color.White);
+            //turret 2
+            foreach (GameObject bullet in turretBullets2)
+                if (bullet.alive)
+                    s.Draw(bullet.sprite, bullet.position, Color.White);
+        }
+        private void DrawEnemies(SpriteBatch s)
+        {
+            foreach (GameObject enemy in enemies)
+                if (enemy.alive)
+                    spriteBatch.Draw(enemy.sprite, new Rectangle((int)enemy.position.X, (int)enemy.position.Y, enemy.sprite.Width, enemy.sprite.Height), null, Color.White, (float)(enemy.rotation + Math.PI / 2), new Vector2(enemy.sprite.Width / 2, enemy.sprite.Height / 2), SpriteEffects.None, 0);
+        }
+        private void DrawScore(SpriteBatch s1)
+        {
+            ArrayList deadScores = new ArrayList(); //Used for determing what scores need to be deleted. 
+            //Output Scores
+            foreach (ScoreDisplay s in score)
+            {
+                if (s.Alive)
+                {
+                    if (s.Time > 0)
+                    {
+                        if (s.Player == 1)
+                            s1.DrawString(scorefont, s.PointVal.ToString(), s.Position, new Color(Color.Red, (byte)(s.Time * 2.5)));
+                        else
+                            s1.DrawString(scorefont, s.PointVal.ToString(), s.Position, new Color(Color.Green, (byte)(s.Time * 2.5)));
+                        s.Time--;
+                    }
+                    else
+                    {
+                        s.Alive = false;
+                        deadScores.Add(s);
+                    }
+                }
+            }
+            //Remove Scores
+            foreach (ScoreDisplay s in deadScores)
+                score.Remove(s);
+        }
+        
+        
         /// <summary>
         /// This is called when the game should draw itself.
         /// </summary>
@@ -1380,7 +1472,7 @@ namespace Bugzzz
             else if (gameOver)
             {
                 spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
-                spriteBatch.DrawString(levelfont, "Game Over", new Vector2(50, 50), Color.Red);
+                spriteBatch.DrawString(levelfont, "Game Over", new Vector2(viewport.Width/2-50, viewport.Height/2-50), Color.Red);
                 spriteBatch.End();
             }
             else
@@ -1390,8 +1482,6 @@ namespace Bugzzz
                     ls = new LevelScore(this.level + 1, player1, player2, true, 200, levelfont, GraphicsDevice, this.healthBar);
                     act_fade = true;
                     enemies_killed = 0;
-                    player1.deploy = false;
-                    player2.deploy = false;
                 }
 
                 if (act_fade)
@@ -1427,7 +1517,7 @@ namespace Bugzzz
                         ls.Draw(this.viewport);
                         if (!GamePad.GetState(PlayerIndex.One).IsConnected)
                         {
-                            if (Keyboard.GetState().IsKeyDown(Keys.Space))
+                            if (Keyboard.GetState().IsKeyDown(Keys.Enter))
                             {
                                 fade_out = true;
                                 scoreScreen = false;
@@ -1444,7 +1534,7 @@ namespace Bugzzz
 
                         if (!GamePad.GetState(PlayerIndex.Two).IsConnected)
                         {
-                            if (Keyboard.GetState().IsKeyDown(Keys.Space))
+                            if (Keyboard.GetState().IsKeyDown(Keys.Enter))
                             {
                                 fade_out = true;
                                 scoreScreen = false;
@@ -1468,34 +1558,16 @@ namespace Bugzzz
                     if (fade_out)
                     {
                         spriteBatch.Draw(level_backgrounds[0], new Rectangle(0, 0, viewport.Width, viewport.Height), Color.White);
-                        spriteBatch.Draw(player1.spriteB, new Rectangle((int)player1.position.X, (int)player1.position.Y, player1.spriteB.Width, player1.spriteB.Height), null, Color.White, player1.rotation_b, new Vector2(player1.spriteB.Width / 2, player1.spriteB.Height / 2), SpriteEffects.None, 0);
-                        spriteBatch.Draw(player1.spriteT, new Rectangle((int)player1.position.X, (int)player1.position.Y, player1.spriteT.Width, player1.spriteT.Height), null, Color.White, (float)(player1.rotation + .5 * Math.PI), new Vector2(player1.spriteT.Width / 2, player1.spriteT.Height / 2), SpriteEffects.None, 0);
-                        spriteBatch.Draw(player2.spriteB, new Rectangle((int)player2.position.X, (int)player2.position.Y, player2.spriteB.Width, player2.spriteB.Height), null, Color.Red, player2.rotation_b, new Vector2(player2.spriteB.Width / 2, player2.spriteB.Height / 2), SpriteEffects.None, 0);
-                        spriteBatch.Draw(player2.spriteT, new Rectangle((int)player2.position.X, (int)player2.position.Y, player2.spriteT.Width, player2.spriteT.Height), null, Color.Red, (float)(player2.rotation + .5 * Math.PI), new Vector2(player2.spriteT.Width / 2, player2.spriteT.Height / 2), SpriteEffects.None, 0);
-                        spriteBatch.DrawString(scorefont, "Player 1 Score: " + player1.score.ToString(), new Vector2(this.viewport.Width / 15, this.viewport.Height / 60), new Color(Color.White, (byte)130));
-                        spriteBatch.DrawString(scorefont, "Player 2 Score: " + player2.score.ToString(), new Vector2(this.viewport.Width * 12 / 16, this.viewport.Height / 60), new Color(Color.White, (byte)130));
-                        spriteBatch.DrawString(scorefont, "Enemies Killed: " + enemies_killed.ToString() + "/" + enemies_level[level], new Vector2(this.viewport.Width * 7 / 16, this.viewport.Height / 60), new Color(Color.Beige, (byte)130));
-                        spriteBatch.Draw(healthBar, new Rectangle(this.viewport.Width / 15, this.viewport.Height / 15, (int)this.viewport.Width * player1.health / 600, this.viewport.Height / 30), Color.Red);
-                        spriteBatch.Draw(healthBar, new Rectangle(this.viewport.Width * 12 / 16, this.viewport.Height / 15, (int)this.viewport.Width * player2.health / 600, this.viewport.Height / 30), Color.Red);
-
-                        // Draw lives left for player 1 and 2
-                        // Milas if you want to make a sprite to draw just replace "healthBar" with the sprite
-                        // And fudge the drawing math a bit and it will be all set to work
-                        for (int i = 0; i < player1.livesLeft; i++)
-                            spriteBatch.Draw(healthBar, new Rectangle(this.viewport.Width / 15 + ((i * 20)), (this.viewport.Height / 15) + 40, 10, 10), new Color(Color.DarkRed, (byte)200));
-                        for (int i = 0; i < player2.livesLeft; i++)
-                            spriteBatch.Draw(healthBar, new Rectangle(this.viewport.Width * 12 / 16 + ((i * 20)), (this.viewport.Height / 15) + 40, 10, 10), new Color(Color.DarkRed, (byte)200));
-                    
+                        this.DrawPlayers(spriteBatch);
+                        this.DrawInformation(spriteBatch);
+                        this.DrawPickups(spriteBatch);
                         
-                        foreach (WeaponPickup pickup in pickups)
-                        {
-                            spriteBatch.Draw(pickup.sprite, pickup.position, Color.White);
-                        }
-
-
-
+                        //draw Get Ready
                         spriteBatch.Draw(getReady, new Rectangle(0, 0, viewport.Width, viewport.Height), new Color(Color.White, (byte)(int)(current_fade)));
 
+
+
+                        #region Level Reset
                         current_fade -= 4 * fade_increment;
                         if (current_fade <= 0)
                         {
@@ -1512,11 +1584,10 @@ namespace Bugzzz
                                 enm.alive = false;
                             }
                             score.Clear();
-                            player1.spellMenu.Active = false;
-                            player2.spellMenu.Active = false;
                             fade_out = false;
                             act_fade = false;
                         }
+                        #endregion
 
                     }
                     #endregion
@@ -1529,128 +1600,26 @@ namespace Bugzzz
                     fade_in = true;
                     fade_out = false;
                     scoreScreen = false;
-                    //GraphicsDevice.Clear(Color.CornflowerBlue);
+                    GraphicsDevice.Clear(Color.CornflowerBlue);
+                    //open spritebatch
                     spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
+                    
+                    //draw background
                     spriteBatch.Draw(level_backgrounds[0], new Rectangle(0, 0, viewport.Width, viewport.Height), Color.White);
-                    spriteBatch.Draw(healthBar, new Rectangle(this.viewport.Width / 15, this.viewport.Height / 15, (int)this.viewport.Width * player1.health / 600, this.viewport.Height / 30), Color.Red);
-                    spriteBatch.Draw(healthBar, new Rectangle(this.viewport.Width * 12 / 16, this.viewport.Height / 15, (int)this.viewport.Width * player2.health / 600, this.viewport.Height / 30), Color.Red);
-                    
-                    // Draw lives left for player 1 and 2
-                    // Milas if you want to make a sprite to draw just replace "healthBar" with the sprite
-                    // And fudge the drawing math a bit and it will be all set to work
-                    for(int i = 0; i<player1.livesLeft; i++)
-                        spriteBatch.Draw(healthBar, new Rectangle(this.viewport.Width/15+((i*20)), (this.viewport.Height/15)+40, 10, 10), new Color(Color.DarkRed, (byte)200));
-                    for(int i = 0; i<player2.livesLeft; i++)
-                        spriteBatch.Draw(healthBar, new Rectangle(this.viewport.Width *12 / 16 + ((i * 20)), (this.viewport.Height / 15) + 40, 10, 10), new Color(Color.DarkRed, (byte)200));
-                    
-                    spriteBatch.DrawString(scorefont, "Player 1 Score: " + player1.score.ToString(), new Vector2(this.viewport.Width / 15, this.viewport.Height / 60), new Color(Color.White, (byte)130));
-                    spriteBatch.DrawString(scorefont, "Player 2 Score: " + player2.score.ToString(), new Vector2(this.viewport.Width * 12 / 16, this.viewport.Height / 60), new Color(Color.White, (byte)130));
-                    spriteBatch.DrawString(scorefont, "Enemies Killed: " + enemies_killed.ToString() +  "/" + enemies_level[level], new Vector2(this.viewport.Width * 7 / 16, this.viewport.Height / 60), new Color(Color.Beige, (byte)130));
-                    spriteBatch.Draw(player1.spriteB, new Rectangle((int)player1.position.X, (int)player1.position.Y, player1.spriteB.Width, player1.spriteB.Height), null, Color.White, player1.rotation_b, new Vector2(player1.spriteB.Width / 2, player1.spriteB.Height / 2), SpriteEffects.None, 0);
-                    spriteBatch.Draw(player1.spriteT, new Rectangle((int)player1.position.X, (int)player1.position.Y, player1.spriteT.Width, player1.spriteT.Height), null, Color.White, (float)(player1.rotation + .5 * Math.PI), new Vector2(player1.spriteT.Width / 2, player1.spriteT.Height / 2), SpriteEffects.None, 0);
-                    spriteBatch.Draw(player2.spriteB, new Rectangle((int)player2.position.X, (int)player2.position.Y, player2.spriteB.Width, player2.spriteB.Height), null, Color.Red, player2.rotation_b, new Vector2(player2.spriteB.Width / 2, player2.spriteB.Height / 2), SpriteEffects.None, 0);
-                    spriteBatch.Draw(player2.spriteT, new Rectangle((int)player2.position.X, (int)player2.position.Y, player2.spriteT.Width, player2.spriteT.Height), null, Color.Red, (float)(player2.rotation + .5 * Math.PI), new Vector2(player2.spriteT.Width / 2, player2.spriteT.Height / 2), SpriteEffects.None, 0);
 
-                    //draw spell menus
-                    spriteBatch.Draw(player1.spellMenu.State, new Rectangle((int)player1.spellMenu.Position.X, (int)player1.spellMenu.Position.Y, player1.spellMenu.Width, player1.spellMenu.Height), new Color(Color.White, (byte)210));
-                    spriteBatch.Draw(player2.spellMenu.State, new Rectangle((int)player2.spellMenu.Position.X, (int)player2.spellMenu.Position.Y, player2.spellMenu.Width, player2.spellMenu.Height), new Color(Color.White, (byte)210));
-                    if (turret1.placed)
-                    {
-                        spriteBatch.Draw(turret1.sprite, new Rectangle((int)turret1.position.X, (int)turret1.position.Y, turret1.sprite.Width, turret1.sprite.Height), null, Color.White, (float)(turret1.rotation + .5 * Math.PI), new Vector2(turret1.sprite.Width / 2, turret1.sprite.Height / 2), SpriteEffects.None, 0);
+                    //Call draw Functions
+                    this.DrawPickups(spriteBatch);
+                    this.DrawPlayers(spriteBatch);
+                    this.DrawInformation(spriteBatch);
+                    this.DrawEnemies(spriteBatch);
+                    this.DrawBullets(spriteBatch);
+                    this.DrawScore(spriteBatch);
 
-                    }
-                    if (turret2.placed)
-                    {
-                        spriteBatch.Draw(turret2.sprite, new Rectangle((int)turret2.position.X, (int)turret2.position.Y, turret2.sprite.Width, turret2.sprite.Height), null, Color.White, (float)(turret2.rotation + .5 * Math.PI), new Vector2(turret2.sprite.Width / 2, turret2.sprite.Height / 2), SpriteEffects.None, 0);
-
-                    }
-                    // TODO: Add your drawing code here
-                    #region Drawing Code:Bullets, TurretBullets, Enemies, Scores
-                    //player 1
-                    foreach (WeaponPickup pickup in pickups)
-                    {
-                        spriteBatch.Draw(pickup.sprite, pickup.position, Color.White);
-                    }
-                    foreach (GameObject bullet in bullets)
-                    {
-                        if (bullet.alive)
-                        {
-                            spriteBatch.Draw(bullet.sprite, bullet.position, Color.White);
-                        }
-                    }
-                    //player 2
-                    foreach (GameObject bullet in bullets2)
-                    {
-                        if (bullet.alive)
-                        {
-                            spriteBatch.Draw(bullet.sprite, bullet.position, Color.White);
-                        }
-                    }
-                    //turret 1
-                    foreach (GameObject bullet in turretBullets1)
-                    {
-                        if (bullet.alive)
-                        {
-                            spriteBatch.Draw(bullet.sprite, bullet.position, Color.White);
-                        }
-                    }
-                    //turret 2
-                    foreach (GameObject bullet in turretBullets2)
-                    {
-                        if (bullet.alive)
-                        {
-                            spriteBatch.Draw(bullet.sprite, bullet.position, Color.White);
-                        }
-                    }
-                    foreach (GameObject enemy in enemies)
-                    {
-                        
-                        if (enemy.alive)
-                        {
-                            spriteBatch.Draw(enemy.sprite, new Rectangle((int)enemy.position.X, (int)enemy.position.Y, enemy.sprite.Width, enemy.sprite.Height), null, Color.White, (float)(enemy.rotation + Math.PI / 2), new Vector2(enemy.sprite.Width / 2, enemy.sprite.Height / 2), SpriteEffects.None, 0);
-                        }
-                    }
-
-                    ArrayList deadScores = new ArrayList(); //Used for determing what scores need to be deleted. 
-                    //Output Scores
-                    foreach (ScoreDisplay s in score)
-                    {
-                        if (s.Alive)
-                        {
-                            if (s.Time > 0)
-                            {
-                                if (s.Player == 1)
-                                    spriteBatch.DrawString(scorefont, s.PointVal.ToString(), s.Position, new Color(Color.Red, (byte)(s.Time * 2.5)));
-                                else
-                                    spriteBatch.DrawString(scorefont, s.PointVal.ToString(), s.Position, new Color(Color.Green, (byte)(s.Time * 2.5)));
-                                s.Time--;
-                            }
-                            else
-                            {
-                                s.Alive = false;
-                                deadScores.Add(s);
-                            }
-                        }
-                    }
-                    //Remove Scores
-                    foreach (ScoreDisplay s in deadScores)
-                    {
-                        score.Remove(s);
-                    }
-                    #endregion
-                    //
+                    //close spriteBatch
                     spriteBatch.End();
 
-                   // Rectangle playerRect = new Rectangle((int)player1.position.X - player1.spriteB.Width / 2, (int)player1.position.Y - player1.spriteB.Height / 2, player1.spriteB.Width, player1.spriteB.Height);
-                   // Rectangle enemyRect = new Rectangle((int)enemies[0].position.X, (int)enemies[0].position.Y, enemies[0].sprite.Width, enemies[0].sprite.Height);
-                   // bool wer = MathFns.broadPhaseCollision(playerRect, enemyRect, (float)(enemies[0].rotation+Math.PI/2), spriteBatch, healthBar);
-
-                    //
-
-
-
+                    //render particles
                     particleRenderer.RenderEffect(particleEffect);
-
                     base.Draw(gameTime);
                 }
             }
