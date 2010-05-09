@@ -49,9 +49,9 @@
     <Reference Include="mscorlib">
       <Private>False</Private>
     </Reference>
-    <Reference Include="ProjectMercuryXbox, Version=3.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="ProjectMercury, Version=3.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>References\ProjectMercuryXbox.dll</HintPath>
+      <HintPath>References\Xbox\ProjectMercury.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Private>False</Private>
