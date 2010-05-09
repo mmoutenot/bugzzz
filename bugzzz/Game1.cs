@@ -1472,6 +1472,18 @@ namespace Bugzzz
                         spriteBatch.DrawString(scorefont, "Player 1 Score: " + player1.score.ToString(), new Vector2(this.viewport.Width / 15, this.viewport.Height / 60), new Color(Color.White, (byte)130));
                         spriteBatch.DrawString(scorefont, "Player 2 Score: " + player2.score.ToString(), new Vector2(this.viewport.Width * 12 / 16, this.viewport.Height / 60), new Color(Color.White, (byte)130));
                         spriteBatch.DrawString(scorefont, "Enemies Killed: " + enemies_killed.ToString() + "/" + enemies_level[level], new Vector2(this.viewport.Width * 7 / 16, this.viewport.Height / 60), new Color(Color.Beige, (byte)130));
+                        spriteBatch.Draw(healthBar, new Rectangle(this.viewport.Width / 15, this.viewport.Height / 15, (int)this.viewport.Width * player1.health / 600, this.viewport.Height / 30), Color.Red);
+                        spriteBatch.Draw(healthBar, new Rectangle(this.viewport.Width * 12 / 16, this.viewport.Height / 15, (int)this.viewport.Width * player2.health / 600, this.viewport.Height / 30), Color.Red);
+
+                        // Draw lives left for player 1 and 2
+                        // Milas if you want to make a sprite to draw just replace "healthBar" with the sprite
+                        // And fudge the drawing math a bit and it will be all set to work
+                        for (int i = 0; i < player1.livesLeft; i++)
+                            spriteBatch.Draw(healthBar, new Rectangle(this.viewport.Width / 15 + ((i * 20)), (this.viewport.Height / 15) + 40, 10, 10), new Color(Color.DarkRed, (byte)200));
+                        for (int i = 0; i < player2.livesLeft; i++)
+                            spriteBatch.Draw(healthBar, new Rectangle(this.viewport.Width * 12 / 16 + ((i * 20)), (this.viewport.Height / 15) + 40, 10, 10), new Color(Color.DarkRed, (byte)200));
+                    
+                        
                         foreach (WeaponPickup pickup in pickups)
                         {
                             spriteBatch.Draw(pickup.sprite, pickup.position, Color.White);
@@ -1481,7 +1493,7 @@ namespace Bugzzz
 
                         spriteBatch.Draw(getReady, new Rectangle(0, 0, viewport.Width, viewport.Height), new Color(Color.White, (byte)(int)(current_fade)));
 
-                        current_fade -= 2 * fade_increment;
+                        current_fade -= 4 * fade_increment;
                         if (current_fade <= 0)
                         {
                             //refresh everything
@@ -1497,7 +1509,8 @@ namespace Bugzzz
                                 enm.alive = false;
                             }
                             score.Clear();
-
+                            player1.spellMenu.Active = false;
+                            player2.spellMenu.Active = false;
                             fade_out = false;
                             act_fade = false;
                         }
