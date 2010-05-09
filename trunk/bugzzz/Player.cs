@@ -64,7 +64,7 @@ namespace Bugzzz
             weapon = w;
             activeWeapon = 0;
             stat = s;
-            livesLeft = 5;
+            livesLeft = 10;
 
             type = ty;
             spellMenu = new SpellMenu(sMenu, viewport, id);
