@@ -259,9 +259,6 @@ namespace Bugzzz
             sMenu[2] = Content.Load<Texture2D>("SpellMenus\\SpiderBar3Active");
             sMenu[3] = Content.Load<Texture2D>("SpellMenus\\SpiderBar4Active");
 
-            player1 = new Player(1, temp, Content.Load<Texture2D>("sprites\\smiley1"), p1_w, new Vector2(viewport.Width*7/15,viewport.Height/2), 1, new Statistics(true), sMenu, viewport);
-            player2 = new Player(2, temp, Content.Load<Texture2D>("sprites\\smiley1"), p2_w, new Vector2(viewport.Width*8/15, viewport.Height/2), 2, new Statistics(true), sMenu, viewport);
-
             
             // The maximum amount of scores to display on screen is the maximum number of dead enemies
             score = new ArrayList();
@@ -272,6 +269,11 @@ namespace Bugzzz
             spriteBatch = new SpriteBatch(GraphicsDevice);
             getReady = Content.Load<Texture2D>("getready");
 
+
+            player1 = new Player(1, temp, Content.Load<Texture2D>("sprites\\smiley1"), p1_w, new Vector2(viewport.Width*7/15,viewport.Height/2), 1, new Statistics(true), sMenu, viewport, levelfont);
+            player2 = new Player(2, temp, Content.Load<Texture2D>("sprites\\smiley1"), p2_w, new Vector2(viewport.Width*8/15, viewport.Height/2), 2, new Statistics(true), sMenu, viewport, levelfont);
+
+            
             particleEffect = new ParticleEffect
             {
                 new Emitter
@@ -806,55 +808,21 @@ namespace Bugzzz
                 // TODO: Add your update logic here
                 UpdateTurret(turret1, player1);
                 UpdateTurret(turret2, player2);
-
-                player1.activeWeapon = player1.spellMenu.CurState;
-                player2.activeWeapon = player2.spellMenu.CurState;
                 updateBullets();
                 updateEnemies();
-                updatePickups(player1);
-                updatePickups(player2);
 
-                //player1 spell menu
-                if (player1.spellMenu.Active)
-                    player1.spellMenu.moveOn();
-                else if (!player1.spellMenu.Active)
-                    player1.spellMenu.moveOff();
-
-                //player2 spell menu
-
-                if (player2.spellMenu.Active)
-                    player2.spellMenu.moveOn();
-                else if (!player2.spellMenu.Active)
-                    player2.spellMenu.moveOff();
-
-
-                // Border detection keeps players on the window
-                float xmove = player1.position.X + player1.velocity.X;
-                float ymove = player1.position.Y + player1.velocity.Y;
-                if( (xmove>(player1.spriteB.Width/2) && xmove<(viewport.Width-player1.spriteB.Width/2)) && (ymove>(player1.spriteB.Height/2) && ymove<(viewport.Height-player1.spriteB.Height/2)) )
-                    player1.position += player1.velocity;
-                xmove = player2.position.X + player2.velocity.X;
-                ymove = player2.position.Y + player2.velocity.Y;
-                if ((xmove > (player2.spriteB.Width / 2) && xmove < (viewport.Width - player2.spriteB.Width / 2)) && (ymove > (player2.spriteB.Height / 2) && ymove < (viewport.Height - player2.spriteB.Height / 2)))
-                    player2.position += player2.velocity;
+                //updates everything for players
                 
-                if (player1.energy < 100)
-                {
-                    player1.energy += 1;
-                }
-                if (player2.energy < 100)
-                {
-                    player2.energy += 1;
-                }
+                updatePlayer(player1);
+                updatePlayer(player2);
 
                 #region Fire Delay
-                if ((elapsedTime >= player1.weapon.delays[player1.activeWeapon]) && player1.fire)
+                if ((elapsedTime >= player1.weapon.delays[player1.activeWeapon]) && player1.fire && !player1.narc.Active)
                 {
-
                     elapsedTime = 0.0f;
                     fireBullets(player1, this.bullets);
                 }
-                if ((elapsedTime2 >= player2.weapon.delays[player2.activeWeapon]) && player2.fire)
+                if ((elapsedTime2 >= player2.weapon.delays[player2.activeWeapon]) && player2.fire && !player2.narc.Active)
                 {
                     elapsedTime2 = 0.0f;
                     fireBullets(player2, this.bullets2);
@@ -885,7 +853,35 @@ namespace Bugzzz
 
             base.Update(gameTime);
         }
-
+        private void updatePlayer(Player p)
+        {
+            if (p.ID == 1)
+                p.narc.Update(GamePad.GetState(PlayerIndex.One), Keyboard.GetState());
+            else
+                p.narc.Update(GamePad.GetState(PlayerIndex.Two), Keyboard.GetState());
+            if (!p.narc.Active)
+            {
+                updatePlayerMovement(p);
+                updatePickups(p);
+                if (p.spellMenu.Active)
+                    p.spellMenu.moveOn();
+                else
+                    p.spellMenu.moveOff();
+                p.activeWeapon = p.spellMenu.CurState;
+            }
+        }
+        private void updatePlayerMovement(Player p)
+        {
+            if (!p.narc.Active)
+            {
+                float xmove = p.position.X + p.velocity.X;
+                float ymove = p.position.Y + p.velocity.Y;
+                if ((xmove > (p.spriteB.Width / 2) && xmove < (viewport.Width - p.spriteB.Width / 2)) && (ymove > (p.spriteB.Height / 2) && ymove < (viewport.Height - p.spriteB.Height / 2)))
+                    p.position += p.velocity;
+                if (p.energy < 100)
+                    p.energy++;
+            }
+        }
 
         private void UpdateTurret(Turret turret, Player player)
         {
@@ -1031,334 +1027,341 @@ namespace Bugzzz
             else
             {
                 #region Player 1 Control Scheme
-                if (currentState.IsConnected)
+                if (!player1.narc.Active)
                 {
-                    #region XBox Controls Player1
-                    player1.velocity.X = currentState.ThumbSticks.Left.X * 5;
-                    player1.velocity.Y = -currentState.ThumbSticks.Left.Y * 5;
-                    //player1.rotation = -(float)((Math.Tan(currentState.ThumbSticks.Right.Y / currentState.ThumbSticks.Right.X)*2*Math.PI)/180);
-                    const float DEADZONE = 0.2f;
-                    const float FIREDEADZONE = 0.3f;
-
-                    Vector2 direction = GamePad.GetState(PlayerIndex.One).ThumbSticks.Right;
-                    float magnitude = direction.Length();
-                    player1.fire = false;
-                    if (GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.Length() > DEADZONE)
+                    if (currentState.IsConnected)
                     {
-                        player1.rotation_b = (float)(-1 * (3.14 / 2 + Math.Atan2(currentState.ThumbSticks.Left.Y, currentState.ThumbSticks.Left.X)));
+                        #region XBox Controls Player1
+                        player1.velocity.X = currentState.ThumbSticks.Left.X * 5;
+                        player1.velocity.Y = -currentState.ThumbSticks.Left.Y * 5;
+                        //player1.rotation = -(float)((Math.Tan(currentState.ThumbSticks.Right.Y / currentState.ThumbSticks.Right.X)*2*Math.PI)/180);
+                        const float DEADZONE = 0.2f;
+                        const float FIREDEADZONE = 0.3f;
+
+                        Vector2 direction = GamePad.GetState(PlayerIndex.One).ThumbSticks.Right;
+                        float magnitude = direction.Length();
+                        player1.fire = false;
+                        if (GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.Length() > DEADZONE)
+                        {
+                            player1.rotation_b = (float)(-1 * (3.14 / 2 + Math.Atan2(currentState.ThumbSticks.Left.Y, currentState.ThumbSticks.Left.X)));
+                        }
+
+                        if (magnitude > DEADZONE)
+                        {
+                            //Smooth Rotation
+                            float angle = (float)(-1 * (3.14 / 2 + Math.Atan2(currentState.ThumbSticks.Right.Y, currentState.ThumbSticks.Right.X)));
+
+                            if (angle != player1.rotation)
+                                player1.rotation = MathFns.Clerp(player1.rotation, angle, angle_rot);
+
+                            if (magnitude > FIREDEADZONE)
+                            {
+                                player1.fire = true;
+                            }
+
+                        }
+                        //move spell on/off
+                        if (GamePad.GetState(PlayerIndex.One).DPad.Up == ButtonState.Pressed)
+                            player1.spellMenu.Active = true;
+                        if (GamePad.GetState(PlayerIndex.One).DPad.Down == ButtonState.Pressed)
+                            player2.spellMenu.Active = false;
+
+                        //move indication of spell
+                        if (player1.spellMenu.Active)
+                        {
+                            //move right
+                            if (GamePad.GetState(PlayerIndex.One).Buttons.RightShoulder == ButtonState.Pressed && !press1a)
+                            {
+                                player1.spellMenu.stateInc();
+                                player1.activeWeapon = player1.spellMenu.CurState;
+                                press1a = true;
+                            }
+                            else if (GamePad.GetState(PlayerIndex.One).Buttons.RightShoulder == ButtonState.Released)
+                                press1a = false;
+
+                            //move left
+                            if (GamePad.GetState(PlayerIndex.One).Buttons.LeftShoulder == ButtonState.Pressed && !press1b)
+                            {
+                                player1.spellMenu.stateDec();
+                                player1.activeWeapon = player1.spellMenu.CurState;
+                                press1b = true;
+                            }
+                            else if (GamePad.GetState(PlayerIndex.One).Buttons.RightShoulder == ButtonState.Released)
+                                press1b = false;
+                        }
+                        #endregion
+
                     }
-
-                    if (magnitude > DEADZONE)
+                    //keyboard controls
+                    else
                     {
-                        //Smooth Rotation
-                        float angle = (float)(-1 * (3.14 / 2 + Math.Atan2(currentState.ThumbSticks.Right.Y, currentState.ThumbSticks.Right.X)));
+                        #region Keyboard Controls Player1
+                        //player1.fire = false;
+                        KeyboardState keyboardState = Keyboard.GetState();
+                        MouseState mouse = Mouse.GetState();
+                        float XDistance = player1.position.X - mouse.X;
+                        float YDistance = player1.position.Y - mouse.Y;
+                        float xdim = 800;
+                        float ydim = 800;
 
-                        if (angle != player1.rotation)
-                            player1.rotation = MathFns.Clerp(player1.rotation, angle, angle_rot);
+                        float rotation = (float)(Math.Atan2(YDistance, XDistance) + Math.PI / 2);
+                        player1.rotation = rotation;
 
-                        if (magnitude > FIREDEADZONE)
+                        if (mouse.LeftButton == ButtonState.Pressed)
                         {
                             player1.fire = true;
+                            xdim = mouse.X;
+                            ydim = mouse.Y;
                         }
-
-                    }
-                    //move spell on/off
-                    if (GamePad.GetState(PlayerIndex.One).DPad.Up == ButtonState.Pressed)
-                        player1.spellMenu.Active = true;
-                    if (GamePad.GetState(PlayerIndex.One).DPad.Down == ButtonState.Pressed)
-                        player2.spellMenu.Active = false;
-
-                    //move indication of spell
-                    if (player1.spellMenu.Active)
-                    {
-                        //move right
-                        if (GamePad.GetState(PlayerIndex.One).Buttons.RightShoulder == ButtonState.Pressed && !press1a)
+                        else
                         {
-                            player1.spellMenu.stateInc();
-                            player1.activeWeapon = player1.spellMenu.CurState;
-                            press1a = true;
+                            player1.fire = false;
                         }
-                        else if (GamePad.GetState(PlayerIndex.One).Buttons.RightShoulder == ButtonState.Released)
-                            press1a = false;
-
-                        //move left
-                        if (GamePad.GetState(PlayerIndex.One).Buttons.LeftShoulder == ButtonState.Pressed && !press1b)
+                        if (keyboardState.IsKeyDown(Keys.Left))
                         {
-                            player1.spellMenu.stateDec();
-                            player1.activeWeapon = player1.spellMenu.CurState;
-                            press1b = true;
+                            player1.velocity.X = -5;
                         }
-                        else if (GamePad.GetState(PlayerIndex.One).Buttons.RightShoulder == ButtonState.Released)
-                            press1b = false;
-                    }
-                    #endregion
-
-                }
-                //keyboard controls
-                else
-                {
-                    #region Keyboard Controls Player1
-                    //player1.fire = false;
-                    KeyboardState keyboardState = Keyboard.GetState();
-                    MouseState mouse = Mouse.GetState();
-                    float XDistance = player1.position.X - mouse.X;
-                    float YDistance = player1.position.Y - mouse.Y;
-                    float xdim = 800;
-                    float ydim = 800;
-
-                    float rotation = (float)(Math.Atan2(YDistance, XDistance) + Math.PI / 2);
-                    player1.rotation = rotation;
-
-                    if (mouse.LeftButton == ButtonState.Pressed)
-                    {
-                        player1.fire = true;
-                        xdim = mouse.X;
-                        ydim = mouse.Y;
-                    }
-                    else
-                    {
-                        player1.fire = false;
-                    }
-                    if (keyboardState.IsKeyDown(Keys.Left))
-                    {
-                        player1.velocity.X = -5;
-                    }
-                    else if (keyboardState.IsKeyDown(Keys.Right))
-                    {
-                        player1.velocity.X = 5;
-                    }
-                    else
-                    {
-                        player1.velocity.X = 0;
-                    }
-                    if (keyboardState.IsKeyDown(Keys.Up))
-                    {
-                        player1.velocity.Y = -5;
-                    }
-                    else if (keyboardState.IsKeyDown(Keys.Down))
-                    {
-                        player1.velocity.Y = 5;
-                    }
-                    else
-                    {
-                        player1.velocity.Y = 0;
-                    }
-                    if (keyboardState.IsKeyDown(Keys.Z))
-                    {
-                        player1.deploy = true;
-                    }
-                    if (keyboardState.IsKeyDown(Keys.Escape))
-                        this.Exit();
-
-                    //move spell menu on/off
-                    if (keyboardState.IsKeyDown(Keys.I))
-                        player1.spellMenu.Active = true;
-                    if (keyboardState.IsKeyDown(Keys.K))
-                        player1.spellMenu.Active = false;
-
-
-                    if (player1.spellMenu.Active)
-                    {
-                        //move left
-                        if (keyboardState.IsKeyDown(Keys.U) && !press1a)
+                        else if (keyboardState.IsKeyDown(Keys.Right))
                         {
-                            //TODO:: Fix from rotating through too fast
-                            player1.spellMenu.stateDec();
-                            player1.activeWeapon = player1.spellMenu.CurState;
-                            press1a = true;
+                            player1.velocity.X = 5;
                         }
-                        else if (keyboardState.IsKeyUp(Keys.U))
-                            press1a = false;
-
-                        //move right
-                        if (keyboardState.IsKeyDown(Keys.O) && !press1b)
+                        else
                         {
-                            player1.spellMenu.stateInc();
-                            player1.activeWeapon = player1.spellMenu.CurState;
-                            press1b = true;
+                            player1.velocity.X = 0;
                         }
-                        else if (keyboardState.IsKeyUp(Keys.O))
-                            press1b = false;
+                        if (keyboardState.IsKeyDown(Keys.Up))
+                        {
+                            player1.velocity.Y = -5;
+                        }
+                        else if (keyboardState.IsKeyDown(Keys.Down))
+                        {
+                            player1.velocity.Y = 5;
+                        }
+                        else
+                        {
+                            player1.velocity.Y = 0;
+                        }
+                        if (keyboardState.IsKeyDown(Keys.Z))
+                        {
+                            player1.deploy = true;
+                        }
+                        if (keyboardState.IsKeyDown(Keys.Escape))
+                            this.Exit();
+
+                        //move spell menu on/off
+                        if (keyboardState.IsKeyDown(Keys.I))
+                            player1.spellMenu.Active = true;
+                        if (keyboardState.IsKeyDown(Keys.K))
+                            player1.spellMenu.Active = false;
+
+
+                        if (player1.spellMenu.Active)
+                        {
+                            //move left
+                            if (keyboardState.IsKeyDown(Keys.U) && !press1a)
+                            {
+                                //TODO:: Fix from rotating through too fast
+                                player1.spellMenu.stateDec();
+                                player1.activeWeapon = player1.spellMenu.CurState;
+                                press1a = true;
+                            }
+                            else if (keyboardState.IsKeyUp(Keys.U))
+                                press1a = false;
+
+                            //move right
+                            if (keyboardState.IsKeyDown(Keys.O) && !press1b)
+                            {
+                                player1.spellMenu.stateInc();
+                                player1.activeWeapon = player1.spellMenu.CurState;
+                                press1b = true;
+                            }
+                            else if (keyboardState.IsKeyUp(Keys.O))
+                                press1b = false;
+                        }
+
+
+
+
+
+                        //cannon.rotation = MathHelper.Clamp(cannon.rotation, MathHelper.PiOver2, 0);
+                        // TODO: Add your update logic here
+                        previousKeyboardState = keyboardState;
+                        previousMouseState = mouse;
+
+                        #endregion
                     }
-
-
-
-
-
-                    //cannon.rotation = MathHelper.Clamp(cannon.rotation, MathHelper.PiOver2, 0);
-                    // TODO: Add your update logic here
-                    previousKeyboardState = keyboardState;
-                    previousMouseState = mouse;
-
-                    #endregion
                 }
                 #endregion
 
-                
+
 
                 #region Player 2 Control Scheme
                 currentState = GamePad.GetState(PlayerIndex.Two);
-                if (currentState.IsConnected)
+                if (!player2.narc.Active)
                 {
-                    #region XBox Controller Controls Player 2
-                    player2.velocity.X = currentState.ThumbSticks.Left.X * 5;
-                    player2.velocity.Y = -currentState.ThumbSticks.Left.Y * 5;
-                    //player2.rotation = -(float)((Math.Tan(currentState.ThumbSticks.Right.Y / currentState.ThumbSticks.Right.X)*2*Math.PI)/180);
-                    const float DEADZONE = 0.2f;
-                    const float FIREDEADZONE = 0.3f;
-
-                    Vector2 direction = GamePad.GetState(PlayerIndex.Two).ThumbSticks.Right;
-                    float magnitude = direction.Length();
-                    player2.fire = false;
-                    if (GamePad.GetState(PlayerIndex.Two).ThumbSticks.Left.Length() > DEADZONE)
+                    if (currentState.IsConnected)
                     {
-                        player2.rotation_b = (float)(-1 * (3.14 / 2 + Math.Atan2(currentState.ThumbSticks.Left.Y, currentState.ThumbSticks.Left.X)));
+                        #region XBox Controller Controls Player 2
+                        player2.velocity.X = currentState.ThumbSticks.Left.X * 5;
+                        player2.velocity.Y = -currentState.ThumbSticks.Left.Y * 5;
+                        //player2.rotation = -(float)((Math.Tan(currentState.ThumbSticks.Right.Y / currentState.ThumbSticks.Right.X)*2*Math.PI)/180);
+                        const float DEADZONE = 0.2f;
+                        const float FIREDEADZONE = 0.3f;
+
+                        Vector2 direction = GamePad.GetState(PlayerIndex.Two).ThumbSticks.Right;
+                        float magnitude = direction.Length();
+                        player2.fire = false;
+                        if (GamePad.GetState(PlayerIndex.Two).ThumbSticks.Left.Length() > DEADZONE)
+                        {
+                            player2.rotation_b = (float)(-1 * (3.14 / 2 + Math.Atan2(currentState.ThumbSticks.Left.Y, currentState.ThumbSticks.Left.X)));
+                        }
+
+                        if (magnitude > DEADZONE)
+                        {
+                            //Smooth Rotation
+                            float angle = (float)(-1 * (3.14 / 2 + Math.Atan2(currentState.ThumbSticks.Right.Y, currentState.ThumbSticks.Right.X)));
+
+                            if (angle != player2.rotation)
+                                player2.rotation = MathFns.Clerp(player2.rotation, angle, angle_rot);
+
+                            if (magnitude > FIREDEADZONE)
+                            {
+                                player2.fire = true;
+                            }
+                        }
+
+                        if (GamePad.GetState(PlayerIndex.One).DPad.Up == ButtonState.Pressed)
+                            player1.spellMenu.Active = true;
+                        if (GamePad.GetState(PlayerIndex.One).DPad.Down == ButtonState.Pressed)
+                            player2.spellMenu.Active = false;
+
+
+
+                        if (player2.spellMenu.Active)
+                        {
+                            //Move right
+                            if (GamePad.GetState(PlayerIndex.One).Buttons.RightShoulder == ButtonState.Pressed && !press2a)
+                            {
+                                player2.spellMenu.stateInc();
+                                player2.activeWeapon = player2.spellMenu.CurState;
+                                press2a = true;
+                            }
+                            else if (GamePad.GetState(PlayerIndex.Two).Buttons.LeftShoulder == ButtonState.Released)
+                                press2a = false;
+
+                            //move left
+                            if (GamePad.GetState(PlayerIndex.One).Buttons.LeftShoulder == ButtonState.Pressed && !press2b)
+                            {
+                                player2.spellMenu.stateDec();
+                                player2.activeWeapon = player2.spellMenu.CurState;
+                                press2b = true;
+                            }
+                            else if (GamePad.GetState(PlayerIndex.Two).Buttons.RightShoulder == ButtonState.Released)
+                                press2b = false;
+                        }
+
+                        #endregion
+
                     }
-
-                    if (magnitude > DEADZONE)
+                    //keyboard controls
+                    else
                     {
-                        //Smooth Rotation
-                        float angle = (float)(-1 * (3.14 / 2 + Math.Atan2(currentState.ThumbSticks.Right.Y, currentState.ThumbSticks.Right.X)));
+                        #region Keyboard Controls Player 2
 
-                        if (angle != player2.rotation)
-                            player2.rotation = MathFns.Clerp(player2.rotation, angle, angle_rot);
+                        //player2.fire = false;
+                        KeyboardState keyboardState = Keyboard.GetState();
+                        MouseState mouse = Mouse.GetState();
+                        float XDistance = player2.position.X - mouse.X;
+                        float YDistance = player2.position.Y - mouse.Y;
+                        float xdim = 800;
+                        float ydim = 800;
 
-                        if (magnitude > FIREDEADZONE)
+                        float rotation = (float)(Math.Atan2(YDistance, XDistance) + Math.PI / 2);
+                        player2.rotation = rotation;
+
+                        if (keyboardState.IsKeyDown(Keys.Space))
                         {
                             player2.fire = true;
+                            xdim = mouse.X;
+                            ydim = mouse.Y;
                         }
-                    }
-
-                    if (GamePad.GetState(PlayerIndex.One).DPad.Up == ButtonState.Pressed)
-                        player1.spellMenu.Active = true;
-                    if (GamePad.GetState(PlayerIndex.One).DPad.Down == ButtonState.Pressed)
-                        player2.spellMenu.Active = false;
-
-
-
-                    if (player2.spellMenu.Active)
-                    {
-                        //Move right
-                        if (GamePad.GetState(PlayerIndex.One).Buttons.RightShoulder == ButtonState.Pressed && !press2a)
+                        else
                         {
-                            player2.spellMenu.stateInc();
-                            player2.activeWeapon = player2.spellMenu.CurState;
-                            press2a = true;
+                            player2.fire = false;
                         }
-                        else if (GamePad.GetState(PlayerIndex.Two).Buttons.LeftShoulder == ButtonState.Released)
-                            press2a = false;
-
-                        //move left
-                        if (GamePad.GetState(PlayerIndex.One).Buttons.LeftShoulder == ButtonState.Pressed && !press2b)
+                        if (keyboardState.IsKeyDown(Keys.A))
                         {
-                            player2.spellMenu.stateDec();
-                            player2.activeWeapon = player2.spellMenu.CurState;
-                            press2b = true;
+                            player2.velocity.X = -5;
                         }
-                        else if (GamePad.GetState(PlayerIndex.Two).Buttons.RightShoulder == ButtonState.Released)
-                            press2b = false;
-                    }
-
-                    #endregion
-
-                }
-                //keyboard controls
-                else
-                {
-                    #region Keyboard Controls Player 2
-
-                    //player2.fire = false;
-                    KeyboardState keyboardState = Keyboard.GetState();
-                    MouseState mouse = Mouse.GetState();
-                    float XDistance = player2.position.X - mouse.X;
-                    float YDistance = player2.position.Y - mouse.Y;
-                    float xdim = 800;
-                    float ydim = 800;
-
-                    float rotation = (float)(Math.Atan2(YDistance, XDistance) + Math.PI / 2);
-                    player2.rotation = rotation;
-
-                    if (keyboardState.IsKeyDown(Keys.Space))
-                    {
-                        player2.fire = true;
-                        xdim = mouse.X;
-                        ydim = mouse.Y;
-                    }
-                    else
-                    {
-                        player2.fire = false;
-                    }
-                    if (keyboardState.IsKeyDown(Keys.A))
-                    {
-                        player2.velocity.X = -5;
-                    }
-                    else if (keyboardState.IsKeyDown(Keys.D))
-                    {
-                        player2.velocity.X = 5;
-                    }
-                    else
-                    {
-                        player2.velocity.X = 0;
-                    }
-                    if (keyboardState.IsKeyDown(Keys.W))
-                    {
-                        player2.velocity.Y = -5;
-                    }
-                    else if (keyboardState.IsKeyDown(Keys.S))
-                    {
-                        player2.velocity.Y = 5;
-                    }
-                    else
-                    {
-                        player2.velocity.Y = 0;
-                    }
-                    if (keyboardState.IsKeyDown(Keys.Q))
-                    {
-                        player2.deploy = true;
-                    }
-                    if (keyboardState.IsKeyDown(Keys.Escape))
-                        this.Exit();
-
-
-                    if (keyboardState.IsKeyDown(Keys.NumPad8))
-                        player2.spellMenu.Active = true;
-                    if (keyboardState.IsKeyDown(Keys.NumPad5))
-                        player2.spellMenu.Active = false;
-
-                    if (player2.spellMenu.Active)
-                    {
-                        if (keyboardState.IsKeyDown(Keys.NumPad7) && !press2a)
+                        else if (keyboardState.IsKeyDown(Keys.D))
                         {
-                            //TODO:: Fix from rotating through too fast
-                            player2.spellMenu.stateDec();
-                            player2.activeWeapon = player2.spellMenu.CurState;
-                            press2a = true;
+                            player2.velocity.X = 5;
                         }
-                        else if (keyboardState.IsKeyUp(Keys.NumPad7))
-                            press2a = false;
-
-                        //move right
-                        if (keyboardState.IsKeyDown(Keys.NumPad9) && !press2b)
+                        else
                         {
-                            player2.spellMenu.stateInc();
-                            player2.activeWeapon = player2.spellMenu.CurState;
-                            press2b = true;
+                            player2.velocity.X = 0;
                         }
-                        else if (keyboardState.IsKeyUp(Keys.NumPad9))
-                            press2b = false;
+                        if (keyboardState.IsKeyDown(Keys.W))
+                        {
+                            player2.velocity.Y = -5;
+                        }
+                        else if (keyboardState.IsKeyDown(Keys.S))
+                        {
+                            player2.velocity.Y = 5;
+                        }
+                        else
+                        {
+                            player2.velocity.Y = 0;
+                        }
+                        if (keyboardState.IsKeyDown(Keys.Q))
+                        {
+                            player2.deploy = true;
+                        }
+                        if (keyboardState.IsKeyDown(Keys.Escape))
+                            this.Exit();
+
+
+                        if (keyboardState.IsKeyDown(Keys.NumPad8))
+                            player2.spellMenu.Active = true;
+                        if (keyboardState.IsKeyDown(Keys.NumPad5))
+                            player2.spellMenu.Active = false;
+
+                        if (player2.spellMenu.Active)
+                        {
+                            if (keyboardState.IsKeyDown(Keys.NumPad7) && !press2a)
+                            {
+                                //TODO:: Fix from rotating through too fast
+                                player2.spellMenu.stateDec();
+                                player2.activeWeapon = player2.spellMenu.CurState;
+                                press2a = true;
+                            }
+                            else if (keyboardState.IsKeyUp(Keys.NumPad7))
+                                press2a = false;
+
+                            //move right
+                            if (keyboardState.IsKeyDown(Keys.NumPad9) && !press2b)
+                            {
+                                player2.spellMenu.stateInc();
+                                player2.activeWeapon = player2.spellMenu.CurState;
+                                press2b = true;
+                            }
+                            else if (keyboardState.IsKeyUp(Keys.NumPad9))
+                                press2b = false;
+                        }
+
+
+
+
+
+
+                        //cannon.rotation = MathHelper.Clamp(cannon.rotation, MathHelper.PiOver2, 0);
+                        // TODO: Add your update logic here
+                        previousKeyboardState = keyboardState;
+                        previousMouseState = mouse;
+                        #endregion Keyboard Controls
+
                     }
-
-
-
-
-
-
-                    //cannon.rotation = MathHelper.Clamp(cannon.rotation, MathHelper.PiOver2, 0);
-                    // TODO: Add your update logic here
-                    previousKeyboardState = keyboardState;
-                    previousMouseState = mouse;
-                    #endregion Keyboard Controls
-
+                
                 }
                 #endregion
             }
@@ -1367,6 +1370,8 @@ namespace Bugzzz
 
         private void DrawPlayers(SpriteBatch s)
         {
+            player1.narc.Draw(s);
+            player2.narc.Draw(s);
             s.Draw(player1.spriteB, new Rectangle((int)player1.position.X, (int)player1.position.Y, player1.spriteB.Width, player1.spriteB.Height), null, Color.White, player1.rotation_b, new Vector2(player1.spriteB.Width / 2, player1.spriteB.Height / 2), SpriteEffects.None, 0);
             s.Draw(player1.spriteT, new Rectangle((int)player1.position.X, (int)player1.position.Y, player1.spriteT.Width, player1.spriteT.Height), null, Color.White, (float)(player1.rotation + .5 * Math.PI), new Vector2(player1.spriteT.Width / 2, player1.spriteT.Height / 2), SpriteEffects.None, 0);
             s.Draw(player2.spriteB, new Rectangle((int)player2.position.X, (int)player2.position.Y, player2.spriteB.Width, player2.spriteB.Height), null, Color.Red, player2.rotation_b, new Vector2(player2.spriteB.Width / 2, player2.spriteB.Height / 2), SpriteEffects.None, 0);

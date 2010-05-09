@@ -59,6 +59,7 @@
   <ItemGroup>
     <Compile Include="Character.cs" />
     <Compile Include="GameMenu.cs" />
+    <Compile Include="NarcolepsyEffect.cs" />
     <Compile Include="SpellMenu.cs" />
     <Compile Include="GameObject.cs" />
     <Compile Include="LevelScore.cs" />
