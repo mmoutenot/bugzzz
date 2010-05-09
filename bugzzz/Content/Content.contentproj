@@ -42,35 +42,35 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="sprites\smiley1.jpg">
+    <Compile Include="Sprites\smiley1.jpg">
       <Name>smiley1</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="sprites\cannonball.tga">
+    <Compile Include="Sprites\cannonball.tga">
       <Name>cannonball</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="sprites\enemy.tga">
+    <Compile Include="Sprites\enemy.tga">
       <Name>enemy</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="sprites\cannon.tga">
+    <Compile Include="Sprites\cannon.tga">
       <Name>cannon</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="sprites\healthBar.png">
+    <Compile Include="Sprites\healthBar.png">
       <Name>healthBar</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
@@ -98,7 +98,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="sprites\roach.png">
+    <Compile Include="Sprites\roach.png">
       <Name>roach</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
@@ -213,6 +213,13 @@
   <ItemGroup>
     <Compile Include="Backgrounds\grass_bg.png">
       <Name>grass_bg</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Sprites\roach_sm.png">
+      <Name>roach_sm</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
