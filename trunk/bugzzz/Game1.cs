@@ -332,7 +332,7 @@ namespace Bugzzz
         /// 
 
 
-        private void fireBullets(Player p)
+        private void fireBullets(Player p, GameObject[] b)
         {
             //firing command
             //automatically resorts to unlimited weapon if current weapon is out of ammo
@@ -344,7 +344,7 @@ namespace Bugzzz
 
             if (p.activeWeapon == 0)
             {
-                foreach (GameObject bullet in bullets)
+                foreach (GameObject bullet in b)
                 {
                     if (!bullet.alive)
                     {
@@ -358,7 +358,7 @@ namespace Bugzzz
             if (p.activeWeapon == 1)
             {
                 double spread = -0.2094;
-                foreach (GameObject bullet in bullets)
+                foreach (GameObject bullet in b)
                 {
                     if (!bullet.alive)
                     {
@@ -374,7 +374,7 @@ namespace Bugzzz
             }
             if (p.activeWeapon == 2)
             {
-                foreach (GameObject bullet in bullets)
+                foreach (GameObject bullet in b)
                 {
                     if (!bullet.alive)
                     {
@@ -849,12 +849,12 @@ namespace Bugzzz
                 {
 
                     elapsedTime = 0.0f;
-                    fireBullets(player1);
+                    fireBullets(player1, this.bullets);
                 }
                 if ((elapsedTime2 >= player2.weapon.delays[player2.activeWeapon]) && player2.fire)
                 {
                     elapsedTime2 = 0.0f;
-                    fireBullets(player2);
+                    fireBullets(player2, this.bullets2);
                 }
 
                 if (turret1.fire && t_elapsedTime >= fireDelay + .5 && turret1.placed)
