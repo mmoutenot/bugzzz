@@ -50,6 +50,7 @@ namespace Bugzzz
         const int fade_length = 150;
         const float fade_increment = 0.5f;
         float current_fade;
+       // int fadeNum;
         bool fade_in, fade_out, scoreScreen, act_fade;
         
         Player player1;
@@ -88,6 +89,7 @@ namespace Bugzzz
         GameTime gt;
 
         Texture2D[] level_backgrounds;
+        Texture2D getReady;
 
         public Game1()
         {
@@ -247,6 +249,7 @@ namespace Bugzzz
             scorefont = Content.Load<SpriteFont>("ScoreFont");
             levelfont = Content.Load<SpriteFont>("LevelFont");
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            getReady = Content.Load<Texture2D>("getready");
 
             particleEffect = new ParticleEffect
             {
@@ -668,20 +671,20 @@ namespace Bugzzz
                         int rand2 = rand.Next(100);
                         if (rand1 < 33)
                         {
-                            enemy.position.X = -enemy.sprite.Width - 5;
+                            enemy.position.X = -enemy.sprite.Width - rand.Next(5,100);
                             enemy.position.Y = rand.Next(viewport.Height);
                         }
                         else if (rand1 < 66)
                         {
                             enemy.position.X = rand.Next(viewport.Width);
                             if (rand2 < 50)
-                                enemy.position.Y = -enemy.sprite.Height + 5;
+                                enemy.position.Y = -enemy.sprite.Height + rand.Next(5,100);
                             else
-                                enemy.position.Y = viewport.Height + 4;
+                                enemy.position.Y = viewport.Height + rand.Next(5,100);
                         }
                         else
                         {
-                            enemy.position.X = viewport.Width + 4;
+                            enemy.position.X = viewport.Width + rand.Next(5, 100);
                             enemy.position.Y = rand.Next(viewport.Height);
                         }
                     }
@@ -1256,6 +1259,8 @@ namespace Bugzzz
                 ls = new LevelScore(this.level+1, player1, player2, true, 200, levelfont, GraphicsDevice, this.healthBar);
                 act_fade = true;
                 enemies_killed = 0;
+                player1.deploy = false;
+                player2.deploy = false;
             }
 
             if (act_fade)
@@ -1275,6 +1280,8 @@ namespace Bugzzz
                     //Console.Out.WriteLine(current_fade);
                     if (current_fade == 22)
                     {
+                        current_fade = 255;
+                        //fadeNum = 0;
                         scoreScreen = true;
                         fade_in = false;
                     }
@@ -1289,7 +1296,7 @@ namespace Bugzzz
                     ls.Draw(this.viewport);
                     if (!GamePad.GetState(PlayerIndex.One).IsConnected)
                     {
-                        if (Keyboard.GetState().IsKeyDown(Keys.Z))
+                        if (Keyboard.GetState().IsKeyDown(Keys.Space))
                         {
                             fade_out = true;
                             scoreScreen = false;
@@ -1297,7 +1304,7 @@ namespace Bugzzz
                     }
                     else
                     {
-                        if (GamePad.GetState(PlayerIndex.One).Buttons.A == ButtonState.Pressed)
+                        if (GamePad.GetState(PlayerIndex.One).Buttons.Start == ButtonState.Pressed)
                         {
                             fade_out = true;
                             scoreScreen = false;
@@ -1306,7 +1313,7 @@ namespace Bugzzz
 
                     if (!GamePad.GetState(PlayerIndex.Two).IsConnected)
                     {
-                        if (Keyboard.GetState().IsKeyDown(Keys.Q))
+                        if (Keyboard.GetState().IsKeyDown(Keys.Space))
                         {
                             fade_out = true;
                             scoreScreen = false;
@@ -1314,7 +1321,7 @@ namespace Bugzzz
                     }
                     else
                     {
-                        if (GamePad.GetState(PlayerIndex.Two).Buttons.A == ButtonState.Pressed)
+                        if (GamePad.GetState(PlayerIndex.Two).Buttons.Start == ButtonState.Pressed)
                         {
                             fade_out = true;
                             scoreScreen = false;
@@ -1325,20 +1332,47 @@ namespace Bugzzz
                 }
                 #endregion
 
-                #region Fade Out Logic
+                #region Fade Back In
                 if (fade_out)
                 {
-                    spriteBatch.Draw(healthBar, new Rectangle(0, 0, this.viewport.Width, this.viewport.Height), new Color(Color.Black, (byte)(current_fade)));
-                    if (elapsed >= fade_length/10)
-                        current_fade -= fade_increment;
+                    spriteBatch.Draw(level_backgrounds[0], new Rectangle(0, 0, viewport.Width, viewport.Height), Color.White);
+                    spriteBatch.Draw(player1.spriteB, new Rectangle((int)player1.position.X, (int)player1.position.Y, player1.spriteB.Width, player1.spriteB.Height), null, Color.White, player1.rotation_b, new Vector2(player1.spriteB.Width / 2, player1.spriteB.Height / 2), SpriteEffects.None, 0);
+                    spriteBatch.Draw(player1.spriteT, new Rectangle((int)player1.position.X, (int)player1.position.Y, player1.spriteT.Width, player1.spriteT.Height), null, Color.White, (float)(player1.rotation + .5 * Math.PI), new Vector2(player1.spriteT.Width / 2, player1.spriteT.Height / 2), SpriteEffects.None, 0);
+                    spriteBatch.Draw(player2.spriteB, new Rectangle((int)player2.position.X, (int)player2.position.Y, player2.spriteB.Width, player2.spriteB.Height), null, Color.Red, player2.rotation_b, new Vector2(player2.spriteB.Width / 2, player2.spriteB.Height / 2), SpriteEffects.None, 0);
+                    spriteBatch.Draw(player2.spriteT, new Rectangle((int)player2.position.X, (int)player2.position.Y, player2.spriteT.Width, player2.spriteT.Height), null, Color.Red, (float)(player2.rotation + .5 * Math.PI), new Vector2(player2.spriteT.Width / 2, player2.spriteT.Height / 2), SpriteEffects.None, 0);
+                    spriteBatch.DrawString(scorefont, "Player 1 Score: " + player1.score.ToString(), new Vector2(this.viewport.Width / 15, this.viewport.Height / 60), new Color(Color.White, (byte)130));
+                    spriteBatch.DrawString(scorefont, "Player 2 Score: " + player2.score.ToString(), new Vector2(this.viewport.Width * 12 / 16, this.viewport.Height / 60), new Color(Color.White, (byte)130));
+                    spriteBatch.DrawString(scorefont, "Enemies Killed: " + enemies_killed.ToString(), new Vector2(this.viewport.Width * 7 / 16, this.viewport.Height / 60), new Color(Color.Beige, (byte)130));
+                    foreach (WeaponPickup pickup in pickups)
+                    {
+                        spriteBatch.Draw(pickup.sprite, pickup.position, Color.White);
+                    }
 
+
+
+                    spriteBatch.Draw(getReady, new Rectangle(0, 0, viewport.Width, viewport.Height), new Color(Color.White, (byte)(int)(current_fade)));
+
+                    current_fade -= 2*fade_increment;
                     if (current_fade <= 0)
                     {
-                        level++; //TODO: Will crash after 5 levels.
-                        enemies_killed = 0;
+                        //refresh everything
+                        for (int i = 0; i < maxBullets; i++)
+                        {
+                            bullets[i].alive = false;
+                            turretBullets1[i].alive = false;
+                            bullets2[i].alive = false;
+                            turretBullets2[i].alive = false;
+                        }
+                        foreach (GameObject enm in enemies)
+                        {
+                            enm.alive = false;
+                        }
+                        score.Clear();
+
                         fade_out = false;
                         act_fade = false;
                     }
+
                 }
                 #endregion
 
