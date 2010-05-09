@@ -193,13 +193,15 @@ namespace Bugzzz
             //Console.Out.WriteLine(b.X);
             Rectangle r1 = new Rectangle((int)minX1, (int)minY1, (int)(maxX1 - minX1), (int)(maxY1- minY1));
             Rectangle r2 = new Rectangle((int)minX2, (int)minY2, (int)(maxX2 - minX2), (int)(maxY2- minY2));
-           // s.Begin(SpriteBlendMode.AlphaBlend);
-           // s.Draw(t,r2,new Color(Color.White, (byte)50));
-           // s.End();
+            //s.Begin(SpriteBlendMode.AlphaBlend);
+            //s.Draw(t,r2,new Color(Color.White, (byte)50));
+            //s.Draw(t, r1, new Color(Color.White, (byte)50));
+            //s.End();
 
             if (!r1.Intersects(r2))
                 return false;
-            else return narrowPhaseCollision(UL2, BL2, UR2, BR2, a);
+            else return true;
+               // narrowPhaseCollision(UL2, BL2, UR2, BR2, a);
 
 
 

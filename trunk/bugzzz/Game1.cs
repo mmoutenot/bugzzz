@@ -1601,11 +1601,13 @@ namespace Bugzzz
                     }
                     foreach (GameObject enemy in enemies)
                     {
+                        
                         if (enemy.alive)
                         {
                             spriteBatch.Draw(enemy.sprite, new Rectangle((int)enemy.position.X, (int)enemy.position.Y, enemy.sprite.Width, enemy.sprite.Height), null, Color.White, (float)(enemy.rotation + Math.PI / 2), new Vector2(enemy.sprite.Width / 2, enemy.sprite.Height / 2), SpriteEffects.None, 0);
                         }
                     }
+
                     ArrayList deadScores = new ArrayList(); //Used for determing what scores need to be deleted. 
                     //Output Scores
                     foreach (ScoreDisplay s in score)
@@ -1636,9 +1638,9 @@ namespace Bugzzz
                     //
                     spriteBatch.End();
 
-                    // Rectangle playerRect = new Rectangle((int)player1.position.X - player1.spriteB.Width / 2, (int)player1.position.Y - player1.spriteB.Height / 2, player1.spriteB.Width, player1.spriteB.Height);
-                    //Rectangle enemyRect = new Rectangle((int)enemies[0].position.X, (int)enemies[0].position.Y, enemies[0].sprite.Width, enemies[0].sprite.Height);
-                    //bool wer = MathFns.broadPhaseCollision(playerRect, 0, enemyRect, (float)(enemies[0].rotation+Math.PI/2), spriteBatch, healthBar);
+                   // Rectangle playerRect = new Rectangle((int)player1.position.X - player1.spriteB.Width / 2, (int)player1.position.Y - player1.spriteB.Height / 2, player1.spriteB.Width, player1.spriteB.Height);
+                   // Rectangle enemyRect = new Rectangle((int)enemies[0].position.X, (int)enemies[0].position.Y, enemies[0].sprite.Width, enemies[0].sprite.Height);
+                   // bool wer = MathFns.broadPhaseCollision(playerRect, enemyRect, (float)(enemies[0].rotation+Math.PI/2), spriteBatch, healthBar);
 
                     //
 
