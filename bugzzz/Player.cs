@@ -42,8 +42,17 @@ namespace Bugzzz
         public Statistics stat;
         public int livesLeft;
         public SpellMenu spellMenu;
+        public NarcolepsyEffect narc;
 
-        public Player(int i, Texture2D t, Texture2D b, Weapons w, Vector2 pos, int ty, Statistics s, Texture2D[] sMenu, Viewport viewport)
+        public int ID
+        {
+            get
+            {
+                return id;
+            }
+        }
+
+        public Player(int i, Texture2D t, Texture2D b, Weapons w, Vector2 pos, int ty, Statistics s, Texture2D[] sMenu, Viewport viewport, SpriteFont f)
         {
             energy = 100;
             deploy = false;
@@ -68,6 +77,7 @@ namespace Bugzzz
 
             type = ty;
             spellMenu = new SpellMenu(sMenu, viewport, id);
+            narc = new NarcolepsyEffect(f, id);
         }
     }
 }
