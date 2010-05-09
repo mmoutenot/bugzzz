@@ -122,6 +122,7 @@ namespace Bugzzz
             this.curLevel = level;
             this.totalCount = level * 10;
         }
+
         //press A repeatedly (space on keyboard)
         private void updateOne(GamePadState g, KeyboardState k)
         {
