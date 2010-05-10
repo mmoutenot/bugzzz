@@ -84,7 +84,7 @@ namespace Bugzzz
         MouseState previousMouseState = Mouse.GetState();
 
         //particle effects zomg!
-        ParticleEffect particleEffect;
+        ParticleEffect bloodExplosion, pickupGlow;
         PointSpriteRenderer particleRenderer;
 
         GameTime gt;
@@ -274,19 +274,20 @@ namespace Bugzzz
             player2 = new Player(2, temp, Content.Load<Texture2D>("Sprites\\smiley1"), p2_w, new Vector2(viewport.Width*8/15, viewport.Height/2), 2, new Statistics(true), sMenu, viewport, levelfont);
 
 
-            particleEffect = Content.Load<ParticleEffect>("Particles\\bloody");
+            bloodExplosion = Content.Load<ParticleEffect>("Particles\\bloody");
+            pickupGlow = Content.Load<ParticleEffect>("Particles\\glow");
+
+            bloodExplosion.Initialise();
+            pickupGlow.Initialise();
+
+            bloodExplosion.LoadContent(Content);
+            pickupGlow.LoadContent(Content);
 
             particleRenderer = new PointSpriteRenderer
             {
                 GraphicsDeviceService = graphics
             };
-
-            particleEffect.Initialise();
-
-            particleEffect.LoadContent(Content);
             particleRenderer.LoadContent(Content);
-
-            // TODO: use this.Content to load your game content here
         }
 
         /// <summary>
@@ -473,7 +474,8 @@ namespace Bugzzz
 
             // particle test
             float deltaSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            particleEffect.Update(deltaSeconds);
+            bloodExplosion.Update(deltaSeconds);
+            pickupGlow.Update(deltaSeconds);
 
             base.Update(gameTime);
         }
@@ -1064,7 +1066,7 @@ namespace Bugzzz
                                 enemy.alive = false;
 
                                 // particle test
-                                particleEffect.Trigger(new Vector2(enemy.position.X, enemy.position.Y));
+                                bloodExplosion.Trigger(new Vector2(enemy.position.X, enemy.position.Y));
 
                                 score.Add(new ScoreDisplay(20, SCORE_TIME, enemy.position, true, 1));
                                 player1.score += 20;
@@ -1377,7 +1379,13 @@ namespace Bugzzz
         private void DrawPickups(SpriteBatch s)
         {
             foreach (WeaponPickup pickup in pickups)
+            {
+                Vector2 glowPos = pickup.position;
+                glowPos.X += pickup.sprite.Width / 2;
+                glowPos.Y += pickup.sprite.Height / 2;
+                pickupGlow.Trigger(glowPos);
                 s.Draw(pickup.sprite, pickup.position, Color.White);
+            }
         }
         private void DrawBullets(SpriteBatch s)
         {
@@ -1597,7 +1605,8 @@ namespace Bugzzz
                     spriteBatch.End();
 
                     //render particles
-                    particleRenderer.RenderEffect(particleEffect);
+                    particleRenderer.RenderEffect(bloodExplosion);
+                    particleRenderer.RenderEffect(pickupGlow);
                     base.Draw(gameTime);
                 }
             }
