@@ -4,7 +4,7 @@
     <Item>
       <Name>Basic Emitter</Name>
       <Budget>5000</Budget>
-      <Term>1</Term>
+      <Term>1.5</Term>
       <ReleaseQuantity>20</ReleaseQuantity>
       <Enabled>true</Enabled>
       <ReleaseSpeed>
@@ -43,7 +43,7 @@
       </Modifiers>
       <BlendMode>Alpha</BlendMode>
       <TriggerOffset>0 0</TriggerOffset>
-      <MinimumTriggerPeriod>0.5</MinimumTriggerPeriod>
+      <MinimumTriggerPeriod>0</MinimumTriggerPeriod>
     </Item>
     <Name>Particle Effect</Name>
   </Asset>
