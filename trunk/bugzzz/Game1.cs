@@ -251,7 +251,6 @@ namespace Bugzzz
                 enemies[j] = new GameObject(temp);
             }
 
-            temp = Content.Load<Texture2D>("Sprites\\cannon");
             //spell menu textures
             Texture2D[] sMenu = new Texture2D[4];
             sMenu[0] = Content.Load<Texture2D>("SpellMenus\\SpiderBar1Active");
@@ -270,8 +269,8 @@ namespace Bugzzz
             getReady = Content.Load<Texture2D>("Backgrounds\\getready");
 
 
-            player1 = new Player(1, temp, Content.Load<Texture2D>("Sprites\\smiley1"), p1_w, new Vector2(viewport.Width*7/15,viewport.Height/2), 1, new Statistics(true), sMenu, viewport, levelfont);
-            player2 = new Player(2, temp, Content.Load<Texture2D>("Sprites\\smiley1"), p2_w, new Vector2(viewport.Width*8/15, viewport.Height/2), 2, new Statistics(true), sMenu, viewport, levelfont);
+            player1 = new Player(1, Content.Load<Texture2D>("Sprites\\antman_top"), Content.Load<Texture2D>("Sprites\\antman_bottom"), p1_w, new Vector2(viewport.Width * 7 / 15, viewport.Height / 2), 1, new Statistics(true), sMenu, viewport, levelfont);
+            player2 = new Player(2, Content.Load<Texture2D>("Sprites\\spidman_top"), Content.Load<Texture2D>("Sprites\\spidman_bottom"), p2_w, new Vector2(viewport.Width * 8 / 15, viewport.Height / 2), 2, new Statistics(true), sMenu, viewport, levelfont);
 
 
             bloodExplosion = Content.Load<ParticleEffect>("Particles\\bloody");
