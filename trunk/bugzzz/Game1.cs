@@ -54,7 +54,7 @@ namespace Bugzzz
        // int fadeNum;
         bool fade_in, fade_out, scoreScreen, act_fade;
         bool gameLoading;
-        float progress;
+        float progress, prog2;
         
         Player player1;
         Player player2;
@@ -165,6 +165,7 @@ namespace Bugzzz
             InitGraphicsMode(1280, 720, false);
             this.gameLoading = true;
             this.progress = 0;
+            this.prog2 = 0;
             this.current_fade = 0;
             this.fade_in = true;
             this.rand = new Random();
@@ -1468,7 +1469,11 @@ namespace Bugzzz
                 spriteBatch.Draw(logo, new Rectangle(0, 0, (int)viewport.Width, (int)viewport.Height), new Color(Color.White, (byte)(int)progress));
                 if (progress <= 255)
                 {
-                    progress += fade_increment;
+                    progress += 1.5f*fade_increment;
+                }
+                else if (prog2 <= 50)
+                {
+                    prog2 += 1.5f * fade_increment;
                 }
                 else
                     gameLoading = false;

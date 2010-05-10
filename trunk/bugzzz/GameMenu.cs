@@ -25,6 +25,10 @@ namespace Bugzzz
         private Vector2 vp;             //viewport width and height
         private bool active;            //Bool if menu is active or not
         private bool select;            //Indicates if button is being pressed
+
+
+        private float progress;
+        private float progInc;
         #endregion
 
         #region Accessors (Active)
@@ -70,6 +74,8 @@ namespace Bugzzz
         /// <param name="v">Game Viewport</param>
         public GameMenu(Texture2D[] inputs, Viewport v)
         {
+            progress = 0f;
+            progInc = 1.5f;
             active = true;
             select = false;
             state = 0;
@@ -103,21 +109,26 @@ namespace Bugzzz
         /// <param name="s">Game Spritebatch</param>
         public void Draw(SpriteBatch s)
         {
-            s.Draw(background, new Rectangle(0, 0, (int)vp.X, (int)vp.Y), Color.White);
+            
+            s.Draw(background, new Rectangle(0, 0, (int)vp.X, (int)vp.Y), new Color(Color.White, (byte)(int)progress));
 
-            Vector2 pos = new Vector2();
-            pos.Y = vp.Y*21/56;
-            pos.X = 0;
-            for(int i=0; i < 4; i++)
+            if (progress >= 50)
             {
-                pos.X = vp.X / 2 - widths[i] / 2;
-                if (state == i)
-                    s.Draw(this.activeIcons[i], new Rectangle((int)pos.X, (int)pos.Y, (int)widths[i], 158), Color.White);
-                else
-                    s.Draw(this.normalIcons[i], new Rectangle((int)pos.X, (int)pos.Y, (int)widths[i], 158), Color.White);
+                Vector2 pos = new Vector2();
+                pos.Y = vp.Y * 21 / 56;
+                pos.X = 0;
+                for (int i = 0; i < 4; i++)
+                {
+                    pos.X = vp.X / 2 - widths[i] / 2;
+                    if (state == i)
+                        s.Draw(this.activeIcons[i], new Rectangle((int)pos.X, (int)pos.Y, (int)widths[i], 158), Color.White);
+                    else
+                        s.Draw(this.normalIcons[i], new Rectangle((int)pos.X, (int)pos.Y, (int)widths[i], 158), Color.White);
 
-                pos.Y = pos.Y + 110;
+                    pos.Y = pos.Y + 110;
+                }
             }
+            progress += progInc;
 
             
             
