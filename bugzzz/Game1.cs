@@ -44,6 +44,7 @@ namespace Bugzzz
         bool press1a, press1b; //indicates if button already pressed
         bool press2a, press2b;
         
+        
 
         // Score display time on screen as it fades out
         const int SCORE_TIME = 80;
@@ -52,6 +53,8 @@ namespace Bugzzz
         float current_fade;
        // int fadeNum;
         bool fade_in, fade_out, scoreScreen, act_fade;
+        bool gameLoading;
+        float progress;
         
         Player player1;
         Player player2;
@@ -91,6 +94,7 @@ namespace Bugzzz
 
         Texture2D[] level_backgrounds;
         Texture2D getReady;
+        Texture2D logo;
 
         bool gameOver;
 
@@ -159,6 +163,8 @@ namespace Bugzzz
             // TODO: Add your initialization logic here
             //player's stating position
             InitGraphicsMode(1280, 720, false);
+            this.gameLoading = true;
+            this.progress = 0;
             this.current_fade = 0;
             this.fade_in = true;
             this.rand = new Random();
@@ -212,6 +218,7 @@ namespace Bugzzz
             menus[8] = Content.Load<Texture2D>("MainMenu\\menu");
 
             this.gm = new GameMenu(menus, viewport);
+            this.logo = Content.Load<Texture2D>("Backgrounds\\CompanyLogo");
 
 
             Texture2D temp = Content.Load<Texture2D>("Sprites\\cannon");
@@ -1454,166 +1461,182 @@ namespace Bugzzz
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            if (gm.Active)
+            if (gameLoading)
             {
+                GraphicsDevice.Clear(Color.Black);
                 spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
-                gm.Draw(spriteBatch);
-                spriteBatch.End();
-            }
-            // Draw the game over screen which should lead back to the menu
-            else if (gameOver)
-            {
-                spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
-                spriteBatch.DrawString(levelfont, "Game Over", new Vector2(viewport.Width/2-50, viewport.Height/2-50), Color.Red);
+                spriteBatch.Draw(logo, new Rectangle(0, 0, (int)viewport.Width, (int)viewport.Height), new Color(Color.White, (byte)(int)progress));
+                if (progress <= 255)
+                {
+                    progress += fade_increment;
+                }
+                else
+                    gameLoading = false;
                 spriteBatch.End();
             }
             else
             {
-                if (enemies_level[level] == enemies_killed && !act_fade)
+                if (gm.Active)
                 {
-                    ls = new LevelScore(this.level + 1, player1, player2, true, 200, levelfont, GraphicsDevice, this.healthBar);
-                    act_fade = true;
-                    enemies_killed = 0;
-                }
-
-                if (act_fade)
-                {
-                    //Fade to Black
-                    float elapsed = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
                     spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
-                    #region Fade In Logic
-                    if (fade_in)
-                    {
-
-                        spriteBatch.Draw(healthBar, new Rectangle(0, 0, this.viewport.Width, this.viewport.Height), new Color(Color.DarkBlue, (byte)(int)(current_fade)));
-                        if (elapsed >= fade_length / 12)
-                        {
-                            current_fade += fade_increment;
-                        }
-                        //Console.Out.WriteLine(current_fade);
-                        if (current_fade == 22)
-                        {
-                            current_fade = 255;
-                            //fadeNum = 0;
-                            scoreScreen = true;
-                            fade_in = false;
-                        }
-                        //Fade out
-                    }
-                    #endregion
-
-                    #region Score Screen Logic
-                    if (scoreScreen)
-                    {
-                        //TODO: Add Score Screen Here
-                        ls.Draw(this.viewport);
-                        if (!GamePad.GetState(PlayerIndex.One).IsConnected)
-                        {
-                            if (Keyboard.GetState().IsKeyDown(Keys.Enter))
-                            {
-                                fade_out = true;
-                                scoreScreen = false;
-                            }
-                        }
-                        else
-                        {
-                            if (GamePad.GetState(PlayerIndex.One).Buttons.Start == ButtonState.Pressed)
-                            {
-                                fade_out = true;
-                                scoreScreen = false;
-                            }
-                        }
-
-                        if (!GamePad.GetState(PlayerIndex.Two).IsConnected)
-                        {
-                            if (Keyboard.GetState().IsKeyDown(Keys.Enter))
-                            {
-                                fade_out = true;
-                                scoreScreen = false;
-                            }
-                        }
-                        else
-                        {
-                            if (GamePad.GetState(PlayerIndex.Two).Buttons.Start == ButtonState.Pressed)
-                            {
-                                fade_out = true;
-                                scoreScreen = false;
-                            }
-                        }
-
-
-                    }
-                    #endregion
-
-                    #region Fade Back In
-                    
-                    if (fade_out)
-                    {
-                        spriteBatch.Draw(level_backgrounds[0], new Rectangle(0, 0, viewport.Width, viewport.Height), Color.White);
-                        this.DrawPlayers(spriteBatch);
-                        this.DrawInformation(spriteBatch);
-                        this.DrawPickups(spriteBatch);
-                        
-                        //draw Get Ready
-                        spriteBatch.Draw(getReady, new Rectangle(0, 0, viewport.Width, viewport.Height), new Color(Color.White, (byte)(int)(current_fade)));
-
-
-
-                        #region Level Reset
-                        current_fade -= 4 * fade_increment;
-                        if (current_fade <= 0)
-                        {
-                            //refresh everything
-                            for (int i = 0; i < maxBullets; i++)
-                            {
-                                bullets[i].alive = false;
-                                turretBullets1[i].alive = false;
-                                bullets2[i].alive = false;
-                                turretBullets2[i].alive = false;
-                            }
-                            foreach (GameObject enm in enemies)
-                            {
-                                enm.alive = false;
-                            }
-                            score.Clear();
-                            fade_out = false;
-                            act_fade = false;
-                        }
-                        #endregion
-
-                    }
-                    #endregion
-
+                    gm.Draw(spriteBatch);
+                    spriteBatch.End();
+                }
+                // Draw the game over screen which should lead back to the menu
+                else if (gameOver)
+                {
+                    spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
+                    spriteBatch.DrawString(levelfont, "Game Over", new Vector2(viewport.Width / 2 - 50, viewport.Height / 2 - 50), Color.Red);
                     spriteBatch.End();
                 }
                 else
                 {
-                    current_fade = 0;
-                    fade_in = true;
-                    fade_out = false;
-                    scoreScreen = false;
-                    GraphicsDevice.Clear(Color.CornflowerBlue);
-                    //open spritebatch
-                    spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
-                    
-                    //draw background
-                    spriteBatch.Draw(level_backgrounds[0], new Rectangle(0, 0, viewport.Width, viewport.Height), Color.White);
+                    if (enemies_level[level] == enemies_killed && !act_fade)
+                    {
+                        ls = new LevelScore(this.level + 1, player1, player2, true, 200, levelfont, GraphicsDevice, this.healthBar);
+                        act_fade = true;
+                        enemies_killed = 0;
+                    }
 
-                    //Call draw Functions
-                    this.DrawPickups(spriteBatch);
-                    this.DrawPlayers(spriteBatch);
-                    this.DrawInformation(spriteBatch);
-                    this.DrawEnemies(spriteBatch);
-                    this.DrawBullets(spriteBatch);
-                    this.DrawScore(spriteBatch);
+                    if (act_fade)
+                    {
+                        //Fade to Black
+                        float elapsed = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+                        spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
+                        #region Fade In Logic
+                        if (fade_in)
+                        {
 
-                    //close spriteBatch
-                    spriteBatch.End();
+                            spriteBatch.Draw(healthBar, new Rectangle(0, 0, this.viewport.Width, this.viewport.Height), new Color(Color.DarkBlue, (byte)(int)(current_fade)));
+                            if (elapsed >= fade_length / 12)
+                            {
+                                current_fade += fade_increment;
+                            }
+                            //Console.Out.WriteLine(current_fade);
+                            if (current_fade == 22)
+                            {
+                                current_fade = 255;
+                                //fadeNum = 0;
+                                scoreScreen = true;
+                                fade_in = false;
+                            }
+                            //Fade out
+                        }
+                        #endregion
 
-                    //render particles
-                    particleRenderer.RenderEffect(bloodExplosion);
-                    particleRenderer.RenderEffect(pickupGlow);
-                    base.Draw(gameTime);
+                        #region Score Screen Logic
+                        if (scoreScreen)
+                        {
+                            //TODO: Add Score Screen Here
+                            ls.Draw(this.viewport);
+                            if (!GamePad.GetState(PlayerIndex.One).IsConnected)
+                            {
+                                if (Keyboard.GetState().IsKeyDown(Keys.Enter))
+                                {
+                                    fade_out = true;
+                                    scoreScreen = false;
+                                }
+                            }
+                            else
+                            {
+                                if (GamePad.GetState(PlayerIndex.One).Buttons.Start == ButtonState.Pressed)
+                                {
+                                    fade_out = true;
+                                    scoreScreen = false;
+                                }
+                            }
+
+                            if (!GamePad.GetState(PlayerIndex.Two).IsConnected)
+                            {
+                                if (Keyboard.GetState().IsKeyDown(Keys.Enter))
+                                {
+                                    fade_out = true;
+                                    scoreScreen = false;
+                                }
+                            }
+                            else
+                            {
+                                if (GamePad.GetState(PlayerIndex.Two).Buttons.Start == ButtonState.Pressed)
+                                {
+                                    fade_out = true;
+                                    scoreScreen = false;
+                                }
+                            }
+
+
+                        }
+                        #endregion
+
+                        #region Fade Back In
+
+                        if (fade_out)
+                        {
+                            spriteBatch.Draw(level_backgrounds[0], new Rectangle(0, 0, viewport.Width, viewport.Height), Color.White);
+                            this.DrawPlayers(spriteBatch);
+                            this.DrawInformation(spriteBatch);
+                            this.DrawPickups(spriteBatch);
+
+                            //draw Get Ready
+                            spriteBatch.Draw(getReady, new Rectangle(0, 0, viewport.Width, viewport.Height), new Color(Color.White, (byte)(int)(current_fade)));
+
+
+
+                            #region Level Reset
+                            current_fade -= 4 * fade_increment;
+                            if (current_fade <= 0)
+                            {
+                                //refresh everything
+                                for (int i = 0; i < maxBullets; i++)
+                                {
+                                    bullets[i].alive = false;
+                                    turretBullets1[i].alive = false;
+                                    bullets2[i].alive = false;
+                                    turretBullets2[i].alive = false;
+                                }
+                                foreach (GameObject enm in enemies)
+                                {
+                                    enm.alive = false;
+                                }
+                                score.Clear();
+                                fade_out = false;
+                                act_fade = false;
+                            }
+                            #endregion
+
+                        }
+                        #endregion
+
+                        spriteBatch.End();
+                    }
+                    else
+                    {
+                        current_fade = 0;
+                        fade_in = true;
+                        fade_out = false;
+                        scoreScreen = false;
+                        GraphicsDevice.Clear(Color.CornflowerBlue);
+                        //open spritebatch
+                        spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
+
+                        //draw background
+                        spriteBatch.Draw(level_backgrounds[0], new Rectangle(0, 0, viewport.Width, viewport.Height), Color.White);
+
+                        //Call draw Functions
+                        this.DrawPickups(spriteBatch);
+                        this.DrawPlayers(spriteBatch);
+                        this.DrawInformation(spriteBatch);
+                        this.DrawEnemies(spriteBatch);
+                        this.DrawBullets(spriteBatch);
+                        this.DrawScore(spriteBatch);
+
+                        //close spriteBatch
+                        spriteBatch.End();
+
+                        //render particles
+                        particleRenderer.RenderEffect(bloodExplosion);
+                        particleRenderer.RenderEffect(pickupGlow);
+                        base.Draw(gameTime);
+                    }
                 }
             }
         }
