@@ -159,34 +159,34 @@ namespace Bugzzz
             // TODO: Add your initialization logic here
             //player's stating position
             InitGraphicsMode(1280, 720, false);
-            current_fade = 0;
-            fade_in = true;
-            rand = new Random();
-            enemies_killed = 0;
-            enemies_level = new int[4];
-            enemies_level[0] = 100;
-            enemies_level[1] = 250;
-            enemies_level[2] = 500;
-            enemies_level[3] = 1000;
+            this.current_fade = 0;
+            this.fade_in = true;
+            this.rand = new Random();
+            this.enemies_killed = 0;
+            this.enemies_level = new int[4];
+            this.enemies_level[0] = 100;
+            this.enemies_level[1] = 250;
+            this.enemies_level[2] = 500;
+            this.enemies_level[3] = 1000;
             this.press1a = false;
             this.press2a = false;
             this.press1b = false;
             this.press2b = false;
 
 
-            level = 0;
-            viewport = GraphicsDevice.Viewport;
-            viewportRect = new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+            this.level = 0;
+            this.viewport = GraphicsDevice.Viewport;
+            this.viewportRect = new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
 
-            bullets = new GameObject[maxBullets];
-            bullets2 = new GameObject[maxBullets];
+            this.bullets = new GameObject[maxBullets];
+            this.bullets2 = new GameObject[maxBullets];
 
-            turretBullets1 = new GameObject[maxBullets];
-            turretBullets2 = new GameObject[maxBullets];
+            this.turretBullets1 = new GameObject[maxBullets];
+            this.turretBullets2 = new GameObject[maxBullets];
 
-            enemies = new GameObject[maxEnemies];
+            this.enemies = new GameObject[maxEnemies];
 
-            gameOver = false;
+            this.gameOver = false;
 
             base.Initialize();
 

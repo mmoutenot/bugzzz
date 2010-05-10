@@ -236,6 +236,7 @@ namespace Bugzzz
         //not yet implemented
         private void updateThree(GamePadState g, KeyboardState k)
         {
+
             this.active = false;
         }
 
