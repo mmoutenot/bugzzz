@@ -69,6 +69,8 @@ namespace Bugzzz
         }
         #endregion
 
+
+        #region Main Methods (Constructor, Update, Narc Update, updateLevel, updateOne, updateTwo, updateThree, updateFour, Draw)
         public NarcolepsyEffect(SpriteFont f, int id)
         {
             this.active = false;
@@ -224,6 +226,7 @@ namespace Bugzzz
 
             if (kCIndex == 10)
             {
+                this.pressed = false;
                 this.active = false;
                 this.kCIndex = 0;
             }
@@ -261,6 +264,9 @@ namespace Bugzzz
                 }
             }
         }
+
+        #endregion
+
 
     }
 }
