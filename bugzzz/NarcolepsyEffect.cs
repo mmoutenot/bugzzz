@@ -24,6 +24,9 @@ namespace Bugzzz
         private SpriteFont dispFont;
         private Random rand;
         private int playerID;
+        private Keys[] konamiKeys;
+        private Buttons[] konamiButtons;
+        private int kCIndex;
 
         //used for updateOne
         //indicates how many times a button has been pressed
@@ -77,8 +80,37 @@ namespace Bugzzz
             dispFont = f;
             this.playerID = id;
 
-            int hash = id * 17 + 111;
+            int hash = id*DateTime.Now.Second + 791;
             rand = new Random(hash);
+
+            kCIndex = 0;
+            konamiKeys = new Keys[10];
+            konamiButtons = new Buttons[10];
+
+            //Keys and Buttons
+            konamiKeys[0] = Keys.Up;
+            konamiKeys[1] = Keys.Up;
+            konamiKeys[2] = Keys.Down;
+            konamiKeys[3] = Keys.Down;
+            konamiKeys[4] = Keys.Left;
+            konamiKeys[5] = Keys.Right;
+            konamiKeys[6] = Keys.Left;
+            konamiKeys[7] = Keys.Right;
+            konamiKeys[8] = Keys.B;
+            konamiKeys[9] = Keys.A;
+
+            konamiButtons[0] = Buttons.DPadUp;
+            konamiButtons[1] = Buttons.DPadUp;
+            konamiButtons[2] = Buttons.DPadDown;
+            konamiButtons[3] = Buttons.DPadDown;
+            konamiButtons[4] = Buttons.DPadLeft;
+            konamiButtons[5] = Buttons.DPadRight;
+            konamiButtons[6] = Buttons.DPadLeft;
+            konamiButtons[7] = Buttons.DPadRight;
+            konamiButtons[8] = Buttons.B;
+            konamiButtons[9] = Buttons.A;
+
+
         }
 
 
@@ -86,10 +118,16 @@ namespace Bugzzz
         {
             if (active)
                 NarcolepsyUpdate(g,k);
-            else if (rand.Next(500) == 1)
+            else if (rand.Next(1000) == 1)
             {
                 active = true;
-                //this.state = rand.Next(1,5);
+                int r = rand.Next(100);
+                if (r < 50)
+                    this.state = 1;
+                else
+                    this.state = 2;
+               // this.state = rand.Next(2)+1;
+                Console.WriteLine(state + "   " + r);
             }
             
         }
@@ -156,7 +194,40 @@ namespace Bugzzz
         //not yet implemented
         private void updateTwo(GamePadState g, KeyboardState k)
         {
-            this.active = false;
+            if (g.IsConnected)
+            {
+                if (g.IsButtonDown(konamiButtons[kCIndex]) && !this.pressed)
+                {
+                    this.kCIndex++;
+                    this.pressed = true;
+                }
+                else if (g.IsButtonDown(konamiButtons[kCIndex]))
+                {
+                    this.pressed = false;
+                }
+
+                
+            }
+            else
+            {
+                if (k.IsKeyDown(konamiKeys[this.kCIndex]) && !this.pressed)
+                {
+                    this.kCIndex++;
+                    this.pressed = true;
+                    Console.WriteLine(kCIndex);
+                }
+                else if (k.IsKeyUp(konamiKeys[this.kCIndex]))
+                {
+                    this.pressed = false;
+                }
+            }
+
+            if (kCIndex == 10)
+            {
+                this.active = false;
+                this.kCIndex = 0;
+            }
+
         }
 
         //not yet implemented
@@ -176,7 +247,19 @@ namespace Bugzzz
         {
             //TODO:: Needs to be fixed so that it works smoother
             if (this.active)
-                s.DrawString(dispFont, "Oh no!! Player " + playerID + " press A (Space) a lot!!!", new Vector2(350f, 150f), Color.Green);
+            {
+                switch (state)
+                {
+                    case 1:
+                        s.DrawString(dispFont, "Oh no!! Player " + playerID + " press A (Space) a lot!!!", new Vector2(350f, 150f), Color.Green);
+                        break;
+                    case 2:
+                        s.DrawString(dispFont, "Player " + playerID + " Enter the Konami Code!!!", new Vector2(350f, 150f), Color.Green);
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
 
     }
