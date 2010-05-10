@@ -98,6 +98,10 @@ namespace Bugzzz
 
         bool gameOver;
 
+        // Sounds
+        SoundEffect introSound;
+        bool introSoundPlayed;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -194,6 +198,7 @@ namespace Bugzzz
             this.enemies = new GameObject[maxEnemies];
 
             this.gameOver = false;
+            this.introSoundPlayed = false;
 
             base.Initialize();
 
@@ -220,6 +225,9 @@ namespace Bugzzz
 
             this.gm = new GameMenu(menus, viewport);
             this.logo = Content.Load<Texture2D>("Backgrounds\\CompanyLogo");
+
+            // Sounds
+            introSound = Content.Load<SoundEffect>("Sounds\\rain_intro");
 
 
             Texture2D temp = Content.Load<Texture2D>("Sprites\\cannon");
@@ -1470,6 +1478,11 @@ namespace Bugzzz
         {
             if (gameLoading)
             {
+                if (!introSoundPlayed)
+                {
+                    introSound.Play();
+                    introSoundPlayed = true;
+                }
                 GraphicsDevice.Clear(Color.Black);
                 spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
                 spriteBatch.Draw(logo, new Rectangle(0, 0, (int)viewport.Width, (int)viewport.Height), new Color(Color.White, (byte)(int)progress));

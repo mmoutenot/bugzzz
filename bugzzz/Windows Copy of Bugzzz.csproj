@@ -79,6 +79,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="GameThumbnail.png" />
+    <Content Include="rain_intro.wav" />
   </ItemGroup>
   <ItemGroup>
     <NestedContentProject Include="Content\Content.contentproj">
