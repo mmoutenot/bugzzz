@@ -335,8 +335,10 @@ namespace Bugzzz
                 {
                     if (!bullet.alive)
                     {
+                        Vector2 temp2 = new Vector2(p.position.X + p.spriteT.Width / 2, p.position.Y + p.spriteT.Height / 2 - 8);
+                        Vector2 temp = MathFns.newPoint(p.position, temp2, (float)(-p.rotation+Math.PI/2));
                         bullet.alive = true;
-                        bullet.position = p.position - bullet.center;
+                        bullet.position = temp;
                         bullet.velocity = new Vector2((float)Math.Cos(p.rotation + Math.PI / 2), (float)Math.Sin(p.rotation + Math.PI / 2)) * 8.0f;
                         return;
                     }
@@ -349,8 +351,10 @@ namespace Bugzzz
                 {
                     if (!bullet.alive)
                     {
+                        Vector2 temp2 = new Vector2(p.position.X + p.spriteT.Width / 2, p.position.Y + p.spriteT.Height / 2 - 8);
+                        Vector2 temp = MathFns.newPoint(p.position, temp2, (float)(-p.rotation + Math.PI / 2));
                         bullet.alive = true;
-                        bullet.position = p.position - bullet.center;
+                        bullet.position = temp;
                         bullet.velocity = new Vector2((float)Math.Cos(p.rotation + Math.PI / 2 + spread), (float)Math.Sin(p.rotation + Math.PI / 2 + spread)) * 8.0f;
                         spread += .1047;
                         p.spellMenu.bulletsLeft[p.spellMenu.CurState]--;
@@ -365,8 +369,10 @@ namespace Bugzzz
                 {
                     if (!bullet.alive)
                     {
+                        Vector2 temp2 = new Vector2(p.position.X + p.spriteT.Width / 2, p.position.Y + p.spriteT.Height / 2 - 8);
+                        Vector2 temp = MathFns.newPoint(p.position, temp2, (float)(-p.rotation + Math.PI / 2));
                         bullet.alive = true;
-                        bullet.position = p.position - bullet.center;
+                        bullet.position = temp;
                         bullet.velocity = new Vector2((float)Math.Cos(p.rotation + Math.PI / 2 + rand.NextDouble()), (float)Math.Sin(p.rotation + Math.PI / 2 + rand.NextDouble())) * 3.0f;
                         p.spellMenu.bulletsLeft[p.spellMenu.CurState]--;
                         return;
