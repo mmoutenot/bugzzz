@@ -244,11 +244,16 @@ namespace Bugzzz
                 turretBullets2[i] = new GameObject(temp);
             }
 
-            temp = Content.Load<Texture2D>("Sprites\\roach_sm");
+            //temp = Content.Load<Texture2D>("Sprites\\roach_sm");
+            ArrayList roachSprites = new ArrayList();
+            for (int i = 0; i < 2; i++)
+            {
+                roachSprites.Add(Content.Load<Texture2D>("Sprites\\roach" + i));
+            }
 
             for (int j = 0; j < maxEnemies; j++)
             {
-                enemies[j] = new GameObject(temp);
+                enemies[j] = new AnimatedGameObject(roachSprites);
             }
 
             //spell menu textures
@@ -1221,7 +1226,7 @@ namespace Bugzzz
         }
         public void updateEnemies()
         {
-            foreach (GameObject enemy in enemies)
+            foreach (AnimatedGameObject enemy in enemies)
             {
                 if (enemy.alive)
                 {
@@ -1333,6 +1338,8 @@ namespace Bugzzz
 
                     if (angle != enemy.rotation)
                         enemy.rotation = MathFns.Clerp(enemy.rotation, angle, angle_rot);
+
+                    enemy.updateAnim();
                 }
             }
         }
