@@ -280,13 +280,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Sprites\roach0.png">
-      <Name>roach0</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Sprites\roach1.png">
-      <Name>roach1</Name>
+    <Compile Include="Backgrounds\CompanyLogo.png">
+      <Name>CompanyLogo</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
