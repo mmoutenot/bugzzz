@@ -1091,7 +1091,7 @@ namespace Bugzzz
                                 bullet.alive = false;
                                 enemy.alive = false;
 
-                                // particle test
+                                // Bloody Explosion Particle Effect
                                 bloodExplosion.Trigger(new Vector2(enemy.position.X, enemy.position.Y));
 
                                 score.Add(new ScoreDisplay(20, SCORE_TIME, enemy.position, true, 1));
@@ -1144,6 +1144,10 @@ namespace Bugzzz
                             {
                                 bullet.alive = false;
                                 enemy.alive = false;
+
+                                // Bloody Explosion Particle Effect
+                                bloodExplosion.Trigger(new Vector2(enemy.position.X, enemy.position.Y));
+
                                 score.Add(new ScoreDisplay(20, SCORE_TIME, enemy.position, true, 2));
                                 player2.score += 20;
                                 enemies_killed++;
@@ -1194,6 +1198,10 @@ namespace Bugzzz
                             {
                                 bullet.alive = false;
                                 enemy.alive = false;
+
+                                // Bloody Explosion Particle Effect
+                                bloodExplosion.Trigger(new Vector2(enemy.position.X, enemy.position.Y));
+
                                 score.Add(new ScoreDisplay(10, SCORE_TIME, enemy.position, true, 1));
                                 player1.score += 10;
                                 enemies_killed++;
@@ -1235,6 +1243,10 @@ namespace Bugzzz
                             {
                                 bullet.alive = false;
                                 enemy.alive = false;
+
+                                // Bloody Explosion Particle Effect
+                                bloodExplosion.Trigger(new Vector2(enemy.position.X, enemy.position.Y));
+
                                 score.Add(new ScoreDisplay(10, SCORE_TIME, enemy.position, true, 2));
                                 player2.score += 10;
                                 enemies_killed++;
