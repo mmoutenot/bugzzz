@@ -253,9 +253,9 @@ namespace Bugzzz
 
             //temp = Content.Load<Texture2D>("Sprites\\roach_sm");
             ArrayList roachSprites = new ArrayList();
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < 10; i++)
             {
-                roachSprites.Add(Content.Load<Texture2D>("Sprites\\roach" + i));
+                roachSprites.Add(Content.Load<Texture2D>("Sprites\\roach\\roach" + i));
             }
 
             for (int j = 0; j < maxEnemies; j++)
