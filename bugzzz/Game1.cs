@@ -625,6 +625,7 @@ namespace Bugzzz
                             p.spellMenu.Active = true;
                             p.spellMenu.CurState = pickup.weaponIndex;
                             p.activeWeapon = pickup.weaponIndex;
+                            p.stat.incrementWeaponPickup(pickup);
                             break;
                         }
                     } 
@@ -1730,7 +1731,7 @@ namespace Bugzzz
                 // Draw the game over screen which should lead back to the menu
                 else
                 {
-                    if (gameOver || (enemies_level[level] == enemies_killed && !act_fade))
+                    if (!act_fade && (gameOver || (enemies_level[level] == enemies_killed)))
                     {
                         ls = new LevelScore(this.level + 1, player1, player2, true, 200, levelfont, titlefont, GraphicsDevice, this.healthBar, this.gameOver);
                         act_fade = true;
@@ -1811,6 +1812,9 @@ namespace Bugzzz
 
                         if (fade_out)
                         {
+                            // Reset the pickups for the next level
+                            pickups = new ArrayList();
+
                             spriteBatch.Draw(level_backgrounds[0], new Rectangle(0, 0, viewport.Width, viewport.Height), Color.White);
                             this.DrawPlayers(spriteBatch);
                             this.DrawInformation(spriteBatch);

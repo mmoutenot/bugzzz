@@ -23,7 +23,7 @@ namespace Bugzzz
         private int spreeLength;            //Number of enemies killed in one life?
         private int maxSpreeLength;
         private ArrayList lifeTimes;        //Length of each life
-        private int wepSwitch;              //Number of times player switched their weapon
+        private ArrayList pickups;
 
         #endregion
 
@@ -45,18 +45,7 @@ namespace Bugzzz
             get { return maxSpreeLength; }
         }
 
-        //Setter for wepSwitch doesn't actually set, just increments value
-        public int WepSwitch
-        {
-            get
-            {
-                return wepSwitch;
-            }
-            set
-            {
-                wepSwitch = wepSwitch + 1;
-            }
-        }
+
         #endregion
 
         #region Main Methods Constructor, updateStatistics
@@ -65,6 +54,7 @@ namespace Bugzzz
             this.started = started;
             this.spreeLength = 0;
             this.lifeTimes = new ArrayList();
+            this.pickups = new ArrayList();
             this.startTime = new TimeSpan(0);
             this.currentTime = new TimeSpan(0);
         }
@@ -75,6 +65,12 @@ namespace Bugzzz
             if(spreeLength>maxSpreeLength){
                 maxSpreeLength = spreeLength;
             }
+        }
+
+        public void incrementWeaponPickup(WeaponPickup p)
+        {
+            Console.WriteLine("Incrementing weapon:" + p.weaponIndex);
+            pickups.Add(p);
         }
 
         public void playerDied()
@@ -120,6 +116,44 @@ namespace Bugzzz
             float avgSec = (float)avgMillis / 1000;
             return avgSec;
         }
+
+        public String favoritePickup()
+        {
+            int[] weaponCounts = new int[4];
+
+            foreach (WeaponPickup p in pickups)
+            {
+                switch (p.weaponIndex)
+                {
+                    case 0:
+                        weaponCounts[0]++;
+                        break;
+                    case 1:
+                        weaponCounts[1]++;
+                        break;
+                    case 2:
+                        weaponCounts[2]++;
+                        break;
+                    case 3:
+                        weaponCounts[3]++;
+                        break;
+                }
+            }
+
+            // now we have an array of the number of times a player used each weapon
+            int mostUsedWeaponIndex=0;
+            int highestNumber=0;
+            for (int i = 0; i < 4; i++)
+            {
+                if(highestNumber<weaponCounts[i]){
+                    highestNumber = weaponCounts[i];
+                    mostUsedWeaponIndex = i;
+                }
+            }
+
+            return (new Weapons(null,null,null).names[mostUsedWeaponIndex]);
+        }
+
         #endregion
     }
 }
