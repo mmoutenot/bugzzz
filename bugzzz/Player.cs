@@ -22,6 +22,7 @@ namespace Bugzzz
         public Texture2D spriteB = null;
         public Vector2 velocity = Vector2.Zero;
         public Vector2 position = Vector2.Zero;
+        public HealthBar healthBar;
 
         public int type;
 
@@ -52,7 +53,7 @@ namespace Bugzzz
             }
         }
 
-        public Player(int i, Texture2D t, Texture2D b, Weapons w, Vector2 pos, int ty, Statistics s, Texture2D[] sMenu, Viewport viewport, SpriteFont f)
+        public Player(int i, Texture2D t, Texture2D b, Weapons w, Vector2 pos, int ty, Statistics s, Texture2D[] sMenu, Viewport viewport, SpriteFont f, Texture2D healthBack, Texture2D healthFront)
         {
             energy = 100;
             deploy = false;
@@ -78,6 +79,12 @@ namespace Bugzzz
             type = ty;
             spellMenu = new SpellMenu(sMenu, viewport, id);
             narc = new NarcolepsyEffect(f, id);
+            Vector2 healthPos;
+            if (id == 1)
+                healthPos = new Vector2(viewport.Width / 15, viewport.Height / 15);
+            else
+                healthPos = new Vector2(viewport.Width * 12 / 16, viewport.Height / 15);
+            healthBar = new HealthBar(healthBack, healthFront, healthPos);
         }
     }
 }
