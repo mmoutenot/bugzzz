@@ -85,9 +85,7 @@ namespace Bugzzz
             curHealth -= loss;
             if (curHealth <= 0f)
             {
-                Console.WriteLine("OWWWW");
                 this.alive = false;
-
             }
         }
 

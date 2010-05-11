@@ -63,6 +63,7 @@
     <Compile Include="GameMenu.cs" />
     <Compile Include="HealthBar.cs" />
     <Compile Include="NarcolepsyEffect.cs" />
+    <Compile Include="PauseMenu.cs" />
     <Compile Include="SlowTimeEffect.cs" />
     <Compile Include="SpellMenu.cs" />
     <Compile Include="GameObject.cs" />
