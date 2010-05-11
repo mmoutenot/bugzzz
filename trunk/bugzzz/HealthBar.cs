@@ -25,9 +25,30 @@ namespace Bugzzz
         const float max = 100f;
         float destination;
 
+        int livesLeft;
+
         const float increment = 0.5f;
 
         #endregion
+
+        public float Current
+        {
+            get
+            {
+                return current;
+            }
+        }
+        public int LivesLeft
+        {
+            get
+            {
+                return livesLeft;
+            }
+            set
+            {
+                this.livesLeft = value;
+            }
+        }
 
 
 
@@ -39,6 +60,7 @@ namespace Bugzzz
             this.background = back;
             this.bar = front;
             this.position = pos;
+            this.livesLeft = 10;
             this.Initialize();
 
         }
@@ -53,12 +75,15 @@ namespace Bugzzz
             if (current != destination)
                 current -= increment;
             if (current <= 0f)
+            {
+                this.livesLeft--;
                 this.Initialize();
+            }
         }
 
-        public void Decrement()
+        public void Decrement(int val)
         {
-            this.destination -= 25;
+            this.destination -= val;
         }
 
 

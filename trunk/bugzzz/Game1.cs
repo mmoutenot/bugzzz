@@ -256,14 +256,14 @@ namespace Bugzzz
 
             for (int i = 0; i < maxBullets; i++)
             {
-                bullets2[i] = new GameObject(temp);
-                bullets[i] = new GameObject(temp);
+                bullets2[i] = new GameObject(temp,4);
+                bullets[i] = new GameObject(temp,4);
             }
 
             for (int i = 0; i < maxBullets; i++)
             {
-                turretBullets1[i] = new GameObject(temp);
-                turretBullets2[i] = new GameObject(temp);
+                turretBullets1[i] = new GameObject(temp,4);
+                turretBullets2[i] = new GameObject(temp,4);
             }
 
             temp = Content.Load<Texture2D>("Sprites\\roach");
@@ -278,13 +278,13 @@ namespace Bugzzz
             for (int j = 0; j < maxEnemies; j++)
             {
                 if (j % 10 == 0)
-                    enemies[j] = new GameObject(temp);
+                    enemies[j] = new GameObject(temp, 1);
                 else if (j % 2 == 0)
-                    enemies[j] = new GameObject(littlebitch);
+                    enemies[j] = new GameObject(littlebitch, 1);
                 else if (j == maxEnemies - 1)
-                    enemies[j] = new GameObject(bigboss);
+                    enemies[j] = new GameObject(bigboss, 3);
                 else
-                    enemies[j] = new AnimatedGameObject(roachSprites);
+                    enemies[j] = new AnimatedGameObject(roachSprites, 2);
             }
 
             //spell menu textures
@@ -449,7 +449,7 @@ namespace Bugzzz
         {
             
             // Checks for a game over condition which is either player losing all 5 lives
-            if ((player1.livesLeft <= 0 && player1.health <= 0)|| (player2.livesLeft <= 0 && player2.health <= 0))
+            if ((player1.healthBar.LivesLeft <= 0 && player1.healthBar.Current <= 0) || (player2.healthBar.LivesLeft <= 0 && player2.healthBar.Current <= 0))
             {
                 gameOver = true;
             }
@@ -1329,18 +1329,16 @@ namespace Bugzzz
                     {
                         //alive = false;
                         enemy.alive = false;
-                        if (player1.health > 0)
+                        if (player1.healthBar.Current > 0)
                         {
-                            player1.healthBar.Decrement();
-                            player1.health -= 25;
+                            player1.healthBar.Decrement(enemy.Damage);
                         }
                         else
                         {
-                            if (player1.livesLeft > 0)
+                            if (player1.healthBar.LivesLeft > 0)
                             {
-                                player1.livesLeft--;
+                                player1.healthBar.LivesLeft--;
                                 player1.stat.playerDied();
-                                player1.health = 100;
                             }
                             else
                             {
@@ -1363,18 +1361,16 @@ namespace Bugzzz
                     {
                         //alive = false;
                         enemy.alive = false;
-                        if (player2.health > 0)
+                        if (player2.healthBar.Current > 0)
                         {
-                            player2.healthBar.Decrement();
-                            player2.health -= 25;
+                            player2.healthBar.Decrement(enemy.Damage);
                         }
                         else
                         {
-                            if (player2.livesLeft > 0)
+                            if (player2.healthBar.LivesLeft > 0)
                             {
-                                player2.livesLeft--;
+                                player2.healthBar.LivesLeft--;
                                 player2.stat.playerDied();
-                                player2.health = 100;
                             }
                             else
                             {
@@ -1478,9 +1474,9 @@ namespace Bugzzz
             // Draw lives left for player 1 and 2
             // Milas if you want to make a sprite to draw just replace "healthBar" with the sprite
             // And fudge the drawing math a bit and it will be all set to work
-            for (int i = 0; i < player1.livesLeft; i++)
+            for (int i = 0; i < player1.healthBar.LivesLeft; i++)
                 s.Draw(healthBar, new Rectangle(this.viewport.Width / 15 + ((i * 20)), (this.viewport.Height / 15) + 40, 10, 10), new Color(Color.DarkRed, (byte)200));
-            for (int i = 0; i < player2.livesLeft; i++)
+            for (int i = 0; i < player2.healthBar.LivesLeft; i++)
                 s.Draw(healthBar, new Rectangle(this.viewport.Width * 12 / 16 + ((i * 20)), (this.viewport.Height / 15) + 40, 10, 10), new Color(Color.DarkRed, (byte)200));
 
             //draw spell menus

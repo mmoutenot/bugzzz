@@ -41,7 +41,6 @@ namespace Bugzzz
         public Weapons weapon;
         public int activeWeapon;
         public Statistics stat;
-        public int livesLeft;
         public SpellMenu spellMenu;
         public NarcolepsyEffect narc;
 
@@ -74,7 +73,6 @@ namespace Bugzzz
             weapon = w;
             activeWeapon = 0;
             stat = s;
-            livesLeft = 10;
 
             type = ty;
             spellMenu = new SpellMenu(sMenu, viewport, id);
