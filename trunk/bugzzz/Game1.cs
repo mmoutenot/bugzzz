@@ -293,8 +293,10 @@ namespace Bugzzz
             getReady = Content.Load<Texture2D>("Backgrounds\\getready");
 
 
-            player1 = new Player(1, Content.Load<Texture2D>("Sprites\\antman_top"), Content.Load<Texture2D>("Sprites\\antman_bottom"), p1_w, new Vector2(viewport.Width * 7 / 15, viewport.Height / 2), 1, new Statistics(true), sMenu, viewport, levelfont);
-            player2 = new Player(2, Content.Load<Texture2D>("Sprites\\spidman_top"), Content.Load<Texture2D>("Sprites\\spidman_bottom"), p2_w, new Vector2(viewport.Width * 8 / 15, viewport.Height / 2), 2, new Statistics(true), sMenu, viewport, levelfont);
+            Texture2D healthBack = Content.Load<Texture2D>("Sprites\\HealthBars\\HealthBarBorder");
+            Texture2D healthFront = Content.Load<Texture2D>("Sprites\\HealthBars\\HealthBarFill");
+            player1 = new Player(1, Content.Load<Texture2D>("Sprites\\antman_top"), Content.Load<Texture2D>("Sprites\\antman_bottom"), p1_w, new Vector2(viewport.Width * 7 / 15, viewport.Height / 2), 1, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFront);
+            player2 = new Player(2, Content.Load<Texture2D>("Sprites\\spidman_top"), Content.Load<Texture2D>("Sprites\\spidman_bottom"), p2_w, new Vector2(viewport.Width * 8 / 15, viewport.Height / 2), 2, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFront);
 
 
             bloodExplosion = Content.Load<ParticleEffect>("Particles\\bloody");
@@ -512,6 +514,7 @@ namespace Bugzzz
         #region UpdateHelpers (updatePlayer, updatePlayerMovement, updatePickups, UpdateTurret, UpdateInput, updateBullets, updateEnemies)
         private void updatePlayer(Player p)
         {
+            p.healthBar.Update();
             if (p.ID == 1)
                 p.narc.Update(GamePad.GetState(PlayerIndex.One), Keyboard.GetState());
             else
@@ -1279,6 +1282,7 @@ namespace Bugzzz
                         enemy.alive = false;
                         if (player1.health > 0)
                         {
+                            player1.healthBar.Decrement();
                             player1.health -= 25;
                         }
                         else
@@ -1307,6 +1311,7 @@ namespace Bugzzz
                         enemy.alive = false;
                         if (player2.health > 0)
                         {
+                            player2.healthBar.Decrement();
                             player2.health -= 25;
                         }
                         else
@@ -1392,6 +1397,8 @@ namespace Bugzzz
         {
             player1.narc.Draw(s);
             player2.narc.Draw(s);
+            player1.healthBar.Draw(s);
+            player2.healthBar.Draw(s);
             s.Draw(player1.spriteB, new Rectangle((int)player1.position.X, (int)player1.position.Y, player1.spriteB.Width, player1.spriteB.Height), null, Color.White, player1.rotation_b, new Vector2(player1.spriteB.Width / 2, player1.spriteB.Height / 2), SpriteEffects.None, 0);
             s.Draw(player1.spriteT, new Rectangle((int)player1.position.X, (int)player1.position.Y, player1.spriteT.Width, player1.spriteT.Height), null, Color.White, (float)(player1.rotation + .5 * Math.PI), new Vector2(player1.spriteT.Width / 2, player1.spriteT.Height / 2), SpriteEffects.None, 0);
             s.Draw(player2.spriteB, new Rectangle((int)player2.position.X, (int)player2.position.Y, player2.spriteB.Width, player2.spriteB.Height), null, Color.Red, player2.rotation_b, new Vector2(player2.spriteB.Width / 2, player2.spriteB.Height / 2), SpriteEffects.None, 0);
@@ -1406,8 +1413,8 @@ namespace Bugzzz
             s.DrawString(scorefont, "Player 1 Score: " + player1.score.ToString(), new Vector2(this.viewport.Width / 15, this.viewport.Height / 60), new Color(Color.White, (byte)130));
             s.DrawString(scorefont, "Player 2 Score: " + player2.score.ToString(), new Vector2(this.viewport.Width * 12 / 16, this.viewport.Height / 60), new Color(Color.White, (byte)130));
             s.DrawString(scorefont, "Enemies Killed: " + enemies_killed.ToString() + "/" + enemies_level[level], new Vector2(this.viewport.Width * 7 / 16, this.viewport.Height / 60), new Color(Color.Beige, (byte)130));
-            s.Draw(healthBar, new Rectangle(this.viewport.Width / 15, this.viewport.Height / 15, (int)this.viewport.Width * player1.health / 600, this.viewport.Height / 30), Color.Red);
-            s.Draw(healthBar, new Rectangle(this.viewport.Width * 12 / 16, this.viewport.Height / 15, (int)this.viewport.Width * player2.health / 600, this.viewport.Height / 30), Color.Red);
+            //s.Draw(healthBar, new Rectangle(this.viewport.Width / 15, this.viewport.Height / 15, (int)this.viewport.Width * player1.health / 600, this.viewport.Height / 30), Color.Red);
+            //s.Draw(healthBar, new Rectangle(this.viewport.Width * 12 / 16, this.viewport.Height / 15, (int)this.viewport.Width * player2.health / 600, this.viewport.Height / 30), Color.Red);
 
             // Draw lives left for player 1 and 2
             // Milas if you want to make a sprite to draw just replace "healthBar" with the sprite
