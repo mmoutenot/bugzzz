@@ -60,13 +60,14 @@ namespace Bugzzz
         Player player2;
         SpriteFont scorefont;
         SpriteFont levelfont;
+        SpriteFont titlefont;
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Viewport viewport;
         Rectangle viewportRect;
         LevelScore ls;
         GameMenu gm;
-        PauseMenu pm;
 
         Random rand;
         //for fire delay
@@ -235,17 +236,6 @@ namespace Bugzzz
             menus[8] = Content.Load<Texture2D>("MainMenu\\menu");
 
             this.gm = new GameMenu(menus, viewport);
-            menus = new Texture2D[7];
-            menus[0] = Content.Load<Texture2D>("PauseMenu\\cont_act");
-            menus[1] = Content.Load<Texture2D>("PauseMenu\\menu_act");
-            menus[2] = Content.Load<Texture2D>("PauseMenu\\exit_act");
-            menus[3] = Content.Load<Texture2D>("PauseMenu\\cont_un");
-            menus[4] = Content.Load<Texture2D>("PauseMenu\\menu_un");
-            menus[5] = Content.Load<Texture2D>("PauseMenu\\exit_un");
-            menus[6] = Content.Load<Texture2D>("PauseMenu\\background");
-
-            this.pm = new PauseMenu(menus, viewport);
-
             this.logo = Content.Load<Texture2D>("Backgrounds\\CompanyLogo");
 
             // Sounds
@@ -320,6 +310,8 @@ namespace Bugzzz
             // Loading in the font we will use for showing the killed enemies score value
             scorefont = Content.Load<SpriteFont>("ScoreFont");
             levelfont = Content.Load<SpriteFont>("LevelFont");
+            titlefont = Content.Load<SpriteFont>("TitleFont");
+
             spriteBatch = new SpriteBatch(GraphicsDevice);
             getReady = Content.Load<Texture2D>("Backgrounds\\getready");
 
@@ -469,7 +461,7 @@ namespace Bugzzz
         {
             
             // Checks for a game over condition which is either player losing all 5 lives
-            if ((player1.healthBar.LivesLeft <= 0 && player1.healthBar.Current <= 0) || (player2.healthBar.LivesLeft <= 0 && player2.healthBar.Current <= 0))
+            if ((player1.healthBar.LivesLeft <=0 && player2.healthBar.LivesLeft <=0))
             {
                 gameOver = true;
             }
@@ -479,13 +471,8 @@ namespace Bugzzz
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
-
-            if (pm.Active || gm.Active)
-            {
-                this.updateInput();
-            }
-            else
-            {
+            
+                
                 if (!timeEffect.isActive || (timeEffect.isActive && timeEffect.counter % 3 == 0))
                 {
                     updateInput();
@@ -550,7 +537,7 @@ namespace Bugzzz
 
                     }
                 }
-                else if (timeEffect.isActive)
+                else if(timeEffect.isActive)
                 {
                     timeEffect.counter++;
                     if (timeEffect.length > 0)
@@ -565,7 +552,6 @@ namespace Bugzzz
                         timeEffect.counter = 1;
                     }
                 }
-            }
 
 
 
@@ -776,79 +762,6 @@ namespace Bugzzz
                 }
 
             }
-            else if (pm.Active)
-            {
-                #region Xbox Menu Controls
-                if (currentState.IsConnected)
-                {
-                    if (currentState.Buttons.A == ButtonState.Pressed)
-                    {
-                        switch (gm.State)
-                        {
-                            case 0:
-                                pm.Active = false;
-                                break;
-                            case 1:
-                                pm.Active = false;
-                                gm.Active = true;
-                                gm.Select = true;
-                                break;
-                            default:
-                                Exit();
-                                break;
-                        }
-                    }
-                    else if (currentState.ThumbSticks.Left.Y > 0.5 && !pm.Select)
-                    {
-                        pm.stateDec();
-                        pm.Select = true;
-                    }
-                    else if (currentState.ThumbSticks.Left.Y < -0.5 && !pm.Select)
-                    {
-                        pm.stateInc();
-                        pm.Select = true;
-                    }
-                    else if (-0.5 < currentState.ThumbSticks.Left.Y && currentState.ThumbSticks.Left.Y < 0.5)
-                        pm.Select = false;
-                #endregion
-
-                }
-                else
-                {
-                    #region Keyboard Menu Controls
-                    KeyboardState k = Keyboard.GetState();
-                    if (k.IsKeyDown(Keys.Enter))
-                    {
-                        switch (pm.State)
-                        {
-                           case 0:
-                                pm.Active = false;
-                                break;
-                            case 1:
-                                pm.Active = false;
-                                gm.Active = true;
-                                gm.Select = true;
-                                break;
-                            default:
-                                Exit();
-                                break;
-                        }
-                    }
-                    else if (k.IsKeyDown(Keys.Up) && !pm.Select)
-                    {
-                        pm.stateDec();
-                        pm.Select = true;
-                    }
-                    else if (k.IsKeyDown(Keys.Down) && !pm.Select)
-                    {
-                        pm.stateInc();
-                        pm.Select = true;
-                    }
-                    else if (k.IsKeyUp(Keys.Down) && k.IsKeyUp(Keys.Up))
-                        pm.Select = false;
-                    #endregion
-                }
-            }
             else
             {
                 #region Player 1 Control Scheme
@@ -857,8 +770,6 @@ namespace Bugzzz
                     if (currentState.IsConnected)
                     {
                         #region XBox Controls Player1
-                        if (currentState.Buttons.Start == ButtonState.Pressed)
-                            this.pm.Active = true;
                         player1.velocity.X = currentState.ThumbSticks.Left.X * 5;
                         player1.velocity.Y = -currentState.ThumbSticks.Left.Y * 5;
                         //player1.rotation = -(float)((Math.Tan(currentState.ThumbSticks.Right.Y / currentState.ThumbSticks.Right.X)*2*Math.PI)/180);
@@ -979,9 +890,7 @@ namespace Bugzzz
 
 
                         if (keyboardState.IsKeyDown(Keys.Escape))
-                        {
-                            this.pm.Active = true;
-                        }
+                            this.Exit();
 
                         //move spell menu on/off
                         if (keyboardState.IsKeyDown(Keys.I))
@@ -1036,9 +945,6 @@ namespace Bugzzz
                 {
                     if (currentState.IsConnected)
                     {
-
-                        if (currentState.Buttons.Start == ButtonState.Pressed)
-                            this.pm.Active = true;
                         #region XBox Controller Controls Player 2
                         player2.velocity.X = currentState.ThumbSticks.Left.X * 5;
                         player2.velocity.Y = -currentState.ThumbSticks.Left.Y * 5;
@@ -1162,9 +1068,7 @@ namespace Bugzzz
                             player2.rotation_b = MathFns.Clerp(player2.rotation_b, a2, angle_rot);
 
                         if (keyboardState.IsKeyDown(Keys.Escape))
-                        {
-                            this.pm.Active = true;
-                        }
+                            this.Exit();
 
 
                         if (keyboardState.IsKeyDown(Keys.NumPad8))
@@ -1603,7 +1507,7 @@ namespace Bugzzz
             for (int i = 0; i < player1.healthBar.LivesLeft; i++)
                 s.Draw(healthBar, new Rectangle(this.viewport.Width / 15 + ((i * 20)), (this.viewport.Height / 15) + 40, 10, 10), new Color(Color.DarkRed, (byte)200));
             for (int i = 0; i < player2.healthBar.LivesLeft; i++)
-                s.Draw(healthBar, new Rectangle(this.viewport.Width * 12 / 16 + ((i * 20)), (this.viewport.Height / 15) + 40, 10, 10), new Color(Color.DarkBlue, (byte)200));
+                s.Draw(healthBar, new Rectangle(this.viewport.Width * 12 / 16 + ((i * 20)), (this.viewport.Height / 15) + 40, 10, 10), new Color(Color.DarkRed, (byte)200));
 
             //draw spell menus
             spriteBatch.Draw(player1.spellMenu.State, new Rectangle((int)player1.spellMenu.Position.X, (int)player1.spellMenu.Position.Y, player1.spellMenu.Width, player1.spellMenu.Height), new Color(Color.White, (byte)210));
@@ -1714,32 +1618,15 @@ namespace Bugzzz
                     gm.Draw(spriteBatch);
                     spriteBatch.End();
                 }
-                else if (pm.Active)
-                {
-                    spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
-                    this.DrawBullets(spriteBatch);
-                    this.DrawEnemies(spriteBatch);
-                    this.DrawInformation(spriteBatch);
-                    this.DrawPickups(spriteBatch);
-                    this.DrawPlayers(spriteBatch);
-                    this.DrawScore(spriteBatch);
-                    this.pm.Draw(spriteBatch);
-                    spriteBatch.End();
-                }
                 // Draw the game over screen which should lead back to the menu
-                else if (gameOver)
-                {
-                    spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
-                    spriteBatch.DrawString(levelfont, "Game Over", new Vector2(viewport.Width / 2 - 50, viewport.Height / 2 - 50), Color.Red);
-                    spriteBatch.End();
-                }
                 else
                 {
-                    if (enemies_level[level] == enemies_killed && !act_fade)
+                    if (gameOver || (enemies_level[level] == enemies_killed && !act_fade))
                     {
-                        ls = new LevelScore(this.level + 1, player1, player2, true, 200, levelfont, GraphicsDevice, this.healthBar);
+                        ls = new LevelScore(this.level + 1, player1, player2, true, 200, levelfont, titlefont, GraphicsDevice, this.healthBar, this.gameOver);
                         act_fade = true;
                         enemies_killed = 0;
+                        level++;
                     }
 
                     if (act_fade)
@@ -1825,7 +1712,6 @@ namespace Bugzzz
                             spriteBatch.Draw(getReady, new Rectangle(0, 0, viewport.Width, viewport.Height), new Color(Color.White, (byte)(int)(current_fade)));
 
 
-
                             #region Level Reset
                             current_fade -= 4 * fade_increment;
                             if (current_fade <= 0)
@@ -1890,15 +1776,17 @@ namespace Bugzzz
 
                         //draw background
                         spriteBatch.Draw(level_backgrounds[0], new Rectangle(0, 0, viewport.Width, viewport.Height), Color.White);
+                        
 
                         //Call draw Functions
                         this.DrawPickups(spriteBatch);
                         this.DrawPlayers(spriteBatch);
-
+                        
                         this.DrawEnemies(spriteBatch);
                         this.DrawBullets(spriteBatch);
-
-
+                        
+                        // Draw a green tint if we are poisoned
+                        //spriteBatch.Draw()
 
                         // End the sprite batch, then end our custom effect.
                         spriteBatch.End();
@@ -1917,7 +1805,7 @@ namespace Bugzzz
                         //render particles
                         particleRenderer.RenderEffect(bloodExplosion);
                         particleRenderer.RenderEffect(pickupGlow);
-
+                        
                     }
                     base.Draw(gameTime);
                 }
