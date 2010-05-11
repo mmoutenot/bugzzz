@@ -35,8 +35,8 @@
           <Ultimate>0</Ultimate>
         </Item>
         <Item Type="Modifiers:ScaleModifier">
-          <InitialScale>48</InitialScale>
-          <UltimateScale>255</UltimateScale>
+          <InitialScale>32</InitialScale>
+          <UltimateScale>96</UltimateScale>
         </Item>
         <Item Type="Modifiers:DampingModifier">
           <DampingCoefficient>1</DampingCoefficient>
