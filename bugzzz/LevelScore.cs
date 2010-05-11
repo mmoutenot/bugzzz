@@ -73,11 +73,11 @@ namespace Bugzzz
             {
                 levelStr = "Game Over";
             }
-            Vector2 textSize = levelfont.MeasureString(levelStr);
+            Vector2 textSize = titlefont.MeasureString(levelStr);
             Vector2 textCenter = new Vector2(viewport.Width / 2, 50);
 
             s.DrawString(titlefont, levelStr, textCenter - (textSize / 2), new Color(Color.Yellow, (byte)(200)));
-            s.Draw(healthBar, new Rectangle(viewport.Width / 8, viewport.Height / 4, viewport.Width * 3 / 4, viewport.Height / 2), new Color(Color.DarkBlue, (byte)(50)));
+            s.Draw(healthBar, new Rectangle(viewport.Width / 8, viewport.Height / 4, viewport.Width * 3 / 4, viewport.Height / 2), new Color(Color.DarkBlue, (byte)(30)));
 
             // At the end of the level, halt the stats for p1,p2
             player1.stat.Started = false;
