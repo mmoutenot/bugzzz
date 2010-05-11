@@ -90,7 +90,7 @@ namespace Bugzzz
         MouseState previousMouseState = Mouse.GetState();
 
         //particle effects zomg!
-        ParticleEffect bloodExplosion, pickupGlow;
+        ParticleEffect bloodExplosion, pickupGlow, bulletHit;
         PointSpriteRenderer particleRenderer;
 
         GameTime gt;
@@ -351,12 +351,15 @@ namespace Bugzzz
 
             bloodExplosion = Content.Load<ParticleEffect>("Particles\\bloody");
             pickupGlow = Content.Load<ParticleEffect>("Particles\\glow");
+            bulletHit = Content.Load<ParticleEffect>("Particles\\bullet");
 
             bloodExplosion.Initialise();
             pickupGlow.Initialise();
+            bulletHit.Initialise();
             
             bloodExplosion.LoadContent(Content);
             pickupGlow.LoadContent(Content);
+            bulletHit.LoadContent(Content);
 
             particleRenderer = new PointSpriteRenderer
             {
@@ -558,7 +561,8 @@ namespace Bugzzz
                         // particle test
                         float deltaSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
                         bloodExplosion.Update(deltaSeconds);
-                        pickupGlow.Update(deltaSeconds); ;
+                        pickupGlow.Update(deltaSeconds);
+                        bulletHit.Update(deltaSeconds);
 
                         timeEffect.counter = 1;
 
@@ -1267,10 +1271,11 @@ namespace Bugzzz
 
                                 bullet.alive = false;
                                 enemy.Update(bullet.Damage);
+                                bulletHit.Trigger(bullet.position);
                                 if (!enemy.alive)
                                 {
                                     // Bloody Explosion Particle Effect
-                                    bloodExplosion.Trigger(new Vector2(enemy.position.X, enemy.position.Y));
+                                    bloodExplosion.Trigger(enemy.position);
 
                                     score.Add(new ScoreDisplay(20, SCORE_TIME, enemy.position, true, 1));
                                     player1.score += 20;
@@ -1323,6 +1328,7 @@ namespace Bugzzz
                             {
                                 enemy.Update(bullet.Damage);
                                 bullet.alive = false;
+                                bulletHit.Trigger(bullet.position);
                                 if (!enemy.alive)
                                 {
                                     // Bloody Explosion Particle Effect
@@ -1379,6 +1385,7 @@ namespace Bugzzz
                             {
                                 bullet.alive = false;
                                 enemy.Update(bullet.Damage);
+                                bulletHit.Trigger(bullet.position);
                                 if (!enemy.alive)
                                 {
                                     // Bloody Explosion Particle Effect
@@ -1426,6 +1433,7 @@ namespace Bugzzz
                             {
                                 bullet.alive = false;
                                 enemy.Update(bullet.Damage);
+                                bulletHit.Trigger(bullet.position);
                                 if (!enemy.alive)
                                 {
                                     // Bloody Explosion Particle Effect
@@ -1991,8 +1999,9 @@ namespace Bugzzz
                         spriteBatch.End();
 
                         //render particles
-                        particleRenderer.RenderEffect(bloodExplosion);
                         particleRenderer.RenderEffect(pickupGlow);
+                        particleRenderer.RenderEffect(bloodExplosion);
+                        particleRenderer.RenderEffect(bulletHit);
                         
                     }
                     base.Draw(gameTime);
