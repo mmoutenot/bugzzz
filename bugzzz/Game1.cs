@@ -435,7 +435,7 @@ namespace Bugzzz
         {
             
             // Checks for a game over condition which is either player losing all 5 lives
-            if (player1.livesLeft <= 0 || player2.livesLeft <= 0)
+            if ((player1.livesLeft <= 0 && player1.health <= 0)|| (player2.livesLeft <= 0 && player2.health <= 0))
             {
                 gameOver = true;
             }
@@ -1618,6 +1618,7 @@ namespace Bugzzz
                             this.DrawInformation(spriteBatch);
                             this.DrawPickups(spriteBatch);
 
+                            particleRenderer.RenderEffect(pickupGlow);
                             //draw Get Ready
                             spriteBatch.Draw(getReady, new Rectangle(0, 0, viewport.Width, viewport.Height), new Color(Color.White, (byte)(int)(current_fade)));
 
@@ -1677,8 +1678,9 @@ namespace Bugzzz
                         //render particles
                         particleRenderer.RenderEffect(bloodExplosion);
                         particleRenderer.RenderEffect(pickupGlow);
-                        base.Draw(gameTime);
+                        
                     }
+                    base.Draw(gameTime);
                 }
             }
         }
