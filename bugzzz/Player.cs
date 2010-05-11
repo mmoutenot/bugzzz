@@ -34,7 +34,6 @@ namespace Bugzzz
         private int id;
         public bool deploy;
         
-        public int health;
         public int energy;
 
         public int score;
@@ -69,7 +68,6 @@ namespace Bugzzz
             spriteB = b;
             rotation = 0.0f;
             rotation_b = 0.0f;
-            health = 100;
             weapon = w;
             activeWeapon = 0;
             stat = s;
