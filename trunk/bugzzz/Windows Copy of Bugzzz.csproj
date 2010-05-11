@@ -60,6 +60,7 @@
     <Compile Include="AnimatedGameObject.cs" />
     <Compile Include="Character.cs" />
     <Compile Include="GameMenu.cs" />
+    <Compile Include="HealthBar.cs" />
     <Compile Include="NarcolepsyEffect.cs" />
     <Compile Include="SpellMenu.cs" />
     <Compile Include="GameObject.cs" />
