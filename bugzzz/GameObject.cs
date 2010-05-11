@@ -26,7 +26,7 @@ namespace Bugzzz
         private int totHealth;
         private int curHealth;
         private int damage;
-
+        private int iD;
 
         #region Accessors
         public int Damage
@@ -34,6 +34,13 @@ namespace Bugzzz
             get
             {
                 return damage;
+            }
+        }
+        public int ID
+        {
+            get
+            {
+                return iD;
             }
         }
         #endregion
@@ -46,11 +53,33 @@ namespace Bugzzz
             position = Vector2.Zero;
             sprite = loadedTexture;
             center = new Vector2(sprite.Width / 2, sprite.Height / 2);
-            
+
+            this.iD = ID;
             // set the gameobjects score
             this.Reset(ID);
         }
 
+        public void UpdateVelocity()
+        {
+            switch (iD)
+            {
+                case 1:
+                    this.velocity.Normalize();
+                    break;
+                case 2:
+                    this.velocity.Normalize();
+                    this.velocity = new Vector2(this.velocity.X * .95f, this.velocity.Y*.85f);
+                    break;
+                case 3:
+                    this.velocity.Normalize();
+                    this.velocity = new Vector2(this.velocity.X*.5f, this.velocity.Y* .5f);
+                    break;
+                default:
+                    this.velocity.Normalize();
+                    break;
+
+            }
+        }
         public void Update(int loss)
         {
             curHealth -= loss;
