@@ -116,6 +116,7 @@ namespace Bugzzz
         SoundEffect shootSoundSlow;
         SoundEffect shotgunSound;
         SoundEffect shotgunSoundSlow;
+        SoundEffect ambianceSound;
 
         bool introSoundPlayed;
 
@@ -272,6 +273,7 @@ namespace Bugzzz
             shootSoundSlow = Content.Load<SoundEffect>("Sounds\\shoot_slow");
             shotgunSound = Content.Load<SoundEffect>("Sounds\\shotgun");
             shotgunSoundSlow = Content.Load<SoundEffect>("Sounds\\shotgun_slow");
+            ambianceSound = Content.Load<SoundEffect>("Sounds\\ambiance");
 
             // Refraction fx
             refractionEffect = Content.Load<Effect>("Content\\refraction");
@@ -1523,6 +1525,7 @@ namespace Bugzzz
                         
                         if(enemy.ID==8){
                             timeEffect.isActive = true;
+                            ambianceSound.Play();
                         }
 
                         enemies_killed++;
@@ -1561,6 +1564,7 @@ namespace Bugzzz
                         if (enemy.ID==8)
                         {
                             timeEffect.isActive = true;
+                            ambianceSound.Play();
                         }
                         enemies_killed++;
                         break;
@@ -1756,11 +1760,11 @@ namespace Bugzzz
             spriteBatch.Draw(logo, new Rectangle(0, 0, (int)viewport.Width, (int)viewport.Height), new Color(Color.White, (byte)(int)progress));
                 if (progress <= 255)
                 {
-                    progress += 1.5f*fade_increment;
+                    progress += 1.3f*fade_increment;
                 }
                 else if (prog2 <= 50)
                 {
-                    prog2 += 1.5f * fade_increment;
+                    prog2 += 1.3f * fade_increment;
                 }
                 else
                     gameLoading = false;
