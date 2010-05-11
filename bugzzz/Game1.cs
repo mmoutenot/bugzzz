@@ -66,6 +66,7 @@ namespace Bugzzz
         Rectangle viewportRect;
         LevelScore ls;
         GameMenu gm;
+        PauseMenu pm;
 
         Random rand;
         //for fire delay
@@ -234,6 +235,17 @@ namespace Bugzzz
             menus[8] = Content.Load<Texture2D>("MainMenu\\menu");
 
             this.gm = new GameMenu(menus, viewport);
+            menus = new Texture2D[7];
+            menus[0] = Content.Load<Texture2D>("PauseMenu\\cont_act");
+            menus[1] = Content.Load<Texture2D>("PauseMenu\\menu_act");
+            menus[2] = Content.Load<Texture2D>("PauseMenu\\exit_act");
+            menus[3] = Content.Load<Texture2D>("PauseMenu\\cont_un");
+            menus[4] = Content.Load<Texture2D>("PauseMenu\\menu_un");
+            menus[5] = Content.Load<Texture2D>("PauseMenu\\exit_un");
+            menus[6] = Content.Load<Texture2D>("PauseMenu\\background");
+
+            this.pm = new PauseMenu(menus, viewport);
+
             this.logo = Content.Load<Texture2D>("Backgrounds\\CompanyLogo");
 
             // Sounds
@@ -467,8 +479,13 @@ namespace Bugzzz
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
-            
-                
+
+            if (pm.Active)
+            {
+                this.updateInput();
+            }
+            else
+            {
                 if (!timeEffect.isActive || (timeEffect.isActive && timeEffect.counter % 3 == 0))
                 {
                     updateInput();
@@ -533,7 +550,7 @@ namespace Bugzzz
 
                     }
                 }
-                else if(timeEffect.isActive)
+                else if (timeEffect.isActive)
                 {
                     timeEffect.counter++;
                     if (timeEffect.length > 0)
@@ -548,6 +565,7 @@ namespace Bugzzz
                         timeEffect.counter = 1;
                     }
                 }
+            }
 
 
 
@@ -758,6 +776,79 @@ namespace Bugzzz
                 }
 
             }
+            else if (pm.Active)
+            {
+                #region Xbox Menu Controls
+                if (currentState.IsConnected)
+                {
+                    if (currentState.Buttons.A == ButtonState.Pressed)
+                    {
+                        switch (gm.State)
+                        {
+                            case 0:
+                                pm.Active = false;
+                                break;
+                            case 1:
+                                pm.Active = false;
+                                gm.Active = true;
+                                gm.Select = true;
+                                break;
+                            default:
+                                Exit();
+                                break;
+                        }
+                    }
+                    else if (currentState.ThumbSticks.Left.Y > 0.5 && !pm.Select)
+                    {
+                        pm.stateDec();
+                        pm.Select = true;
+                    }
+                    else if (currentState.ThumbSticks.Left.Y < -0.5 && !pm.Select)
+                    {
+                        pm.stateInc();
+                        pm.Select = true;
+                    }
+                    else if (-0.5 < currentState.ThumbSticks.Left.Y && currentState.ThumbSticks.Left.Y < 0.5)
+                        pm.Select = false;
+                #endregion
+
+                }
+                else
+                {
+                    #region Keyboard Menu Controls
+                    KeyboardState k = Keyboard.GetState();
+                    if (k.IsKeyDown(Keys.Enter))
+                    {
+                        switch (pm.State)
+                        {
+                           case 0:
+                                pm.Active = false;
+                                break;
+                            case 1:
+                                pm.Active = false;
+                                gm.Active = true;
+                                gm.Select = true;
+                                break;
+                            default:
+                                Exit();
+                                break;
+                        }
+                    }
+                    else if (k.IsKeyDown(Keys.Up) && !pm.Select)
+                    {
+                        pm.stateDec();
+                        pm.Select = true;
+                    }
+                    else if (k.IsKeyDown(Keys.Down) && !pm.Select)
+                    {
+                        pm.stateInc();
+                        pm.Select = true;
+                    }
+                    else if (k.IsKeyUp(Keys.Down) && k.IsKeyUp(Keys.Up))
+                        pm.Select = false;
+                    #endregion
+                }
+            }
             else
             {
                 #region Player 1 Control Scheme
@@ -766,6 +857,8 @@ namespace Bugzzz
                     if (currentState.IsConnected)
                     {
                         #region XBox Controls Player1
+                        if (currentState.Buttons.Start == ButtonState.Pressed)
+                            this.pm.Active = true;
                         player1.velocity.X = currentState.ThumbSticks.Left.X * 5;
                         player1.velocity.Y = -currentState.ThumbSticks.Left.Y * 5;
                         //player1.rotation = -(float)((Math.Tan(currentState.ThumbSticks.Right.Y / currentState.ThumbSticks.Right.X)*2*Math.PI)/180);
@@ -886,7 +979,9 @@ namespace Bugzzz
 
 
                         if (keyboardState.IsKeyDown(Keys.Escape))
-                            this.Exit();
+                        {
+                            this.pm.Active = true;
+                        }
 
                         //move spell menu on/off
                         if (keyboardState.IsKeyDown(Keys.I))
@@ -941,6 +1036,9 @@ namespace Bugzzz
                 {
                     if (currentState.IsConnected)
                     {
+
+                        if (currentState.Buttons.Start == ButtonState.Pressed)
+                            this.pm.Active = true;
                         #region XBox Controller Controls Player 2
                         player2.velocity.X = currentState.ThumbSticks.Left.X * 5;
                         player2.velocity.Y = -currentState.ThumbSticks.Left.Y * 5;
@@ -1064,7 +1162,9 @@ namespace Bugzzz
                             player2.rotation_b = MathFns.Clerp(player2.rotation_b, a2, angle_rot);
 
                         if (keyboardState.IsKeyDown(Keys.Escape))
-                            this.Exit();
+                        {
+                            this.pm.Active = true;
+                        }
 
 
                         if (keyboardState.IsKeyDown(Keys.NumPad8))
@@ -1616,6 +1716,18 @@ namespace Bugzzz
                     gm.Draw(spriteBatch);
                     spriteBatch.End();
                 }
+                else if (pm.Active)
+                {
+                    spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
+                    this.DrawBullets(spriteBatch);
+                    this.DrawEnemies(spriteBatch);
+                    this.DrawInformation(spriteBatch);
+                    this.DrawPickups(spriteBatch);
+                    this.DrawPlayers(spriteBatch);
+                    this.DrawScore(spriteBatch);
+                    this.pm.Draw(spriteBatch);
+                    spriteBatch.End();
+                }
                 // Draw the game over screen which should lead back to the menu
                 else if (gameOver)
                 {
@@ -1784,11 +1896,11 @@ namespace Bugzzz
                         //Call draw Functions
                         this.DrawPickups(spriteBatch);
                         this.DrawPlayers(spriteBatch);
-                        
+
                         this.DrawEnemies(spriteBatch);
                         this.DrawBullets(spriteBatch);
-                        
-                        
+
+
 
                         // End the sprite batch, then end our custom effect.
                         spriteBatch.End();
@@ -1807,7 +1919,7 @@ namespace Bugzzz
                         //render particles
                         particleRenderer.RenderEffect(bloodExplosion);
                         particleRenderer.RenderEffect(pickupGlow);
-                        
+
                     }
                     base.Draw(gameTime);
                 }

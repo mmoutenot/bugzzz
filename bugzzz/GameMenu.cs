@@ -95,10 +95,10 @@ namespace Bugzzz
 
             background = inputs[8];
 
-            widths[0] = 271f;
-            widths[1] = 463f;
-            widths[2] = 421f;
-            widths[3] = 255f;
+            widths[0] = normalIcons[0].Width;
+            widths[1] = normalIcons[1].Width;
+            widths[2] = normalIcons[2].Width;
+            widths[3] = normalIcons[3].Width;
 
         }
 
