@@ -178,11 +178,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Sprites\antman_bottom.png">
-      <Name>antman_bottom</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
     <Compile Include="Sprites\antman_top.png">
       <Name>antman_top</Name>
       <Importer>TextureImporter</Importer>
@@ -402,6 +397,13 @@
   <ItemGroup>
     <Compile Include="Sprites\raygun.png">
       <Name>raygun</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Sprites\antman_bottom.png">
+      <Name>antman_bottom</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
