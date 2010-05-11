@@ -68,6 +68,7 @@ namespace Bugzzz
         Rectangle viewportRect;
         LevelScore ls;
         GameMenu gm;
+        PauseMenu pm;
 
         Random rand;
         //for fire delay
@@ -236,6 +237,18 @@ namespace Bugzzz
             menus[8] = Content.Load<Texture2D>("MainMenu\\menu");
 
             this.gm = new GameMenu(menus, viewport);
+
+            menus = new Texture2D[7];
+            menus[0] = Content.Load<Texture2D>("PauseMenu\\cont_act");
+            menus[1] = Content.Load<Texture2D>("PauseMenu\\menu_act");
+            menus[2] = Content.Load<Texture2D>("PauseMenu\\exit_act");
+            menus[3] = Content.Load<Texture2D>("PauseMenu\\cont_un");
+            menus[4] = Content.Load<Texture2D>("PauseMenu\\menu_un");
+            menus[5] = Content.Load<Texture2D>("PauseMenu\\exit_un");
+            menus[6] = Content.Load<Texture2D>("PauseMenu\\background");
+
+            this.pm = new PauseMenu(menus, viewport);
+
             this.logo = Content.Load<Texture2D>("Backgrounds\\CompanyLogo");
 
             // Sounds
@@ -455,24 +468,30 @@ namespace Bugzzz
             pickups.Add(new WeaponPickup(sample_weapon, pos, rand.Next(2)+1));
         }
 
-        
+
 
         protected override void Update(GameTime gameTime)
         {
-            
+
             // Checks for a game over condition which is either player losing all 5 lives
-            if ((player1.healthBar.LivesLeft <=0 || player2.healthBar.LivesLeft <=0))
+            if ((player1.healthBar.LivesLeft <= 0 || player2.healthBar.LivesLeft <= 0))
             {
                 gameOver = true;
             }
-            
+
             // Allows the game to exit
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
-            
-                
+            if (pm.Active || gm.Active)
+            {
+                this.updateInput();
+            }
+            else
+            {
+
+
                 if (!timeEffect.isActive || (timeEffect.isActive && timeEffect.counter % 3 == 0))
                 {
                     updateInput();
@@ -531,13 +550,13 @@ namespace Bugzzz
                         // particle test
                         float deltaSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
                         bloodExplosion.Update(deltaSeconds);
-                        pickupGlow.Update(deltaSeconds);;
+                        pickupGlow.Update(deltaSeconds); ;
 
                         timeEffect.counter = 1;
 
                     }
                 }
-                else if(timeEffect.isActive)
+                else if (timeEffect.isActive)
                 {
                     timeEffect.counter++;
                     if (timeEffect.length > 0)
@@ -552,11 +571,7 @@ namespace Bugzzz
                         timeEffect.counter = 1;
                     }
                 }
-
-
-
-            
-
+            }
             base.Update(gameTime);
         }
         
@@ -693,7 +708,7 @@ namespace Bugzzz
                 #region Xbox Menu Controls
                 if (currentState.IsConnected)
                 {
-                    if (currentState.Buttons.A == ButtonState.Pressed)
+                    if (currentState.Buttons.A == ButtonState.Pressed && !gm.Select)
                     {
                         switch (gm.State)
                         {
@@ -720,7 +735,7 @@ namespace Bugzzz
                         gm.stateInc();
                         gm.Select = true;
                     }
-                    else if (-0.5 < currentState.ThumbSticks.Left.Y && currentState.ThumbSticks.Left.Y < 0.5)
+                    else if (-0.5 < currentState.ThumbSticks.Left.Y && currentState.ThumbSticks.Left.Y < 0.5 && currentState.Buttons.A == ButtonState.Released)
                         gm.Select = false;
                 #endregion
 
@@ -729,7 +744,7 @@ namespace Bugzzz
                 {
                     #region Keyboard Menu Controls
                     KeyboardState k = Keyboard.GetState();
-                    if (k.IsKeyDown(Keys.Enter))
+                    if (k.IsKeyDown(Keys.Enter) && !gm.Select)
                     {
                         switch (gm.State)
                         {
@@ -756,11 +771,85 @@ namespace Bugzzz
                         gm.stateInc();
                         gm.Select = true;
                     }
-                    else if (k.IsKeyUp(Keys.Down) && k.IsKeyUp(Keys.Up))
+                    else if (k.IsKeyUp(Keys.Down) && k.IsKeyUp(Keys.Up) && k.IsKeyUp(Keys.Enter))
                         gm.Select = false;
                     #endregion
                 }
 
+            }
+
+            else if (pm.Active)
+            {
+                #region Xbox Menu Controls
+                if (currentState.IsConnected)
+                {
+                    if (currentState.Buttons.A == ButtonState.Pressed)
+                    {
+                        switch (gm.State)
+                        {
+                            case 0:
+                                pm.Active = false;
+                                break;
+                            case 1:
+                                pm.Active = false;
+                                gm.Active = true;
+                                gm.Select = true;
+                                break;
+                            default:
+                                Exit();
+                                break;
+                        }
+                    }
+                    else if (currentState.ThumbSticks.Left.Y > 0.5 && !pm.Select)
+                    {
+                        pm.stateDec();
+                        pm.Select = true;
+                    }
+                    else if (currentState.ThumbSticks.Left.Y < -0.5 && !pm.Select)
+                    {
+                        pm.stateInc();
+                        pm.Select = true;
+                    }
+                    else if (-0.5 < currentState.ThumbSticks.Left.Y && currentState.ThumbSticks.Left.Y < 0.5)
+                        pm.Select = false;
+                #endregion
+
+                }
+                else
+                {
+                    #region Keyboard Menu Controls
+                    KeyboardState k = Keyboard.GetState();
+                    if (k.IsKeyDown(Keys.Enter))
+                    {
+                        switch (pm.State)
+                        {
+                            case 0:
+                                pm.Active = false;
+                                break;
+                            case 1:
+                                pm.Active = false;
+                                gm.Active = true;
+                                gm.Select = true;
+                                break;
+                            default:
+                                Exit();
+                                break;
+                        }
+                    }
+                    else if (k.IsKeyDown(Keys.Up) && !pm.Select)
+                    {
+                        pm.stateDec();
+                        pm.Select = true;
+                    }
+                    else if (k.IsKeyDown(Keys.Down) && !pm.Select)
+                    {
+                        pm.stateInc();
+                        pm.Select = true;
+                    }
+                    else if (k.IsKeyUp(Keys.Down) && k.IsKeyUp(Keys.Up))
+                        pm.Select = false;
+                    #endregion
+                }
             }
             else
             {
@@ -770,6 +859,9 @@ namespace Bugzzz
                     if (currentState.IsConnected)
                     {
                         #region XBox Controls Player1
+                        if (currentState.Buttons.Start == ButtonState.Pressed)
+                            this.pm.Active = true;
+                        
                         player1.velocity.X = currentState.ThumbSticks.Left.X * 5;
                         player1.velocity.Y = -currentState.ThumbSticks.Left.Y * 5;
                         //player1.rotation = -(float)((Math.Tan(currentState.ThumbSticks.Right.Y / currentState.ThumbSticks.Right.X)*2*Math.PI)/180);
@@ -884,13 +976,16 @@ namespace Bugzzz
                             player1.deploy = true;
                         }
 
-                        float a1 = (float)((-1 * (3.14 / 2 + Math.Atan2(player1.velocity.X, player1.velocity.Y)))+Math.PI/2);
+                        float a1 = (float)((-1 * (3.14 / 2 + Math.Atan2(player1.velocity.X, player1.velocity.Y))) + Math.PI / 2);
                         if (a1 != player1.rotation_b)
-                                player1.rotation_b = MathFns.Clerp(player1.rotation_b, a1, angle_rot);
+                            player1.rotation_b = MathFns.Clerp(player1.rotation_b, a1, angle_rot);
 
 
                         if (keyboardState.IsKeyDown(Keys.Escape))
-                            this.Exit();
+                        {
+                            this.pm.Active = true;
+                        }
+
 
                         //move spell menu on/off
                         if (keyboardState.IsKeyDown(Keys.I))
@@ -946,6 +1041,9 @@ namespace Bugzzz
                     if (currentState.IsConnected)
                     {
                         #region XBox Controller Controls Player 2
+                        if (currentState.Buttons.Start == ButtonState.Pressed)
+                            this.pm.Active = true;
+                        
                         player2.velocity.X = currentState.ThumbSticks.Left.X * 5;
                         player2.velocity.Y = -currentState.ThumbSticks.Left.Y * 5;
                         //player2.rotation = -(float)((Math.Tan(currentState.ThumbSticks.Right.Y / currentState.ThumbSticks.Right.X)*2*Math.PI)/180);
@@ -1068,7 +1166,9 @@ namespace Bugzzz
                             player2.rotation_b = MathFns.Clerp(player2.rotation_b, a2, angle_rot);
 
                         if (keyboardState.IsKeyDown(Keys.Escape))
-                            this.Exit();
+                        {
+                            this.pm.Active = true;
+                        }
 
 
                         if (keyboardState.IsKeyDown(Keys.NumPad8))
@@ -1111,7 +1211,7 @@ namespace Bugzzz
                         #endregion Keyboard Controls
 
                     }
-                
+
                 }
                 #endregion
             }
@@ -1616,6 +1716,18 @@ namespace Bugzzz
                 {
                     spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
                     gm.Draw(spriteBatch);
+                    spriteBatch.End();
+                }
+                else if (pm.Active)
+                {
+                    spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
+                    this.DrawBullets(spriteBatch);
+                    this.DrawEnemies(spriteBatch);
+                    this.DrawInformation(spriteBatch);
+                    this.DrawPickups(spriteBatch);
+                    this.DrawPlayers(spriteBatch);
+                    this.DrawScore(spriteBatch);
+                    this.pm.Draw(spriteBatch); 
                     spriteBatch.End();
                 }
                 // Draw the game over screen which should lead back to the menu
