@@ -1468,8 +1468,7 @@ namespace Bugzzz
         {
             player1.narc.Draw(s);
             player2.narc.Draw(s);
-            player1.healthBar.Draw(s);
-            player2.healthBar.Draw(s);
+            
             s.Draw(player1.spriteB, new Rectangle((int)player1.position.X, (int)player1.position.Y, player1.spriteB.Width, player1.spriteB.Height), null, Color.White, player1.rotation_b, new Vector2(player1.spriteB.Width / 2, player1.spriteB.Height / 2), SpriteEffects.None, 0);
             s.Draw(player1.spriteT, new Rectangle((int)player1.position.X, (int)player1.position.Y, player1.spriteT.Width, player1.spriteT.Height), null, Color.White, (float)(player1.rotation + .5 * Math.PI), new Vector2(player1.spriteT.Width / 2, player1.spriteT.Height / 2), SpriteEffects.None, 0);
             s.Draw(player2.spriteB, new Rectangle((int)player2.position.X, (int)player2.position.Y, player2.spriteB.Width, player2.spriteB.Height), null, Color.Red, player2.rotation_b, new Vector2(player2.spriteB.Width / 2, player2.spriteB.Height / 2), SpriteEffects.None, 0);
@@ -1481,6 +1480,8 @@ namespace Bugzzz
         }
         private void DrawInformation(SpriteBatch s)
         {
+            player1.healthBar.Draw(s);
+            player2.healthBar.Draw(s);
             s.DrawString(scorefont, "Player 1 Score: " + player1.score.ToString(), new Vector2(this.viewport.Width / 15, this.viewport.Height / 60), new Color(Color.White, (byte)130));
             s.DrawString(scorefont, "Player 2 Score: " + player2.score.ToString(), new Vector2(this.viewport.Width * 12 / 16, this.viewport.Height / 60), new Color(Color.White, (byte)130));
             s.DrawString(scorefont, "Enemies Killed: " + enemies_killed.ToString() + "/" + enemies_level[level], new Vector2(this.viewport.Width * 7 / 16, this.viewport.Height / 60), new Color(Color.Beige, (byte)130));
@@ -1772,10 +1773,10 @@ namespace Bugzzz
                         //Call draw Functions
                         this.DrawPickups(spriteBatch);
                         this.DrawPlayers(spriteBatch);
-                        this.DrawInformation(spriteBatch);
+                        
                         this.DrawEnemies(spriteBatch);
                         this.DrawBullets(spriteBatch);
-                        this.DrawScore(spriteBatch);
+                        
                         
 
                         // End the sprite batch, then end our custom effect.
@@ -1786,7 +1787,11 @@ namespace Bugzzz
                             refractionEffect.CurrentTechnique.Passes[0].End();
                             refractionEffect.End();
                         }
-                       
+
+                        spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
+                        this.DrawInformation(spriteBatch);
+                        this.DrawScore(spriteBatch);
+                        spriteBatch.End();
 
                         //render particles
                         particleRenderer.RenderEffect(bloodExplosion);
