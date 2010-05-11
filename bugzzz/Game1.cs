@@ -500,7 +500,7 @@ namespace Bugzzz
             {
 
 
-                if (!timeEffect.isActive || (timeEffect.isActive && timeEffect.counter % 3 == 0))
+                if (!timeEffect.isActive || (timeEffect.isActive && timeEffect.counter % 2 == 0))
                 {
                     updateInput();
                     if (!act_fade && !gm.Active)
@@ -575,7 +575,7 @@ namespace Bugzzz
                     else
                     {
                         timeEffect.isActive = false;
-                        timeEffect.length = 250;
+                        timeEffect.length = 200;
                         timeEffect.counter = 1;
                     }
                 }
@@ -1753,7 +1753,7 @@ namespace Bugzzz
                         if (gameOver)
                         {
                             level = 0;
-                            // Need to add more code here so that when we go back to the menu
+                            // Need to add more code so that when we go back to the menu
                             // and hit play again, it fades in without the remnants of the last game still on screen
                         }
                     }
@@ -1799,7 +1799,10 @@ namespace Bugzzz
                                         gm.Select = true;
                                         scoreScreen = false;
                                         fade_out = true;
-                                        fade_in = false;
+                                        player1 = new Player(1, antman_top, antman_bottom, p1_w, new Vector2(viewport.Width * 7 / 15, viewport.Height / 2), 1, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP1);
+                                        player2 = new Player(2, spiderman_top, spiderman_bottom, p2_w, new Vector2(viewport.Width * 8 / 15, viewport.Height / 2), 2, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP2);
+                                        this.gameOver = false;
+                                        this.level = 0;
                                     }
                                     else
                                     {
@@ -1810,7 +1813,7 @@ namespace Bugzzz
                             }
                             else
                             {
-                                if (GamePad.GetState(PlayerIndex.One).Buttons.Start == ButtonState.Pressed)
+                                if (GamePad.GetState(PlayerIndex.One).Buttons.A == ButtonState.Pressed)
                                 {
                                     if (gameOver)
                                     {
@@ -1818,7 +1821,10 @@ namespace Bugzzz
                                         gm.Select = true;
                                         scoreScreen = false;
                                         fade_out = true;
-                                        fade_in = false;
+                                        player1 = new Player(1, antman_top, antman_bottom, p1_w, new Vector2(viewport.Width * 7 / 15, viewport.Height / 2), 1, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP1);
+                                        player2 = new Player(2, spiderman_top, spiderman_bottom, p2_w, new Vector2(viewport.Width * 8 / 15, viewport.Height / 2), 2, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP2);
+                                        this.gameOver = false;
+                                        this.level = 0;
                                     }
                                     else
                                     {
@@ -1838,7 +1844,10 @@ namespace Bugzzz
                                         gm.Select = true;
                                         scoreScreen = false;
                                         fade_out = true;
-                                        fade_in = false;
+                                        player1 = new Player(1, antman_top, antman_bottom, p1_w, new Vector2(viewport.Width * 7 / 15, viewport.Height / 2), 1, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP1);
+                                        player2 = new Player(2, spiderman_top, spiderman_bottom, p2_w, new Vector2(viewport.Width * 8 / 15, viewport.Height / 2), 2, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP2);
+                                        this.gameOver = false;
+                                        this.level = 0;
                                     }
                                     else
                                     {
@@ -1849,7 +1858,7 @@ namespace Bugzzz
                             }
                             else
                             {
-                                if (GamePad.GetState(PlayerIndex.Two).Buttons.Start == ButtonState.Pressed)
+                                if (GamePad.GetState(PlayerIndex.Two).Buttons.A == ButtonState.Pressed)
                                 {
                                     if (gameOver)
                                     {
@@ -1857,6 +1866,10 @@ namespace Bugzzz
                                         gm.Select = true;
                                         scoreScreen = false;
                                         fade_out = true;
+                                        player1 = new Player(1, antman_top, antman_bottom, p1_w, new Vector2(viewport.Width * 7 / 15, viewport.Height / 2), 1, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP1);
+                                        player2 = new Player(2, spiderman_top, spiderman_bottom, p2_w, new Vector2(viewport.Width * 8 / 15, viewport.Height / 2), 2, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP2);
+                                        this.gameOver = false;
+                                        this.level = 0;
                                     }
                                     else
                                     {
@@ -1891,16 +1904,6 @@ namespace Bugzzz
                             current_fade -= 4 * fade_increment;
                             if (current_fade <= 0)
                             {
-                                if (gameOver)
-                                {
-                                    this.level = 0;
-                                    this.gameOver = false;
-                                    player1 = new Player(1, antman_top, antman_bottom, p1_w, new Vector2(viewport.Width * 7 / 15, viewport.Height / 2), 1, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP1);
-                                    player2 = new Player(2, spiderman_top, spiderman_bottom, p2_w, new Vector2(viewport.Width * 8 / 15, viewport.Height / 2), 2, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP2);
-
-
-
-                                }
                                 //refresh everything
                                 for (int i = 0; i < maxBullets; i++)
                                 {
