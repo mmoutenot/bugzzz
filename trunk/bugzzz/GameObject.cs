@@ -83,9 +83,11 @@ namespace Bugzzz
         public void Update(int loss)
         {
             curHealth -= loss;
-            if (curHealth <= 0)
+            if (curHealth <= 0f)
             {
+                Console.WriteLine("OWWWW");
                 this.alive = false;
+
             }
         }
 
@@ -95,16 +97,19 @@ namespace Bugzzz
             {
                 case 1: //enemy 1
                     totHealth = 100;
+                    curHealth = totHealth;
                     damage = 5;
                     score = 10;
                     break;
                 case 2: //enemy 2
-                    totHealth = 250;
+                    totHealth = 450;
+                    curHealth = totHealth;
                     damage = 25;
                     score = 25;
                     break;
                 case 3: //enemy 3
-                    totHealth = 3000;
+                    totHealth = 5000;
+                    curHealth = totHealth;
                     damage = 50;
                     score = 100;
                     break;
@@ -122,6 +127,7 @@ namespace Bugzzz
                     break;
                 default:
                     totHealth = 100;
+                    curHealth = totHealth;
                     damage = 5;
                     score = 10;
                     break;
