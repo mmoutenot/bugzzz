@@ -105,6 +105,10 @@ namespace Bugzzz
         // Time Effects
         SlowTimeEffect timeEffect;
 
+        // Refraction effect
+        Effect refractionEffect;
+        Texture2D waterfallTexture;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -235,6 +239,9 @@ namespace Bugzzz
             // Sounds
             introSound = Content.Load<SoundEffect>("Sounds\\rain_intro");
 
+            // Refraction fx
+            refractionEffect = Content.Load<Effect>("Content\\refraction");
+            waterfallTexture = Content.Load<Texture2D>("Sprites\\waterfall");
 
             Texture2D temp = Content.Load<Texture2D>("Sprites\\cannon");
             turret1 = new Turret(temp);
@@ -531,7 +538,7 @@ namespace Bugzzz
                     if (timeEffect.length > 0)
                     {
                         timeEffect.length--;
-                        Console.WriteLine(timeEffect.length);
+                        //Console.WriteLine(timeEffect.length);
                     }
                     else
                     {
@@ -1572,8 +1579,10 @@ namespace Bugzzz
                     introSoundPlayed = true;
                 }
                 GraphicsDevice.Clear(Color.Black);
-                spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
-                spriteBatch.Draw(logo, new Rectangle(0, 0, (int)viewport.Width, (int)viewport.Height), new Color(Color.White, (byte)(int)progress));
+
+
+            spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
+            spriteBatch.Draw(logo, new Rectangle(0, 0, (int)viewport.Width, (int)viewport.Height), new Color(Color.White, (byte)(int)progress));
                 if (progress <= 255)
                 {
                     progress += 1.5f*fade_increment;
@@ -1727,9 +1736,34 @@ namespace Bugzzz
                         fade_in = true;
                         fade_out = false;
                         scoreScreen = false;
-                        GraphicsDevice.Clear(Color.CornflowerBlue);
-                        //open spritebatch
-                        spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
+                        //GraphicsDevice.Clear(Color.CornflowerBlue);
+
+                        // Begin the sprite batch.
+                        spriteBatch.Begin(SpriteBlendMode.AlphaBlend,
+                                          SpriteSortMode.Immediate,
+                                          SaveStateMode.None);
+
+                        // Set the displacement texture.
+                        graphics.GraphicsDevice.Textures[1] = waterfallTexture;
+
+                        // Set an effect parameter to make the
+                        // displacement texture scroll in a giant circle.
+                        refractionEffect.Parameters["DisplacementScroll"].SetValue(
+                                                                    MoveInCircle(gameTime, 0.2f));
+
+                        if (timeEffect.isActive)
+                        {
+                            // Begin the custom effect.
+                            refractionEffect.Begin();
+                            refractionEffect.CurrentTechnique.Passes[0].Begin();
+                        }
+                        // Because the effect will displace the texture coordinates before
+                        // sampling the main texture, the coordinates could sometimes go right
+                        // off the edges of the texture, which looks ugly. To prevent this, we
+                        // adjust our sprite source region to leave a little border around the
+                        // edge of the texture. The displacement effect will then just move the
+                        // texture coordinates into this border region, without ever hitting
+                        // the edge of the texture.
 
                         //draw background
                         spriteBatch.Draw(level_backgrounds[0], new Rectangle(0, 0, viewport.Width, viewport.Height), Color.White);
@@ -1741,9 +1775,17 @@ namespace Bugzzz
                         this.DrawEnemies(spriteBatch);
                         this.DrawBullets(spriteBatch);
                         this.DrawScore(spriteBatch);
+                        
 
-                        //close spriteBatch
+                        // End the sprite batch, then end our custom effect.
                         spriteBatch.End();
+
+                        if (timeEffect.isActive)
+                        {
+                            refractionEffect.CurrentTechnique.Passes[0].End();
+                            refractionEffect.End();
+                        }
+                       
 
                         //render particles
                         particleRenderer.RenderEffect(bloodExplosion);
@@ -1754,5 +1796,18 @@ namespace Bugzzz
                 }
             }
         }
+        /// <summary>
+        /// Helper for moving a value around in a circle.
+        /// </summary>
+        static Vector2 MoveInCircle(GameTime gameTime, float speed)
+        {
+            double time = gameTime.TotalGameTime.TotalSeconds * speed;
+
+            float x = (float)Math.Cos(time);
+            float y = (float)Math.Sin(time);
+
+            return new Vector2(x, y);
+        }
+
     }
 }
