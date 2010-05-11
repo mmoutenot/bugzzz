@@ -43,6 +43,8 @@ namespace Bugzzz
         public SpellMenu spellMenu;
         public NarcolepsyEffect narc;
 
+        public bool isAlive;
+
         public int ID
         {
             get
@@ -56,6 +58,7 @@ namespace Bugzzz
             energy = 100;
             deploy = false;
             id = i;
+            isAlive = true;
  
             fire = false;
             move1 = false;
