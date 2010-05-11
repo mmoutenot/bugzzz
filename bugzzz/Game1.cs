@@ -484,7 +484,7 @@ namespace Bugzzz
                 this.Exit();
 
 
-            if (pm.Active)
+            if (pm.Active || gm.Active)
             {
                 this.updateInput();
             }
