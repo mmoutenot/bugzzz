@@ -21,11 +21,17 @@ namespace Bugzzz
         public Player player2;
         public bool alive;
         SpriteFont levelfont;
+        SpriteFont titlefont;
         SpriteBatch s;
         public int tempscore;
         Texture2D healthBar;
+        bool scoreIsDone;
+        bool avgLifeIsDone;
+        bool spreeIsDone;
+        bool livesLeftIsDone;
+        bool gameOver;
 
-        public LevelScore(int level, Player player1, Player player2, bool alive, int scrolltime, SpriteFont levelfont, GraphicsDevice gDevice, Texture2D healthBar)
+        public LevelScore(int level, Player player1, Player player2, bool alive, int scrolltime, SpriteFont levelfont, SpriteFont titlefont, GraphicsDevice gDevice, Texture2D healthBar, bool gameOver)
         {
             this.level = level;
             this.player1 = player1;
@@ -33,8 +39,10 @@ namespace Bugzzz
             this.alive = alive;
             this.tempscore = 0;
             this.levelfont = levelfont;
+            this.titlefont = titlefont;
             this.s = new SpriteBatch(gDevice);
             this.healthBar = healthBar;
+            this.gameOver = gameOver;
         }
 
         public void Draw(Viewport viewport)
@@ -51,11 +59,15 @@ namespace Bugzzz
                 s2 = player2.score;
 
             string levelStr = "Level "+level;
+            if (gameOver)
+            {
+                levelStr = "Game Over";
+            }
             Vector2 textSize = levelfont.MeasureString(levelStr); 
-            Vector2 textCenter = new Vector2(viewport.Width / 2, (viewport.Height/4)+30f); 
+            Vector2 textCenter = new Vector2(viewport.Width / 2, 50); 
  
-            s.DrawString(levelfont,levelStr,textCenter - (textSize / 2), new Color(Color.Yellow,(byte)(200)));
-            s.Draw(healthBar, new Rectangle(viewport.Width / 4, viewport.Height / 4, viewport.Width / 2, viewport.Height / 2), new Color(Color.DarkBlue, (byte)(50)));
+            s.DrawString(titlefont,levelStr,textCenter-(textSize/2), new Color(Color.Yellow,(byte)(200)));
+            s.Draw(healthBar, new Rectangle(viewport.Width / 8, viewport.Height / 4, viewport.Width*3 / 4, viewport.Height / 2), new Color(Color.DarkBlue, (byte)(50)));
             
             // At the end of the level, halt the stats for p1,p2
             player1.stat.Started = false;
@@ -63,19 +75,35 @@ namespace Bugzzz
             
             string avgLifeP1 = string.Format("{0:0.0}", player1.stat.averageLifeTime());
             string avgLifeP2 = string.Format("{0:0.0}", player2.stat.averageLifeTime());
-            s.DrawString(levelfont, "Player 1", new Vector2((viewport.Width/4)+150,(viewport.Height/4)+40),new Color(Color.Yellow,(byte)(200)));
-            s.DrawString(levelfont, "Player 2", new Vector2(((3*viewport.Width)/4)-(levelfont.MeasureString("Player 2").X)-50, (viewport.Height / 4) + 40), new Color(Color.Yellow, (byte)(200)));
+            s.DrawString(levelfont, "Player 1", new Vector2((viewport.Width/8)+350,(viewport.Height/4)+40),new Color(Color.Yellow,(byte)(200)));
+            s.DrawString(levelfont, "Player 2", new Vector2(((7*viewport.Width)/8)-(levelfont.MeasureString("Player 2").X)-100, (viewport.Height / 4) + 40), new Color(Color.Yellow, (byte)(200)));
+            /*
             s.DrawString(levelfont, "Score:       " + s1 + "                   " + s2, new Vector2((viewport.Width / 4) + 10, (viewport.Height / 4) + 100), new Color(Color.Red, (byte)(200)));
             s.DrawString(levelfont, "Avg Life:    " + avgLifeP1 + "s                  " + avgLifeP2+"s", new Vector2((viewport.Width / 4) + 10, (viewport.Height / 4) + 150), new Color(Color.Red, (byte)(200)));
             s.DrawString(levelfont, "Max Spree:   " + player1.stat.MaxSpreeLength + "                   " + player2.stat.MaxSpreeLength, new Vector2((viewport.Width / 4) + 10, (viewport.Height / 4) + 200), new Color(Color.Red, (byte)(200)));
             s.DrawString(levelfont, "Lives Left:  " + player1.healthBar.LivesLeft + "                     " + player2.healthBar.LivesLeft, new Vector2((viewport.Width / 4) + 10, (viewport.Height / 4) + 250), new Color(Color.Red, (byte)(200)));
-            if(tempscore < player1.score || tempscore < player2.score){
+            
+             */
+            s.DrawString(levelfont, "Score:\nAvg Life:\nMax Spree:\nLives Left:", new Vector2((viewport.Width / 8) + 75, (viewport.Height / 4) + 100), new Color(Color.Red, (byte)(200)));
+            s.DrawString(levelfont, s1+"", new Vector2((viewport.Width / 8) + 350, (viewport.Height / 4) + 100), new Color(Color.Red, (byte)(200)));
+            s.DrawString(levelfont, s2+"", new Vector2(((7 * viewport.Width) / 8) - (levelfont.MeasureString("Player 2").X) - 100, (viewport.Height / 4) + 100), new Color(Color.Red, (byte)(200)));
+            if (scoreIsDone)
+            {
+                s.DrawString(levelfont, avgLifeP1 + "\n" + player1.stat.MaxSpreeLength + "\n" + player1.healthBar.LivesLeft, new Vector2((viewport.Width / 8) + 350, (viewport.Height / 4) + 150), new Color(Color.Red, (byte)(200)));
+                s.DrawString(levelfont, avgLifeP2 + "\n" + player2.stat.MaxSpreeLength + "\n" + player2.healthBar.LivesLeft, new Vector2(((7 * viewport.Width) / 8) - (levelfont.MeasureString("Player 2").X) - 100, (viewport.Height / 4) + 150), new Color(Color.Red, (byte)(200)));
+            }
+             if (tempscore < player1.score || tempscore < player2.score)
+            {
                 if (tempscore < 200)
                     tempscore += 5;
                 else if (tempscore < 500)
                     tempscore += 10;
                 else
                     tempscore += 20;
+            }
+            else
+            {
+                scoreIsDone = true;
             }
 
             s.End();
