@@ -461,7 +461,7 @@ namespace Bugzzz
         {
             
             // Checks for a game over condition which is either player losing all 5 lives
-            if ((player1.healthBar.LivesLeft <=0 && player2.healthBar.LivesLeft <=0))
+            if ((player1.healthBar.LivesLeft <=0 || player2.healthBar.LivesLeft <=0))
             {
                 gameOver = true;
             }
@@ -1367,7 +1367,7 @@ namespace Bugzzz
                             }
                             else
                             {
-                                // Game over
+                                gameOver = true;
                             }
                         }
                         int slowTimeProbability = rand.Next(20);
@@ -1403,7 +1403,7 @@ namespace Bugzzz
                             }
                             else
                             {
-                                // Game over
+                                gameOver = true;
                             }
                         }
 
