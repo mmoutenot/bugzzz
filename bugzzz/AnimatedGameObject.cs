@@ -18,8 +18,8 @@ namespace Bugzzz
     {
         ArrayList sprites;
         int duration, curFrame;
-        public AnimatedGameObject(ArrayList textures)
-            : base((Texture2D) textures[0])
+        public AnimatedGameObject(ArrayList textures, int ID)
+            : base((Texture2D) textures[0], ID)
         {
             this.sprites = textures;
             this.duration = textures.Count;
