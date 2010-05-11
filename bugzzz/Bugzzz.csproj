@@ -70,6 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AnimatedGameObject.cs" />
+    <Compile Include="AnimatedTexture.cs" />
     <Compile Include="Character.cs" />
     <Compile Include="GameMenu.cs" />
     <Compile Include="HealthBar.cs" />
