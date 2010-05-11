@@ -28,7 +28,7 @@
         <Variation>3.14</Variation>
       </ReleaseRotation>
       <ReleaseImpulse>0 0</ReleaseImpulse>
-      <ParticleTextureAssetName>Cloud002</ParticleTextureAssetName>
+      <ParticleTextureAssetName>Particles\Cloud002</ParticleTextureAssetName>
       <Modifiers>
         <Item Type="Modifiers:OpacityInterpolatorModifier">
           <InitialOpacity>0</InitialOpacity>
@@ -79,7 +79,7 @@
         <Variation>0</Variation>
       </ReleaseRotation>
       <ReleaseImpulse>0 0</ReleaseImpulse>
-      <ParticleTextureAssetName>Particle005</ParticleTextureAssetName>
+      <ParticleTextureAssetName>Particles\Particle005</ParticleTextureAssetName>
       <Modifiers>
         <Item Type="Modifiers:OpacityInterpolatorModifier">
           <InitialOpacity>0</InitialOpacity>
@@ -126,7 +126,7 @@
         <Variation>3.14</Variation>
       </ReleaseRotation>
       <ReleaseImpulse>0 0</ReleaseImpulse>
-      <ParticleTextureAssetName>Flame</ParticleTextureAssetName>
+      <ParticleTextureAssetName>Particles\Flame</ParticleTextureAssetName>
       <Modifiers>
         <Item Type="Modifiers:OpacityInterpolatorModifier">
           <InitialOpacity>0</InitialOpacity>
@@ -180,7 +180,7 @@
         <Variation>3.14</Variation>
       </ReleaseRotation>
       <ReleaseImpulse>0 0</ReleaseImpulse>
-      <ParticleTextureAssetName>Flame</ParticleTextureAssetName>
+      <ParticleTextureAssetName>Particles\Flame</ParticleTextureAssetName>
       <Modifiers>
         <Item Type="Modifiers:OpacityInterpolatorModifier">
           <InitialOpacity>0</InitialOpacity>
