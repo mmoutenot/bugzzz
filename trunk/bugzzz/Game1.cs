@@ -834,6 +834,12 @@ namespace Bugzzz
                         {
                             player1.deploy = true;
                         }
+
+                        float a1 = (float)((-1 * (3.14 / 2 + Math.Atan2(player1.velocity.X, player1.velocity.Y)))+Math.PI/2);
+                        if (a1 != player1.rotation_b)
+                                player1.rotation_b = MathFns.Clerp(player1.rotation_b, a1, angle_rot);
+
+
                         if (keyboardState.IsKeyDown(Keys.Escape))
                             this.Exit();
 
@@ -1006,6 +1012,12 @@ namespace Bugzzz
                         {
                             player2.deploy = true;
                         }
+
+
+                        float a2 = (float)((-1 * (3.14 / 2 + Math.Atan2(player2.velocity.X, player2.velocity.Y))) + Math.PI / 2);
+                        if (a2 != player2.rotation_b)
+                            player2.rotation_b = MathFns.Clerp(player2.rotation_b, a2, angle_rot);
+
                         if (keyboardState.IsKeyDown(Keys.Escape))
                             this.Exit();
 
