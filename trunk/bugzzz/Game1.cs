@@ -857,7 +857,7 @@ namespace Bugzzz
                     else if (currentState.ThumbSticks.Left.Y < -0.5 && !pm.Select)
                     {
                         pm.stateInc();
-                        pm.Select = true;
+                        pm.Select = true; 
                     }
                     else if (-0.5 < currentState.ThumbSticks.Left.Y && currentState.ThumbSticks.Left.Y < 0.5)
                         pm.Select = false;

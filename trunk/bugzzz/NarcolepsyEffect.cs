@@ -253,6 +253,7 @@ namespace Bugzzz
             //TODO:: Needs to be fixed so that it works smoother
             if (this.active)
             {
+
                 switch (state)
                 {
                     case 1:
