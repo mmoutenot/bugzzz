@@ -1466,8 +1466,7 @@ namespace Bugzzz
         #region Draw Helpers (DrawPlayers, DrawInformation, DrawPickups, DrawBullets, DrawEnemies, DrawScore)
         private void DrawPlayers(SpriteBatch s)
         {
-            player1.narc.Draw(s);
-            player2.narc.Draw(s);
+            
             
             s.Draw(player1.spriteB, new Rectangle((int)player1.position.X, (int)player1.position.Y, player1.spriteB.Width, player1.spriteB.Height), null, Color.White, player1.rotation_b, new Vector2(player1.spriteB.Width / 2, player1.spriteB.Height / 2), SpriteEffects.None, 0);
             s.Draw(player1.spriteT, new Rectangle((int)player1.position.X, (int)player1.position.Y, player1.spriteT.Width, player1.spriteT.Height), null, Color.White, (float)(player1.rotation + .5 * Math.PI), new Vector2(player1.spriteT.Width / 2, player1.spriteT.Height / 2), SpriteEffects.None, 0);
@@ -1480,6 +1479,8 @@ namespace Bugzzz
         }
         private void DrawInformation(SpriteBatch s)
         {
+            player1.narc.Draw(s);
+            player2.narc.Draw(s);
             player1.healthBar.Draw(s);
             player2.healthBar.Draw(s);
             s.DrawString(scorefont, "Player 1 Score: " + player1.score.ToString(), new Vector2(this.viewport.Width / 15, this.viewport.Height / 60), new Color(Color.White, (byte)130));
