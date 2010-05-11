@@ -625,9 +625,11 @@ namespace Bugzzz
         private void updatePlayer(Player p)
         {
             p.healthBar.Update();
-            if (p.ID == 1)
+            if (!p.isAlive)
+                p.narc.Active = false;
+            if (p.ID == 1 && p.isAlive)
                 p.narc.Update(GamePad.GetState(PlayerIndex.One), Keyboard.GetState());
-            else
+            else if (p.ID == 2 && p.isAlive)
                 p.narc.Update(GamePad.GetState(PlayerIndex.Two), Keyboard.GetState());
             if (!p.narc.Active)
             {
@@ -901,7 +903,7 @@ namespace Bugzzz
             else
             {
                 #region Player 1 Control Scheme
-                if (!player1.narc.Active)
+                if (!player1.narc.Active && player1.isAlive)
                 {
                     if (currentState.IsConnected)
                     {
@@ -1083,7 +1085,7 @@ namespace Bugzzz
 
                 #region Player 2 Control Scheme
                 currentState = GamePad.GetState(PlayerIndex.Two);
-                if (!player2.narc.Active)
+                if (!player2.narc.Active && player2.isAlive)
                 {
                     if (currentState.IsConnected)
                     {
@@ -1519,7 +1521,14 @@ namespace Bugzzz
                             }
                             else
                             {
-                                gameOver = true;
+                                if (player2.healthBar.LivesLeft > 0)
+                                {
+                                    player1.isAlive = false;
+                                }
+                                else
+                                {
+                                    gameOver = true;
+                                }
                             }
                         }
                         
@@ -1556,7 +1565,14 @@ namespace Bugzzz
                             }
                             else
                             {
-                                gameOver = true;
+                                if (player1.healthBar.LivesLeft > 0)
+                                {
+                                    player2.isAlive = false;
+                                }
+                                else
+                                {
+                                    gameOver = true;
+                                }
                             }
                         }
 
@@ -1611,6 +1627,15 @@ namespace Bugzzz
                     else
                         target = player1.position;
 
+                    if (!player1.isAlive)
+                    {
+                        target = player2.position;
+                    }
+                    if (!player2.isAlive)
+                    {
+                        target = player1.position;
+                    }
+
                     enemy.velocity = target - enemy.position;
                     enemy.velocity.Normalize();
                     enemy.UpdateVelocity();
@@ -1634,11 +1659,17 @@ namespace Bugzzz
         #region Draw Helpers (DrawPlayers, DrawInformation, DrawPickups, DrawBullets, DrawEnemies, DrawScore)
         private void DrawPlayers(SpriteBatch s)
         {
-            s.Draw(player1.spriteB, new Rectangle((int)player1.position.X, (int)player1.position.Y, player1.spriteB.Width, player1.spriteB.Height), null, Color.White, player1.rotation_b, new Vector2(player1.spriteB.Width / 2, player1.spriteB.Height / 2), SpriteEffects.None, 0);
-            s.Draw(player1.spriteT, new Rectangle((int)player1.position.X, (int)player1.position.Y, player1.spriteT.Width, player1.spriteT.Height), null, Color.White, (float)(player1.rotation + .5 * Math.PI), new Vector2(player1.spriteT.Width / 2, player1.spriteT.Height / 2), SpriteEffects.None, 0);
-            s.Draw(player2.spriteB, new Rectangle((int)player2.position.X, (int)player2.position.Y, player2.spriteB.Width, player2.spriteB.Height), null, Color.White, player2.rotation_b, new Vector2(player2.spriteB.Width / 2, player2.spriteB.Height / 2), SpriteEffects.None, 0);
-            s.Draw(player2.spriteT, new Rectangle((int)player2.position.X, (int)player2.position.Y, player2.spriteT.Width, player2.spriteT.Height), null, Color.White, (float)(player2.rotation + .5 * Math.PI), new Vector2(player2.spriteT.Width / 2, player2.spriteT.Height / 2), SpriteEffects.None, 0);
-            if (turret1.placed)
+            if (player1.isAlive)
+            {
+                s.Draw(player1.spriteB, new Rectangle((int)player1.position.X, (int)player1.position.Y, player1.spriteB.Width, player1.spriteB.Height), null, Color.White, player1.rotation_b, new Vector2(player1.spriteB.Width / 2, player1.spriteB.Height / 2), SpriteEffects.None, 0);
+                s.Draw(player1.spriteT, new Rectangle((int)player1.position.X, (int)player1.position.Y, player1.spriteT.Width, player1.spriteT.Height), null, Color.White, (float)(player1.rotation + .5 * Math.PI), new Vector2(player1.spriteT.Width / 2, player1.spriteT.Height / 2), SpriteEffects.None, 0);
+            }
+            if (player2.isAlive)
+            {
+                s.Draw(player2.spriteB, new Rectangle((int)player2.position.X, (int)player2.position.Y, player2.spriteB.Width, player2.spriteB.Height), null, Color.White, player2.rotation_b, new Vector2(player2.spriteB.Width / 2, player2.spriteB.Height / 2), SpriteEffects.None, 0);
+                s.Draw(player2.spriteT, new Rectangle((int)player2.position.X, (int)player2.position.Y, player2.spriteT.Width, player2.spriteT.Height), null, Color.White, (float)(player2.rotation + .5 * Math.PI), new Vector2(player2.spriteT.Width / 2, player2.spriteT.Height / 2), SpriteEffects.None, 0);
+            }
+                if (turret1.placed)
                 s.Draw(turret1.sprite, new Rectangle((int)turret1.position.X, (int)turret1.position.Y, turret1.sprite.Width, turret1.sprite.Height), null, Color.White, (float)(turret1.rotation + .5 * Math.PI), new Vector2(turret1.sprite.Width / 2, turret1.sprite.Height / 2), SpriteEffects.None, 0);
             if (turret2.placed)
                 s.Draw(turret2.sprite, new Rectangle((int)turret2.position.X, (int)turret2.position.Y, turret2.sprite.Width, turret2.sprite.Height), null, Color.White, (float)(turret2.rotation + .5 * Math.PI), new Vector2(turret2.sprite.Width / 2, turret2.sprite.Height / 2), SpriteEffects.None, 0);
