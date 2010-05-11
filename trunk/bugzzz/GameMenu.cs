@@ -26,7 +26,7 @@ namespace Bugzzz
         private bool active;            //Bool if menu is active or not
         private bool select;            //Indicates if button is being pressed
 
-
+        private float glow;
         private float progress;
         private float progInc;
         #endregion
@@ -121,14 +121,17 @@ namespace Bugzzz
                 {
                     pos.X = vp.X / 2 - widths[i] / 2;
                     if (state == i)
+                    {
                         s.Draw(this.activeIcons[i], new Rectangle((int)pos.X, (int)pos.Y, (int)widths[i], 158), Color.White);
+                    }
                     else
                         s.Draw(this.normalIcons[i], new Rectangle((int)pos.X, (int)pos.Y, (int)widths[i], 158), Color.White);
 
                     pos.Y = pos.Y + 110;
                 }
             }
-            progress += progInc;
+            if (progress <= 150)
+                progress += progInc;
 
             
             
@@ -138,6 +141,7 @@ namespace Bugzzz
         //increments state (wraps around)
         public void stateInc()
         {
+            glow = 0;
             if (state != 3)
                 state++;
             else
