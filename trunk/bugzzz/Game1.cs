@@ -106,11 +106,17 @@ namespace Bugzzz
         Texture2D healthBack;
         Texture2D healthFrontP1;
         Texture2D healthFrontP2;
+        Texture2D poison;
 
         bool gameOver;
 
         // Sounds
         SoundEffect introSound;
+        SoundEffect shootSound;
+        SoundEffect shootSoundSlow;
+        SoundEffect shotgunSound;
+        SoundEffect shotgunSoundSlow;
+
         bool introSoundPlayed;
 
         // Time Effects
@@ -262,6 +268,10 @@ namespace Bugzzz
 
             // Sounds
             introSound = Content.Load<SoundEffect>("Sounds\\rain_intro");
+            shootSound = Content.Load<SoundEffect>("Sounds\\shoot");
+            shootSoundSlow = Content.Load<SoundEffect>("Sounds\\shoot_slow");
+            shotgunSound = Content.Load<SoundEffect>("Sounds\\shotgun");
+            shotgunSoundSlow = Content.Load<SoundEffect>("Sounds\\shotgun_slow");
 
             // Refraction fx
             refractionEffect = Content.Load<Effect>("Content\\refraction");
@@ -284,6 +294,7 @@ namespace Bugzzz
 
             level_backgrounds = new Texture2D[5];
             level_backgrounds[0] = Content.Load<Texture2D>("Backgrounds\\grass_bg");
+            poison = Content.Load<Texture2D>("Backgrounds\\poisoned");
 
             for (int i = 0; i < maxBullets; i++)
             {
@@ -393,6 +404,20 @@ namespace Bugzzz
 
         private void fireBullets(Player p, GameObject[] b)
         {
+            if (p.activeWeapon == 1)
+            {
+                if(timeEffect.isActive)
+                    shotgunSoundSlow.Play();
+                    else
+                shotgunSound.Play();
+            }
+            else
+            {
+                if (timeEffect.isActive)
+                    shootSoundSlow.Play();
+                else
+                    shootSound.Play();
+            }
             //firing command
             //automatically resorts to unlimited weapon if current weapon is out of ammo
             if (p.spellMenu.bulletsLeft[p.activeWeapon] == 0)
@@ -1495,8 +1520,8 @@ namespace Bugzzz
                                 gameOver = true;
                             }
                         }
-                        int slowTimeProbability = rand.Next(20);
-                        if(slowTimeProbability == 0){
+                        
+                        if(enemy.ID==8){
                             timeEffect.isActive = true;
                         }
 
@@ -1532,9 +1557,8 @@ namespace Bugzzz
                             }
                         }
 
-                        
-                        int slowTimeProbability = rand.Next(20);
-                        if (slowTimeProbability == 0)
+                        // If it is a stink bug, players are poisoned
+                        if (enemy.ID==8)
                         {
                             timeEffect.isActive = true;
                         }
@@ -1998,15 +2022,24 @@ namespace Bugzzz
                         //spriteBatch.Draw()
 
                         // End the sprite batch, then end our custom effect.
-                        spriteBatch.End();
+                        
 
                         if (timeEffect.isActive)
                         {
+                            
+
                             refractionEffect.CurrentTechnique.Passes[0].End();
                             refractionEffect.End();
                         }
 
+                        spriteBatch.End();
+
                         spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
+
+                        if (timeEffect.isActive)
+                        {
+                            spriteBatch.Draw(poison, new Rectangle(0, 0, viewport.Width, viewport.Height),new Rectangle(250-timeEffect.length,0,1280+250-timeEffect.length,720), new Color(Color.White, (byte)(60)));
+                        }
                         this.DrawInformation(spriteBatch);
                         this.DrawScore(spriteBatch);
                         spriteBatch.End();
