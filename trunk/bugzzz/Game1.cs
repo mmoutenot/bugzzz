@@ -447,7 +447,7 @@ namespace Bugzzz
         private void generateWeaponPickup(Vector2 pos)
         {
             Console.WriteLine("A new pickup was created"+pos);
-            Texture2D sample_weapon = Content.Load<Texture2D>("Sprites\\cannonball");
+            Texture2D sample_weapon = Content.Load<Texture2D>("Sprites\\raygun");
             pickups.Add(new WeaponPickup(sample_weapon, pos, rand.Next(2)+1));
         }
 
