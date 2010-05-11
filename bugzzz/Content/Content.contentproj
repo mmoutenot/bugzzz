@@ -360,13 +360,15 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Sprites\bigboss.png">
-      <Name>bigboss</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
+    <Compile Include="Content\refraction.fx">
+      <Name>refraction</Name>
+      <Importer>EffectImporter</Importer>
+      <Processor>EffectProcessor</Processor>
     </Compile>
-    <Compile Include="Sprites\littlebitch.png">
-      <Name>littlebitch</Name>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Sprites\waterfall.jpg">
+      <Name>waterfall</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
