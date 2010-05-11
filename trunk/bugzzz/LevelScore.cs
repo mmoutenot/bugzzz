@@ -94,7 +94,15 @@ namespace Bugzzz
             s.DrawString(levelfont, "Lives Left:  " + player1.healthBar.LivesLeft + "                     " + player2.healthBar.LivesLeft, new Vector2((viewport.Width / 4) + 10, (viewport.Height / 4) + 250), new Color(Color.Red, (byte)(200)));
             
              */
-            s.DrawString(levelfont, "Score:\nAvg Life:\nMax Spree:\nLives Left:", new Vector2((viewport.Width / 8) + 75, (viewport.Height / 4) + 100), new Color(Color.Red, (byte)(200)));
+            if (!gameOver)
+            {
+                s.DrawString(levelfont, "Score:\nAvg Life:\nMax Spree:\nLives Left:", new Vector2((viewport.Width / 8) + 75, (viewport.Height / 4) + 100), new Color(Color.Red, (byte)(200)));
+            }
+            else
+            {
+                s.DrawString(levelfont, "Score:\nAvg Life:\nMax Spree:\nFav Weapon:", new Vector2((viewport.Width / 8) + 75, (viewport.Height / 4) + 100), new Color(Color.Red, (byte)(200)));
+            }
+
             s.DrawString(levelfont, s1 + "", new Vector2((viewport.Width / 8) + 350, (viewport.Height / 4) + 100), new Color(Color.Red, (byte)(200)));
             s.DrawString(levelfont, s2 + "", new Vector2(((7 * viewport.Width) / 8) - (levelfont.MeasureString("Player 2").X) - 100, (viewport.Height / 4) + 100), new Color(Color.Red, (byte)(200)));
             if (scoreIsDone)
@@ -125,16 +133,25 @@ namespace Bugzzz
             }
             if (spreeIsDone)
             {
-                s.DrawString(levelfont, player1.healthBar.LivesLeft+"", new Vector2((viewport.Width / 8) + 360, (viewport.Height / 4) + 250), new Color(Color.Red, (byte)(alphaLivesLeft)));
-                s.DrawString(levelfont, player2.healthBar.LivesLeft+"", new Vector2(((7 * viewport.Width) / 8) - (levelfont.MeasureString("Player 2").X) - 100, (viewport.Height / 4) + 250), new Color(Color.Red, (byte)(alphaLivesLeft)));
-                if (alphaLivesLeft > 100)
+                if (!gameOver)
                 {
-                    livesLeftIsDone = true;
+                    s.DrawString(levelfont, player1.healthBar.LivesLeft + "", new Vector2((viewport.Width / 8) + 360, (viewport.Height / 4) + 250), new Color(Color.Red, (byte)(alphaLivesLeft)));
+                    s.DrawString(levelfont, player2.healthBar.LivesLeft + "", new Vector2(((7 * viewport.Width) / 8) - (levelfont.MeasureString("Player 2").X) - 100, (viewport.Height / 4) + 250), new Color(Color.Red, (byte)(alphaLivesLeft)));
                 }
+                else
+                {
+                    s.DrawString(levelfont, player1.stat.favoritePickup(), new Vector2((viewport.Width / 8) + 360, (viewport.Height / 4) + 250), new Color(Color.Red, (byte)(alphaLivesLeft)));
+                    s.DrawString(levelfont, player2.stat.favoritePickup(), new Vector2(((7 * viewport.Width) / 8) - (levelfont.MeasureString("Player 2").X) - 100, (viewport.Height / 4) + 250), new Color(Color.Red, (byte)(alphaLivesLeft)));
+                }
+                if (alphaLivesLeft > 100)
+                    {
+                        livesLeftIsDone = true;
+                    }
                 if (alphaLivesLeft < 200)
                 {
                     alphaLivesLeft++;
                 }
+
             }
             if (livesLeftIsDone)
             {
