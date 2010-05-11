@@ -1445,6 +1445,7 @@ namespace Bugzzz
 
                     enemy.velocity = target - enemy.position;
                     enemy.velocity.Normalize();
+                    enemy.UpdateVelocity();
                     enemy.position += enemy.velocity * 2;
                     float angle = (float)(-1 * (Math.PI / 2 + Math.Atan2(enemy.velocity.X, enemy.velocity.Y)));
 
