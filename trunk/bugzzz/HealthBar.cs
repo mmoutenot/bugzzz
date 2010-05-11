@@ -37,6 +37,10 @@ namespace Bugzzz
             {
                 return current;
             }
+            set
+            {
+                this.current = value;
+            }
         }
         public int LivesLeft
         {
@@ -74,11 +78,7 @@ namespace Bugzzz
         {
             if (current != destination)
                 current -= increment;
-            if (current <= 0f)
-            {
-                this.livesLeft--;
-                this.Initialize();
-            }
+            
         }
 
         public void Decrement(int val)
