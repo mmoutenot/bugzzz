@@ -1329,6 +1329,10 @@ namespace Bugzzz
                     {
                         //alive = false;
                         enemy.alive = false;
+
+                        // Bloody Explosion Particle Effect
+                        bloodExplosion.Trigger(new Vector2(enemy.position.X, enemy.position.Y));
+
                         if (player1.healthBar.Current > 0)
                         {
                             player1.healthBar.Decrement(enemy.Damage);
@@ -1361,6 +1365,10 @@ namespace Bugzzz
                     {
                         //alive = false;
                         enemy.alive = false;
+
+                        // Bloody Explosion Particle Effect
+                        bloodExplosion.Trigger(new Vector2(enemy.position.X, enemy.position.Y));
+
                         if (player2.healthBar.Current > 0)
                         {
                             player2.healthBar.Decrement(enemy.Damage);
