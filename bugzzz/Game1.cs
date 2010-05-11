@@ -90,7 +90,7 @@ namespace Bugzzz
         MouseState previousMouseState = Mouse.GetState();
 
         //particle effects zomg!
-        ParticleEffect bloodExplosion, pickupGlow, bulletHit;
+        ParticleEffect bloodExplosion, pickupGlow, bulletHit, stinkyBug;
         PointSpriteRenderer particleRenderer;
 
         GameTime gt;
@@ -300,6 +300,7 @@ namespace Bugzzz
             temp = Content.Load<Texture2D>("Sprites\\roach");
             Texture2D littlebitch = Content.Load<Texture2D>("Sprites\\littlebitch");
             Texture2D bigboss = Content.Load<Texture2D>("Sprites\\bigboss");
+            Texture2D stinky = Content.Load<Texture2D>("Sprites\\stinky");
             ArrayList roachSprites = new ArrayList();
             for (int i = 0; i < 10; i++)
             {
@@ -309,13 +310,15 @@ namespace Bugzzz
             for (int j = 0; j < maxEnemies; j++)
             {
                 if (j % 10 == 0)
-                    enemies[j] = new GameObject(temp, 1);
+                    enemies[j] = new GameObject(temp, 2);
+                else if (j == maxEnemies - 2)
+                    enemies[j] = new GameObject(stinky, 8);
                 else if (j % 2 == 0)
                     enemies[j] = new GameObject(littlebitch, 1);
                 else if (j == maxEnemies - 1)
                     enemies[j] = new GameObject(bigboss, 3);
                 else
-                    enemies[j] = new AnimatedGameObject(roachSprites, 2);
+                    enemies[j] = new AnimatedGameObject(roachSprites, 9);
             }
 
             //spell menu textures
@@ -352,14 +355,17 @@ namespace Bugzzz
             bloodExplosion = Content.Load<ParticleEffect>("Particles\\bloody");
             pickupGlow = Content.Load<ParticleEffect>("Particles\\glow");
             bulletHit = Content.Load<ParticleEffect>("Particles\\bullet");
+            stinkyBug = Content.Load<ParticleEffect>("Particles\\stinky");
 
             bloodExplosion.Initialise();
             pickupGlow.Initialise();
             bulletHit.Initialise();
+            stinkyBug.Initialise();
             
             bloodExplosion.LoadContent(Content);
             pickupGlow.LoadContent(Content);
             bulletHit.LoadContent(Content);
+            stinkyBug.LoadContent(Content);
 
             particleRenderer = new PointSpriteRenderer
             {
@@ -563,6 +569,7 @@ namespace Bugzzz
                         bloodExplosion.Update(deltaSeconds);
                         pickupGlow.Update(deltaSeconds);
                         bulletHit.Update(deltaSeconds);
+                        stinkyBug.Update(deltaSeconds);
 
                         timeEffect.counter = 1;
 
@@ -1666,8 +1673,14 @@ namespace Bugzzz
         private void DrawEnemies(SpriteBatch s)
         {
             foreach (GameObject enemy in enemies)
+            {
                 if (enemy.alive)
+                {
                     spriteBatch.Draw(enemy.sprite, new Rectangle((int)enemy.position.X, (int)enemy.position.Y, enemy.sprite.Width, enemy.sprite.Height), null, Color.White, (float)(enemy.rotation + Math.PI / 2), new Vector2(enemy.sprite.Width / 2, enemy.sprite.Height / 2), SpriteEffects.None, 0);
+                    if (enemy.ID == 8)
+                        stinkyBug.Trigger(enemy.position);
+                }
+            }
         }
         private void DrawScore(SpriteBatch s1)
         {
@@ -2002,6 +2015,7 @@ namespace Bugzzz
                         particleRenderer.RenderEffect(pickupGlow);
                         particleRenderer.RenderEffect(bloodExplosion);
                         particleRenderer.RenderEffect(bulletHit);
+                        particleRenderer.RenderEffect(stinkyBug);
                         
                     }
                     base.Draw(gameTime);
