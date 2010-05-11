@@ -47,7 +47,7 @@ namespace Bugzzz
         
 
         // Score display time on screen as it fades out
-        const int SCORE_TIME = 80;
+        const int SCORE_TIME = 160;
         const int fade_length = 150;
         const float fade_increment = 0.5f;
         float current_fade;
@@ -98,6 +98,14 @@ namespace Bugzzz
         Texture2D[] level_backgrounds;
         Texture2D getReady;
         Texture2D logo;
+        Texture2D antman_top;
+        Texture2D spiderman_top;
+        Texture2D antman_bottom;
+        Texture2D spiderman_bottom;
+        Texture2D[] sMenu;
+        Texture2D healthBack;
+        Texture2D healthFrontP1;
+        Texture2D healthFrontP2;
 
         bool gameOver;
 
@@ -195,10 +203,11 @@ namespace Bugzzz
             this.press2b = false;
 
 
-            this.level = 0;
+            
             this.viewport = GraphicsDevice.Viewport;
             this.viewportRect = new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
 
+            this.level = 0;
             this.bullets = new GameObject[maxBullets];
             this.bullets2 = new GameObject[maxBullets];
 
@@ -310,7 +319,7 @@ namespace Bugzzz
             }
 
             //spell menu textures
-            Texture2D[] sMenu = new Texture2D[4];
+            sMenu = new Texture2D[4];
             sMenu[0] = Content.Load<Texture2D>("SpellMenus\\SpiderBar1Active");
             sMenu[1] = Content.Load<Texture2D>("SpellMenus\\SpiderBar2Active");
             sMenu[2] = Content.Load<Texture2D>("SpellMenus\\SpiderBar3Active");
@@ -329,11 +338,15 @@ namespace Bugzzz
             getReady = Content.Load<Texture2D>("Backgrounds\\getready");
 
 
-            Texture2D healthBack = Content.Load<Texture2D>("Sprites\\HealthBars\\HealthBarBorder");
-            Texture2D healthFrontP1 = Content.Load<Texture2D>("Sprites\\HealthBars\\HealthBarFill1");
-            Texture2D healthFrontP2 = Content.Load<Texture2D>("Sprites\\HealthBars\\HealthBarFill2");
-            player1 = new Player(1, Content.Load<Texture2D>("Sprites\\antman_top"), Content.Load<Texture2D>("Sprites\\antman_bottom"), p1_w, new Vector2(viewport.Width * 7 / 15, viewport.Height / 2), 1, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP1);
-            player2 = new Player(2, Content.Load<Texture2D>("Sprites\\spidman_top"), Content.Load<Texture2D>("Sprites\\spidman_bottom"), p2_w, new Vector2(viewport.Width * 8 / 15, viewport.Height / 2), 2, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP2);
+            healthBack = Content.Load<Texture2D>("Sprites\\HealthBars\\HealthBarBorder");
+            healthFrontP1 = Content.Load<Texture2D>("Sprites\\HealthBars\\HealthBarFill1");
+            healthFrontP2 = Content.Load<Texture2D>("Sprites\\HealthBars\\HealthBarFill2");
+            antman_top = Content.Load<Texture2D>("Sprites\\antman_top");
+            spiderman_top = Content.Load<Texture2D>("Sprites\\spidman_top");
+            antman_bottom = Content.Load<Texture2D>("Sprites\\antman_bottom");
+            spiderman_bottom = Content.Load<Texture2D>("Sprites\\spidman_bottom");
+            player1 = new Player(1,antman_top, antman_bottom, p1_w, new Vector2(viewport.Width * 7 / 15, viewport.Height / 2), 1, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP1);
+            player2 = new Player(2, spiderman_top, spiderman_bottom, p2_w, new Vector2(viewport.Width * 8 / 15, viewport.Height / 2), 2, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP2);
 
 
             bloodExplosion = Content.Load<ParticleEffect>("Particles\\bloody");
@@ -1737,6 +1750,12 @@ namespace Bugzzz
                         act_fade = true;
                         enemies_killed = 0;
                         level++;
+                        if (gameOver)
+                        {
+                            level = 0;
+                            // Need to add more code here so that when we go back to the menu
+                            // and hit play again, it fades in without the remnants of the last game still on screen
+                        }
                     }
 
                     if (act_fade)
@@ -1774,16 +1793,38 @@ namespace Bugzzz
                             {
                                 if (Keyboard.GetState().IsKeyDown(Keys.Enter))
                                 {
-                                    fade_out = true;
-                                    scoreScreen = false;
+                                    if (gameOver)
+                                    {
+                                        gm.Active = true;
+                                        gm.Select = true;
+                                        scoreScreen = false;
+                                        fade_out = true;
+                                        fade_in = false;
+                                    }
+                                    else
+                                    {
+                                        fade_out = true;
+                                        scoreScreen = false;
+                                    }
                                 }
                             }
                             else
                             {
                                 if (GamePad.GetState(PlayerIndex.One).Buttons.Start == ButtonState.Pressed)
                                 {
-                                    fade_out = true;
-                                    scoreScreen = false;
+                                    if (gameOver)
+                                    {
+                                        gm.Active = true;
+                                        gm.Select = true;
+                                        scoreScreen = false;
+                                        fade_out = true;
+                                        fade_in = false;
+                                    }
+                                    else
+                                    {
+                                        fade_out = true;
+                                        scoreScreen = false;
+                                    }
                                 }
                             }
 
@@ -1791,16 +1832,37 @@ namespace Bugzzz
                             {
                                 if (Keyboard.GetState().IsKeyDown(Keys.Enter))
                                 {
-                                    fade_out = true;
-                                    scoreScreen = false;
+                                    if (gameOver)
+                                    {
+                                        gm.Active = true;
+                                        gm.Select = true;
+                                        scoreScreen = false;
+                                        fade_out = true;
+                                        fade_in = false;
+                                    }
+                                    else
+                                    {
+                                        fade_out = true;
+                                        scoreScreen = false;
+                                    }
                                 }
                             }
                             else
                             {
                                 if (GamePad.GetState(PlayerIndex.Two).Buttons.Start == ButtonState.Pressed)
                                 {
-                                    fade_out = true;
-                                    scoreScreen = false;
+                                    if (gameOver)
+                                    {
+                                        gm.Active = true;
+                                        gm.Select = true;
+                                        scoreScreen = false;
+                                        fade_out = true;
+                                    }
+                                    else
+                                    {
+                                        fade_out = true;
+                                        scoreScreen = false;
+                                    }
                                 }
                             }
 
@@ -1829,6 +1891,16 @@ namespace Bugzzz
                             current_fade -= 4 * fade_increment;
                             if (current_fade <= 0)
                             {
+                                if (gameOver)
+                                {
+                                    this.level = 0;
+                                    this.gameOver = false;
+                                    player1 = new Player(1, antman_top, antman_bottom, p1_w, new Vector2(viewport.Width * 7 / 15, viewport.Height / 2), 1, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP1);
+                                    player2 = new Player(2, spiderman_top, spiderman_bottom, p2_w, new Vector2(viewport.Width * 8 / 15, viewport.Height / 2), 2, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP2);
+
+
+
+                                }
                                 //refresh everything
                                 for (int i = 0; i < maxBullets; i++)
                                 {
@@ -1924,6 +1996,8 @@ namespace Bugzzz
                 }
             }
         }
+
+
         /// <summary>
         /// Helper for moving a value around in a circle.
         /// </summary>
