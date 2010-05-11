@@ -68,11 +68,19 @@ namespace Bugzzz
                     break;
                 case 2:
                     this.velocity.Normalize();
-                    this.velocity = new Vector2(this.velocity.X * .95f, this.velocity.Y*.85f);
+                    this.velocity = new Vector2(this.velocity.X * .7f, this.velocity.Y*.7f);
                     break;
                 case 3:
                     this.velocity.Normalize();
-                    this.velocity = new Vector2(this.velocity.X*.5f, this.velocity.Y* .5f);
+                    this.velocity = new Vector2(this.velocity.X*.3f, this.velocity.Y* .3f);
+                    break;
+                case 8:
+                    this.velocity.Normalize();
+                    this.velocity = new Vector2(this.velocity.X * .55f, this.velocity.Y * .55f);
+                    break;
+                case 9:
+                    this.velocity.Normalize();
+                    this.velocity = new Vector2(this.velocity.X * .85f, this.velocity.Y * .85f);
                     break;
                 default:
                     this.velocity.Normalize();
@@ -93,19 +101,19 @@ namespace Bugzzz
         {
             switch (ID)
             {
-                case 1: //enemy 1
+                case 1: // little bitches
                     totHealth = 100;
                     curHealth = totHealth;
                     damage = 5;
                     score = 10;
                     break;
-                case 2: //enemy 2
+                case 2: // medium enemies
                     totHealth = 450;
                     curHealth = totHealth;
                     damage = 25;
                     score = 25;
                     break;
-                case 3: //enemy 3
+                case 3: // boss
                     totHealth = 5000;
                     curHealth = totHealth;
                     damage = 50;
@@ -122,6 +130,18 @@ namespace Bugzzz
                     break;
                 case 7: //turret bullet
                     damage = 25;
+                    break;
+                case 8: // diseased enemy
+                    totHealth = 700;
+                    curHealth = totHealth;
+                    damage = 10;
+                    score = 50;
+                    break;
+                case 9: // little roaches
+                    totHealth = 200;
+                    curHealth = totHealth;
+                    damage = 15;
+                    score = 15;
                     break;
                 default:
                     totHealth = 100;
