@@ -1150,25 +1150,28 @@ namespace Bugzzz
 
                             if (MathFns.broadPhaseCollision(bulletRect, enemyRect, enemy.rotation))
                             {
+
                                 bullet.alive = false;
-                                enemy.alive = false;
-
-                                // Bloody Explosion Particle Effect
-                                bloodExplosion.Trigger(new Vector2(enemy.position.X, enemy.position.Y));
-
-                                score.Add(new ScoreDisplay(20, SCORE_TIME, enemy.position, true, 1));
-                                player1.score += 20;
-                                enemies_killed++;
-
-                                player1.stat.enemyKilled();
-
-                                // Possibly Generate a new WeaponPickup
-                                int wpn_pickup_prob = rand.Next(100);
-                                if (wpn_pickup_prob < 10)
+                                enemy.Update(bullet.Damage);
+                                if (!enemy.alive)
                                 {
-                                    generateWeaponPickup(enemy.position);
+                                    // Bloody Explosion Particle Effect
+                                    bloodExplosion.Trigger(new Vector2(enemy.position.X, enemy.position.Y));
+
+                                    score.Add(new ScoreDisplay(20, SCORE_TIME, enemy.position, true, 1));
+                                    player1.score += 20;
+                                    enemies_killed++;
+
+                                    player1.stat.enemyKilled();
+
+                                    // Possibly Generate a new WeaponPickup
+                                    int wpn_pickup_prob = rand.Next(100);
+                                    if (wpn_pickup_prob < 10)
+                                    {
+                                        generateWeaponPickup(enemy.position);
+                                    }
+                                    break;
                                 }
-                                break;
                             }
                         }
                     }
@@ -1204,25 +1207,27 @@ namespace Bugzzz
 
                             if (MathFns.broadPhaseCollision(bulletRect, enemyRect, enemy.rotation))
                             {
+                                enemy.Update(bullet.Damage);
                                 bullet.alive = false;
-                                enemy.alive = false;
-
-                                // Bloody Explosion Particle Effect
-                                bloodExplosion.Trigger(new Vector2(enemy.position.X, enemy.position.Y));
-
-                                score.Add(new ScoreDisplay(20, SCORE_TIME, enemy.position, true, 2));
-                                player2.score += 20;
-                                enemies_killed++;
-
-                                player2.stat.enemyKilled();
-
-                                // Possibly Generate a new WeaponPickup
-                                int wpn_pickup_prob = rand.Next(100);
-                                if (wpn_pickup_prob < 10)
+                                if (!enemy.alive)
                                 {
-                                    generateWeaponPickup(enemy.position);
+                                    // Bloody Explosion Particle Effect
+                                    bloodExplosion.Trigger(new Vector2(enemy.position.X, enemy.position.Y));
+
+                                    score.Add(new ScoreDisplay(20, SCORE_TIME, enemy.position, true, 2));
+                                    player2.score += 20;
+                                    enemies_killed++;
+
+                                    player2.stat.enemyKilled();
+
+                                    // Possibly Generate a new WeaponPickup
+                                    int wpn_pickup_prob = rand.Next(100);
+                                    if (wpn_pickup_prob < 10)
+                                    {
+                                        generateWeaponPickup(enemy.position);
+                                    }
+                                    break;
                                 }
-                                break;
                             }
                         }
                     }
@@ -1259,15 +1264,17 @@ namespace Bugzzz
                             if (MathFns.broadPhaseCollision(bulletRect, enemyRect, enemy.rotation))
                             {
                                 bullet.alive = false;
-                                enemy.alive = false;
+                                enemy.Update(bullet.Damage);
+                                if (!enemy.alive)
+                                {
+                                    // Bloody Explosion Particle Effect
+                                    bloodExplosion.Trigger(new Vector2(enemy.position.X, enemy.position.Y));
 
-                                // Bloody Explosion Particle Effect
-                                bloodExplosion.Trigger(new Vector2(enemy.position.X, enemy.position.Y));
-
-                                score.Add(new ScoreDisplay(10, SCORE_TIME, enemy.position, true, 1));
-                                player1.score += 10;
-                                enemies_killed++;
-                                break;
+                                    score.Add(new ScoreDisplay(10, SCORE_TIME, enemy.position, true, 1));
+                                    player1.score += 10;
+                                    enemies_killed++;
+                                    break;
+                                }
                             }
                         }
                     }
@@ -1304,15 +1311,17 @@ namespace Bugzzz
                             if (MathFns.broadPhaseCollision(bulletRect, enemyRect, (float)(enemy.rotation + Math.PI / 2)))
                             {
                                 bullet.alive = false;
-                                enemy.alive = false;
+                                enemy.Update(bullet.Damage);
+                                if (!enemy.alive)
+                                {
+                                    // Bloody Explosion Particle Effect
+                                    bloodExplosion.Trigger(new Vector2(enemy.position.X, enemy.position.Y));
 
-                                // Bloody Explosion Particle Effect
-                                bloodExplosion.Trigger(new Vector2(enemy.position.X, enemy.position.Y));
-
-                                score.Add(new ScoreDisplay(10, SCORE_TIME, enemy.position, true, 2));
-                                player2.score += 10;
-                                enemies_killed++;
-                                break;
+                                    score.Add(new ScoreDisplay(10, SCORE_TIME, enemy.position, true, 2));
+                                    player2.score += 10;
+                                    enemies_killed++;
+                                    break;
+                                }
                             }
                         }
                     }
@@ -1470,8 +1479,8 @@ namespace Bugzzz
             
             s.Draw(player1.spriteB, new Rectangle((int)player1.position.X, (int)player1.position.Y, player1.spriteB.Width, player1.spriteB.Height), null, Color.White, player1.rotation_b, new Vector2(player1.spriteB.Width / 2, player1.spriteB.Height / 2), SpriteEffects.None, 0);
             s.Draw(player1.spriteT, new Rectangle((int)player1.position.X, (int)player1.position.Y, player1.spriteT.Width, player1.spriteT.Height), null, Color.White, (float)(player1.rotation + .5 * Math.PI), new Vector2(player1.spriteT.Width / 2, player1.spriteT.Height / 2), SpriteEffects.None, 0);
-            s.Draw(player2.spriteB, new Rectangle((int)player2.position.X, (int)player2.position.Y, player2.spriteB.Width, player2.spriteB.Height), null, Color.Red, player2.rotation_b, new Vector2(player2.spriteB.Width / 2, player2.spriteB.Height / 2), SpriteEffects.None, 0);
-            s.Draw(player2.spriteT, new Rectangle((int)player2.position.X, (int)player2.position.Y, player2.spriteT.Width, player2.spriteT.Height), null, Color.Red, (float)(player2.rotation + .5 * Math.PI), new Vector2(player2.spriteT.Width / 2, player2.spriteT.Height / 2), SpriteEffects.None, 0);
+            s.Draw(player2.spriteB, new Rectangle((int)player2.position.X, (int)player2.position.Y, player2.spriteB.Width, player2.spriteB.Height), null, Color.White, player2.rotation_b, new Vector2(player2.spriteB.Width / 2, player2.spriteB.Height / 2), SpriteEffects.None, 0);
+            s.Draw(player2.spriteT, new Rectangle((int)player2.position.X, (int)player2.position.Y, player2.spriteT.Width, player2.spriteT.Height), null, Color.White, (float)(player2.rotation + .5 * Math.PI), new Vector2(player2.spriteT.Width / 2, player2.spriteT.Height / 2), SpriteEffects.None, 0);
             if (turret1.placed)
                 s.Draw(turret1.sprite, new Rectangle((int)turret1.position.X, (int)turret1.position.Y, turret1.sprite.Width, turret1.sprite.Height), null, Color.White, (float)(turret1.rotation + .5 * Math.PI), new Vector2(turret1.sprite.Width / 2, turret1.sprite.Height / 2), SpriteEffects.None, 0);
             if (turret2.placed)
