@@ -102,6 +102,9 @@ namespace Bugzzz
         SoundEffect introSound;
         bool introSoundPlayed;
 
+        // Time Effects
+        SlowTimeEffect timeEffect;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -199,6 +202,9 @@ namespace Bugzzz
 
             this.gameOver = false;
             this.introSoundPlayed = false;
+
+            this.timeEffect = new SlowTimeEffect();
+            timeEffect.isActive = false;
 
             base.Initialize();
 
@@ -447,66 +453,91 @@ namespace Bugzzz
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
-            updateInput();
-            if (!act_fade && !gm.Active)
-            {
-                if (GamePad.GetState(PlayerIndex.One).Buttons.A == ButtonState.Pressed)
-                    player1.deploy = true;
-                if (GamePad.GetState(PlayerIndex.Two).Buttons.A == ButtonState.Pressed)
-                    player2.deploy = true;
+            
                 
-                float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
-                gt = gameTime;
-                elapsedTime += elapsed;
-                elapsedTime2 += elapsed;
-                t_elapsedTime += elapsed;
-                t2_elapsedTime += elapsed;
-                // TODO: Add your update logic here
-                updateTurret(turret1, player1);
-                updateTurret(turret2, player2);
-                updateBullets();
-                updateEnemies();
-
-                //updates everything for players
-                
-                updatePlayer(player1);
-                updatePlayer(player2);
-
-                #region Fire Delay
-                if ((elapsedTime >= player1.weapon.delays[player1.activeWeapon]) && player1.fire && !player1.narc.Active)
+                if (!timeEffect.isActive || (timeEffect.isActive && timeEffect.counter % 3 == 0))
                 {
-                    elapsedTime = 0.0f;
-                    fireBullets(player1, this.bullets);
+                    updateInput();
+                    if (!act_fade && !gm.Active)
+                    {
+                        if (GamePad.GetState(PlayerIndex.One).Buttons.A == ButtonState.Pressed)
+                            player1.deploy = true;
+                        if (GamePad.GetState(PlayerIndex.Two).Buttons.A == ButtonState.Pressed)
+                            player2.deploy = true;
+
+                        float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+                        gt = gameTime;
+                        elapsedTime += elapsed;
+                        elapsedTime2 += elapsed;
+                        t_elapsedTime += elapsed;
+                        t2_elapsedTime += elapsed;
+                        // TODO: Add your update logic here
+                        updateTurret(turret1, player1);
+                        updateTurret(turret2, player2);
+                        updateBullets();
+                        updateEnemies();
+
+                        //updates everything for players
+
+                        updatePlayer(player1);
+                        updatePlayer(player2);
+
+                        #region Fire Delay
+                        if ((elapsedTime >= player1.weapon.delays[player1.activeWeapon]) && player1.fire && !player1.narc.Active)
+                        {
+                            elapsedTime = 0.0f;
+                            fireBullets(player1, this.bullets);
+                        }
+                        if ((elapsedTime2 >= player2.weapon.delays[player2.activeWeapon]) && player2.fire && !player2.narc.Active)
+                        {
+                            elapsedTime2 = 0.0f;
+                            fireBullets(player2, this.bullets2);
+                        }
+
+                        if (turret1.fire && t_elapsedTime >= fireDelay + .5 && turret1.placed)
+                        {
+                            t_elapsedTime = 0.0f;
+                            fireTurretBullets1();
+                        }
+                        if (turret2.fire && t2_elapsedTime >= fireDelay + .5 && turret2.placed)
+                        {
+                            t2_elapsedTime = 0.0f;
+                            fireTurretBullets2();
+                        }
+                        #endregion
+
+                        // Update the statistical time used to calculate player statistics
+                        player1.stat.updateStatisticsTime(gameTime);
+                        player2.stat.updateStatisticsTime(gameTime);
+
+                        // particle test
+                        float deltaSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
+                        bloodExplosion.Update(deltaSeconds);
+                        pickupGlow.Update(deltaSeconds);
+
+                        timeEffect.counter = 1;
+
+                    }
                 }
-                if ((elapsedTime2 >= player2.weapon.delays[player2.activeWeapon]) && player2.fire && !player2.narc.Active)
+                else if(timeEffect.isActive)
                 {
-                    elapsedTime2 = 0.0f;
-                    fireBullets(player2, this.bullets2);
+                    timeEffect.counter++;
+                    if (timeEffect.length > 0)
+                    {
+                        timeEffect.length--;
+                        Console.WriteLine(timeEffect.length);
+                    }
+                    else
+                    {
+                        timeEffect.isActive = false;
+                        timeEffect.length = 250;
+                        timeEffect.counter = 1;
+                    }
                 }
 
-                if (turret1.fire && t_elapsedTime >= fireDelay + .5 && turret1.placed)
-                {
-                    t_elapsedTime = 0.0f;
-                    fireTurretBullets1();
-                }
-                if (turret2.fire && t2_elapsedTime >= fireDelay + .5 && turret2.placed)
-                {
-                    t2_elapsedTime = 0.0f;
-                    fireTurretBullets2();
-                }
-                #endregion
 
 
-            }
-
-            // Update the statistical time used to calculate player statistics
-            player1.stat.updateStatisticsTime(gameTime);
-            player2.stat.updateStatisticsTime(gameTime);
-
-            // particle test
-            float deltaSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            bloodExplosion.Update(deltaSeconds);
-            pickupGlow.Update(deltaSeconds);
+            
 
             base.Update(gameTime);
         }
@@ -1310,6 +1341,11 @@ namespace Bugzzz
                                 // Game over
                             }
                         }
+                        int slowTimeProbability = rand.Next(20);
+                        if(slowTimeProbability == 0){
+                            timeEffect.isActive = true;
+                        }
+
                         enemies_killed++;
 
                         break;
@@ -1339,8 +1375,13 @@ namespace Bugzzz
                                 // Game over
                             }
                         }
-                        enemies_killed++;
 
+                        enemies_killed++;
+                        int slowTimeProbability = rand.Next(20);
+                        if (slowTimeProbability == 0)
+                        {
+                            timeEffect.isActive = true;
+                        }
                         break;
                     }
                 }

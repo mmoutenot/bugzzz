@@ -72,6 +72,7 @@
     <Compile Include="AnimatedGameObject.cs" />
     <Compile Include="AnimatedTexture.cs" />
     <Compile Include="Character.cs" />
+    <Compile Include="SlowTimeEffect.cs" />
     <Compile Include="GameMenu.cs" />
     <Compile Include="HealthBar.cs" />
     <Compile Include="NarcolepsyEffect.cs" />
