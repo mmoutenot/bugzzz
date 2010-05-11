@@ -267,6 +267,8 @@ namespace Bugzzz
             }
 
             temp = Content.Load<Texture2D>("Sprites\\roach");
+            Texture2D littlebitch = Content.Load<Texture2D>("Sprites\\littlebitch");
+            Texture2D bigboss = Content.Load<Texture2D>("Sprites\\bigboss");
             ArrayList roachSprites = new ArrayList();
             for (int i = 0; i < 10; i++)
             {
@@ -277,6 +279,10 @@ namespace Bugzzz
             {
                 if (j % 10 == 0)
                     enemies[j] = new GameObject(temp);
+                else if (j % 2 == 0)
+                    enemies[j] = new GameObject(littlebitch);
+                else if (j == maxEnemies - 1)
+                    enemies[j] = new GameObject(bigboss);
                 else
                     enemies[j] = new AnimatedGameObject(roachSprites);
             }
