@@ -1924,6 +1924,7 @@ namespace Bugzzz
                         //render particles
                         particleRenderer.RenderEffect(bloodExplosion);
                         particleRenderer.RenderEffect(pickupGlow);
+                        particleRenderer.RenderEffect(holyShitFire);
 
                     }
                     base.Draw(gameTime);
