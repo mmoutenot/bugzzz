@@ -473,11 +473,6 @@ namespace Bugzzz
         protected override void Update(GameTime gameTime)
         {
 
-            // Checks for a game over condition which is either player losing all 5 lives
-            if ((player1.healthBar.LivesLeft <= 0 || player2.healthBar.LivesLeft <= 0))
-            {
-                gameOver = true;
-            }
 
             // Allows the game to exit
 
@@ -1463,6 +1458,7 @@ namespace Bugzzz
                             if (player1.healthBar.LivesLeft > 0)
                             {
                                 player1.healthBar.LivesLeft--;
+                                player1.healthBar.Current = 100;
                                 player1.stat.playerDied();
                             }
                             else
@@ -1489,7 +1485,6 @@ namespace Bugzzz
 
                         // Bloody Explosion Particle Effect
                         bloodExplosion.Trigger(new Vector2(enemy.position.X, enemy.position.Y));
-
                         if (player2.healthBar.Current > 0)
                         {
                             player2.healthBar.Decrement(enemy.Damage);
@@ -1499,6 +1494,7 @@ namespace Bugzzz
                             if (player2.healthBar.LivesLeft > 0)
                             {
                                 player2.healthBar.LivesLeft--;
+                                player2.healthBar.Current = 100;
                                 player2.stat.playerDied();
                             }
                             else
@@ -1507,12 +1503,13 @@ namespace Bugzzz
                             }
                         }
 
-                        enemies_killed++;
+                        
                         int slowTimeProbability = rand.Next(20);
                         if (slowTimeProbability == 0)
                         {
                             timeEffect.isActive = true;
                         }
+                        enemies_killed++;
                         break;
                     }
                 }
