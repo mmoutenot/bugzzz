@@ -313,9 +313,10 @@ namespace Bugzzz
 
 
             Texture2D healthBack = Content.Load<Texture2D>("Sprites\\HealthBars\\HealthBarBorder");
-            Texture2D healthFront = Content.Load<Texture2D>("Sprites\\HealthBars\\HealthBarFill");
-            player1 = new Player(1, Content.Load<Texture2D>("Sprites\\antman_top"), Content.Load<Texture2D>("Sprites\\antman_bottom"), p1_w, new Vector2(viewport.Width * 7 / 15, viewport.Height / 2), 1, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFront);
-            player2 = new Player(2, Content.Load<Texture2D>("Sprites\\spidman_top"), Content.Load<Texture2D>("Sprites\\spidman_bottom"), p2_w, new Vector2(viewport.Width * 8 / 15, viewport.Height / 2), 2, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFront);
+            Texture2D healthFrontP1 = Content.Load<Texture2D>("Sprites\\HealthBars\\HealthBarFill1");
+            Texture2D healthFrontP2 = Content.Load<Texture2D>("Sprites\\HealthBars\\HealthBarFill2");
+            player1 = new Player(1, Content.Load<Texture2D>("Sprites\\antman_top"), Content.Load<Texture2D>("Sprites\\antman_bottom"), p1_w, new Vector2(viewport.Width * 7 / 15, viewport.Height / 2), 1, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP1);
+            player2 = new Player(2, Content.Load<Texture2D>("Sprites\\spidman_top"), Content.Load<Texture2D>("Sprites\\spidman_bottom"), p2_w, new Vector2(viewport.Width * 8 / 15, viewport.Height / 2), 2, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP2);
 
 
             bloodExplosion = Content.Load<ParticleEffect>("Particles\\bloody");
