@@ -115,7 +115,7 @@ namespace Bugzzz
             if (progress >= 50)
             {
                 Vector2 pos = new Vector2();
-                pos.Y = vp.Y * 21 / 56;
+                pos.Y = (float) (vp.Y * 21 / 56 - .05 * vp.Y);
                 pos.X = 0;
                 for (int i = 0; i < 4; i++)
                 {
