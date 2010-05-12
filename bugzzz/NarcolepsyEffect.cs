@@ -156,7 +156,7 @@ namespace Bugzzz
             {
                 NarcolepsyUpdate(g, k);
             }
-            else if (rand.Next(500) == 1)
+            else if (rand.Next(1000) == 1)
             {
 
                 active = true;
