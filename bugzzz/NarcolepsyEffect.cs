@@ -156,7 +156,7 @@ namespace Bugzzz
             {
                 NarcolepsyUpdate(g, k);
             }
-            else if (rand.Next(5000) == 1)
+            else if (rand.Next(500) == 1)
             {
 
                 active = true;
@@ -255,7 +255,7 @@ namespace Bugzzz
                     this.kCIndex++;
                     this.pressed = true;
                 }
-                else if (g.IsButtonDown(konamiButtons[kCIndex]))
+                else if (g.IsButtonUp(konamiButtons[kCIndex]))
                 {
                     this.pressed = false;
                 }
