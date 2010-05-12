@@ -119,7 +119,7 @@ namespace Bugzzz
                 pos.X = 0;
                 for (int i = 0; i < 4; i++)
                 {
-                    pos.X = vp.X / 2 - widths[i] / 2;
+                    pos.X = (float) (vp.X / 2 - widths[i] / 2 - vp.X * 0.1);
                     if (state == i)
                     {
                         s.Draw(this.activeIcons[i], new Rectangle((int)pos.X, (int)pos.Y, (int)widths[i], 158), Color.White);
