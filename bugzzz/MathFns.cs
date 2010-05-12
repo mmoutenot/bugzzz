@@ -86,14 +86,31 @@ namespace Bugzzz
            //Console.WriteLine("Start: "  + start + "   End: " + end + "  Value: " + value + "  Half: " + half + "  Diff: " + diff + "  Retval: " + retval);
            return retval;
         }
-
+        
+        //calculates distance between two vectors
         public static float Distance(Vector2 A, Vector2 B)
         {
             return (float)Math.Sqrt(Math.Pow(A.X-B.X,2) + Math.Pow(A.Y-B.Y,2));
         }
 
+        /// <summary>
+        /// Helper for moving a value around in a circle.
+        /// </summary>
+        public static Vector2 MoveInCircle(GameTime gameTime, float speed)
+        {
+            double time = gameTime.TotalGameTime.TotalSeconds * speed;
+
+            float x = (float)Math.Cos(time);
+            float y = (float)Math.Sin(time);
+
+            return new Vector2(x, y);
+        }
+
+
+        //calculates location of new point rotated around center
         public static Vector2 newPoint(Vector2 center, Vector2 original, float angle)
         {
+            //MATHHHHHHHHHH
             float x = (float)(center.X - (original.X - center.X) * Math.Cos(angle) + (original.Y - center.Y) * Math.Sin(angle));
             float y = (float)(center.Y + (original.X - center.X) * Math.Sin(angle) + (original.Y - center.Y) * Math.Cos(angle));
             Vector2 ret = new Vector2(x, y);
@@ -108,6 +125,7 @@ namespace Bugzzz
             Vector2 CenterB = new Vector2(b.X, b.Y);
 
 
+            //calculate corners for rect a
             Vector2 UL1 = new Vector2(a.Left, a.Top);
             UL1 = newPoint(CenterA, UL1, 0);
             //s.Draw(l, UL1, Color.White);
@@ -311,6 +329,7 @@ namespace Bugzzz
 
         public static Vector2 project(Vector2 Axis, Vector2 pt)
         {
+            //VECTOR MATHHH
             Vector2 ret = new Vector2();
             ret.X = (float)(((pt.X * Axis.X + pt.Y * Axis.Y)/ (Math.Pow(Axis.X, 2) + Math.Pow(Axis.Y, 2)))*Axis.X);
             ret.Y = (float)(((pt.X * Axis.X + pt.Y * Axis.Y)  / (Math.Pow(Axis.X, 2) + Math.Pow(Axis.Y, 2)))* Axis.Y);

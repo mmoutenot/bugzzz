@@ -123,7 +123,7 @@ namespace Bugzzz
                     damage = 100;
                     break;
                 case 5: //shotgun
-                    damage = 175;
+                    damage = 50;
                     break;
                 case 6: //flamethrower
                     damage = 75;

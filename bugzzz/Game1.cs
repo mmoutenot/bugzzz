@@ -541,9 +541,9 @@ namespace Bugzzz
                     updateInput();
                     if (!act_fade && !gm.Active)
                     {
-                        if (GamePad.GetState(PlayerIndex.One).Buttons.A == ButtonState.Pressed)
+                        if (GamePad.GetState(PlayerIndex.One).Buttons.Y == ButtonState.Pressed)
                             player1.deploy = true;
-                        if (GamePad.GetState(PlayerIndex.Two).Buttons.A == ButtonState.Pressed)
+                        if (GamePad.GetState(PlayerIndex.Two).Buttons.Y == ButtonState.Pressed)
                             player2.deploy = true;
 
                         float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -750,45 +750,87 @@ namespace Bugzzz
 
             GamePadState currentState;
             currentState = GamePad.GetState(PlayerIndex.One);
+            GamePadState cs = GamePad.GetState(PlayerIndex.Two);
 
 
             if (gm.Active)
             {
                 #region Xbox Menu Controls
-                if (currentState.IsConnected)
+                if (currentState.IsConnected || cs.IsConnected)
                 {
-                    if (currentState.Buttons.A == ButtonState.Pressed && !gm.Select)
+                    //player 1 menu movement
+                    if (currentState.IsConnected)
                     {
-                        switch (gm.State)
+                        if (currentState.Buttons.A == ButtonState.Pressed && !gm.Select)
                         {
-                            case 0:
-                                gm.Active = false;
-                                act_fade = true;
-                                fade_out = true;
-                                scoreScreen = false;
-                                fade_in = false;
-                                current_fade = 255;
-                                break;
-                            default:
-                                Exit();
-                                break;
+                            switch (gm.State)
+                            {
+                                case 0:
+                                    gm.Active = false;
+                                    act_fade = true;
+                                    fade_out = true;
+                                    scoreScreen = false;
+                                    fade_in = false;
+                                    current_fade = 255;
+                                    break;
+                                default:
+                                    Exit();
+                                    break;
+                            }
                         }
+                        else if (currentState.ThumbSticks.Left.Y > 0.5 && !gm.Select)
+                        {
+                            gm.stateDec();
+                            gm.Select = true;
+                        }
+                        else if (currentState.ThumbSticks.Left.Y < -0.5 && !gm.Select)
+                        {
+                            gm.stateInc();
+                            gm.Select = true;
+                        }
+                        else if (-0.5 < currentState.ThumbSticks.Left.Y && currentState.ThumbSticks.Left.Y < 0.5 && currentState.Buttons.A == ButtonState.Released)
+                            gm.Select = false;
+                
+
                     }
-                    else if (currentState.ThumbSticks.Left.Y > 0.5 && !gm.Select)
+                    //player 2 menu movement
+                    if (cs.IsConnected)
                     {
-                        gm.stateDec();
-                        gm.Select = true;
+                        if (cs.Buttons.A == ButtonState.Pressed && !gm.Select)
+                        {
+                            switch (gm.State)
+                            {
+                                case 0:
+                                    gm.Active = false;
+                                    act_fade = true;
+                                    fade_out = true;
+                                    scoreScreen = false;
+                                    fade_in = false;
+                                    current_fade = 255;
+                                    break;
+                                default:
+                                    Exit();
+                                    break;
+                            }
+                        }
+                        else if (cs.ThumbSticks.Left.Y > 0.5 && !gm.Select)
+                        {
+                            gm.stateDec();
+                            gm.Select = true;
+                        }
+                        else if (cs.ThumbSticks.Left.Y < -0.5 && !gm.Select)
+                        {
+                            gm.stateInc();
+                            gm.Select = true;
+                        }
+                        else if (-0.5 < cs.ThumbSticks.Left.Y && cs.ThumbSticks.Left.Y < 0.5 && cs.Buttons.A == ButtonState.Released)
+                            gm.Select = false;
+
+
                     }
-                    else if (currentState.ThumbSticks.Left.Y < -0.5 && !gm.Select)
-                    {
-                        gm.stateInc();
-                        gm.Select = true;
-                    }
-                    else if (-0.5 < currentState.ThumbSticks.Left.Y && currentState.ThumbSticks.Left.Y < 0.5 && currentState.Buttons.A == ButtonState.Released)
-                        gm.Select = false;
-                #endregion
 
                 }
+                #endregion
                 else
                 {
                     #region Keyboard Menu Controls
@@ -830,40 +872,75 @@ namespace Bugzzz
             else if (pm.Active)
             {
                 #region Xbox Menu Controls
-                if (currentState.IsConnected)
+                if (currentState.IsConnected || cs.IsConnected)
                 {
-                    if (currentState.Buttons.A == ButtonState.Pressed)
+                    if (currentState.IsConnected)
                     {
-                        switch (gm.State)
+                        if (currentState.Buttons.A == ButtonState.Pressed)
                         {
-                            case 0:
-                                pm.Active = false;
-                                break;
-                            case 1:
-                                pm.Active = false;
-                                gm.Active = true;
-                                gm.Select = true;
-                                break;
-                            default:
-                                Exit();
-                                break;
+                            switch (gm.State)
+                            {
+                                case 0:
+                                    pm.Active = false;
+                                    break;
+                                case 1:
+                                    pm.Active = false;
+                                    gm.Active = true;
+                                    gm.Select = true;
+                                    break;
+                                default:
+                                    Exit();
+                                    break;
+                            }
                         }
+                        else if (currentState.ThumbSticks.Left.Y > 0.5 && !pm.Select)
+                        {
+                            pm.stateDec();
+                            pm.Select = true;
+                        }
+                        else if (currentState.ThumbSticks.Left.Y < -0.5 && !pm.Select)
+                        {
+                            pm.stateInc();
+                            pm.Select = true;
+                        }
+                        else if (-0.5 < currentState.ThumbSticks.Left.Y && currentState.ThumbSticks.Left.Y < 0.5)
+                            pm.Select = false;
                     }
-                    else if (currentState.ThumbSticks.Left.Y > 0.5 && !pm.Select)
+                    if (cs.IsConnected)
                     {
-                        pm.stateDec();
-                        pm.Select = true;
+                        if (cs.Buttons.A == ButtonState.Pressed)
+                        {
+                            switch (gm.State)
+                            {
+                                case 0:
+                                    pm.Active = false;
+                                    break;
+                                case 1:
+                                    pm.Active = false;
+                                    gm.Active = true;
+                                    gm.Select = true;
+                                    break;
+                                default:
+                                    Exit();
+                                    break;
+                            }
+                        }
+                        else if (cs.ThumbSticks.Left.Y > 0.5 && !pm.Select)
+                        {
+                            pm.stateDec();
+                            pm.Select = true;
+                        }
+                        else if (cs.ThumbSticks.Left.Y < -0.5 && !pm.Select)
+                        {
+                            pm.stateInc();
+                            pm.Select = true;
+                        }
+                        else if (-0.5 < cs.ThumbSticks.Left.Y && cs.ThumbSticks.Left.Y < 0.5)
+                            pm.Select = false;
                     }
-                    else if (currentState.ThumbSticks.Left.Y < -0.5 && !pm.Select)
-                    {
-                        pm.stateInc();
-                        pm.Select = true; 
-                    }
-                    else if (-0.5 < currentState.ThumbSticks.Left.Y && currentState.ThumbSticks.Left.Y < 0.5)
-                        pm.Select = false;
-                #endregion
 
                 }
+                #endregion
                 else
                 {
                     #region Keyboard Menu Controls
@@ -1499,92 +1576,108 @@ namespace Bugzzz
                     Rectangle enemyRect = new Rectangle((int)enemy.position.X, (int)enemy.position.Y, enemy.sprite.Width, enemy.sprite.Height);
 
                     //detect p1 collision
+                    #region Player 1 Collision
                     if (MathFns.broadPhaseCollision(playerRect, enemyRect, (float)(enemy.rotation + Math.PI / 2)))
                     {
                         //alive = false;
-                        enemy.alive = false;
-
-                        // Bloody Explosion Particle Effect
-                        bloodExplosion.Trigger(new Vector2(enemy.position.X, enemy.position.Y));
-
-                        if (player1.healthBar.Current > 0)
+                        enemy.Update(10);
+                        if (!enemy.alive)
                         {
-                            player1.healthBar.Decrement(enemy.Damage);
+                            // Bloody Explosion Particle Effect
+                            bloodExplosion.Trigger(new Vector2(enemy.position.X, enemy.position.Y));
+                            enemies_killed++;
                         }
                         else
                         {
-                            if (player1.healthBar.LivesLeft > 0)
+                            if (player1.healthBar.Current > 0)
                             {
-                                player1.healthBar.LivesLeft--;
-                                player1.healthBar.Current = 100;
-                                player1.stat.playerDied();
-                            }
-                            else
-                            {
-                                if (player2.healthBar.LivesLeft > 0)
-                                {
-                                    player1.isAlive = false;
-                                }
-                                else
-                                {
-                                    gameOver = true;
-                                }
-                            }
-                        }
-                        
-                        if(enemy.ID==8){
-                            timeEffect.isActive = true;
-                            ambianceSound.Play();
-                        }
-
-                        enemies_killed++;
-
-                        break;
-                    }
-                    playerRect = new Rectangle((int)player2.position.X - player2.spriteB.Width / 2, (int)player2.position.Y - player2.spriteB.Height / 2, player2.spriteB.Width, player2.spriteB.Height);
-
-                    //detect p2 collision
-                    if (MathFns.broadPhaseCollision(playerRect, enemyRect, (float)(enemy.rotation + Math.PI / 2)))
-                    {
-                        //alive = false;
-                        enemy.alive = false;
-
-                        // Bloody Explosion Particle Effect
-                        bloodExplosion.Trigger(new Vector2(enemy.position.X, enemy.position.Y));
-                        if (player2.healthBar.Current > 0)
-                        {
-                            player2.healthBar.Decrement(enemy.Damage);
-                        }
-                        else
-                        {
-                            if (player2.healthBar.LivesLeft > 0)
-                            {
-                                player2.healthBar.LivesLeft--;
-                                player2.healthBar.Current = 100;
-                                player2.stat.playerDied();
+                                player1.healthBar.Decrement(enemy.Damage);
                             }
                             else
                             {
                                 if (player1.healthBar.LivesLeft > 0)
                                 {
-                                    player2.isAlive = false;
+                                    player1.healthBar.LivesLeft--;
+                                    player1.healthBar.Current = 100;
+                                    player1.stat.playerDied();
                                 }
                                 else
                                 {
-                                    gameOver = true;
+                                    if (player2.healthBar.LivesLeft > 0)
+                                    {
+                                        player1.isAlive = false;
+                                    }
+                                    else
+                                    {
+                                        gameOver = true;
+                                    }
                                 }
                             }
+
+                            if (enemy.ID == 8 && !timeEffect.isActive)
+                            {
+                                timeEffect.isActive = true;
+                                ambianceSound.Play();
+                            } 
                         }
 
-                        // If it is a stink bug, players are poisoned
-                        if (enemy.ID==8)
-                        {
-                            timeEffect.isActive = true;
-                            ambianceSound.Play();
-                        }
-                        enemies_killed++;
-                        break;
+
+                       
                     }
+                    #endregion
+                    playerRect = new Rectangle((int)player2.position.X - player2.spriteB.Width / 2, (int)player2.position.Y - player2.spriteB.Height / 2, player2.spriteB.Width, player2.spriteB.Height);
+
+                    //detect p2 collision
+                    #region Player 2 Collision
+                    if (MathFns.broadPhaseCollision(playerRect, enemyRect, (float)(enemy.rotation + Math.PI / 2)))
+                    {
+                        //alive = false;
+                        enemy.Update(10);
+                        if (enemy.alive == false)
+                        {
+                            // Bloody Explosion Particle Effect
+                            bloodExplosion.Trigger(new Vector2(enemy.position.X, enemy.position.Y));
+
+                            enemies_killed++;
+                        }
+                        else
+                        {
+                            if (player2.healthBar.Current > 0)
+                            {
+                                player2.healthBar.Decrement(enemy.Damage);
+                            }
+                            else
+                            {
+                                if (player2.healthBar.LivesLeft > 0)
+                                {
+                                    player2.healthBar.LivesLeft--;
+                                    player2.healthBar.Current = 100;
+                                    player2.stat.playerDied();
+                                }
+                                else
+                                {
+                                    if (player1.healthBar.LivesLeft > 0)
+                                    {
+                                        player2.isAlive = false;
+                                    }
+                                    else
+                                    {
+                                        gameOver = true;
+                                    }
+                                }
+                            }
+
+                            // If it is a stink bug, players are poisoned
+                            if (enemy.ID == 8 && !timeEffect.isActive)
+                            {
+
+                                timeEffect.isActive = true;
+                                ambianceSound.Play();
+                            }
+                        
+                        }
+                    }
+                    #endregion
                 }
                 else
                 {
@@ -1592,6 +1685,7 @@ namespace Bugzzz
                     if (enemies_killed < (enemies_level[level] - maxEnemies + 1))
                     {
                         enemy.alive = true;
+                        enemy.Reset(enemy.ID);
 
                         int rand1 = rand.Next(100);
                         int rand2 = rand.Next(100);
@@ -1798,7 +1892,10 @@ namespace Bugzzz
                     prog2 += 1.3f * fade_increment;
                 }
                 else
+                {
                     gameLoading = false;
+                    gm.Select = true;
+                }
                 spriteBatch.End();
             }
             else
@@ -2026,7 +2123,7 @@ namespace Bugzzz
                         // Set an effect parameter to make the
                         // displacement texture scroll in a giant circle.
                         refractionEffect.Parameters["DisplacementScroll"].SetValue(
-                                                                    MoveInCircle(gameTime, 0.2f));
+                                                                    MathFns.MoveInCircle(gameTime, 0.2f));
 
                         if (timeEffect.isActive)
                         {
@@ -2092,18 +2189,7 @@ namespace Bugzzz
         }
 
 
-        /// <summary>
-        /// Helper for moving a value around in a circle.
-        /// </summary>
-        static Vector2 MoveInCircle(GameTime gameTime, float speed)
-        {
-            double time = gameTime.TotalGameTime.TotalSeconds * speed;
-
-            float x = (float)Math.Cos(time);
-            float y = (float)Math.Sin(time);
-
-            return new Vector2(x, y);
-        }
+        
 
     }
 }
