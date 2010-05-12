@@ -18,7 +18,7 @@ namespace Bugzzz
     {
         #region Fields (Backgrounds, Bar, current, max, destination)
         private Texture2D background;
-        private Texture2D bar;
+        public Texture2D bar;
         private Vector2 position;
 
         float current;

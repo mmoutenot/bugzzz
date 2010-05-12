@@ -107,6 +107,7 @@ namespace Bugzzz
         Texture2D healthFrontP1;
         Texture2D healthFrontP2;
         Texture2D poison;
+        Texture2D narcMenu;
 
         bool gameOver;
 
@@ -297,6 +298,7 @@ namespace Bugzzz
             level_backgrounds = new Texture2D[5];
             level_backgrounds[0] = Content.Load<Texture2D>("Backgrounds\\grass_bg");
             poison = Content.Load<Texture2D>("Backgrounds\\poisoned");
+            narcMenu = Content.Load<Texture2D>("NarcMenu\\sidebar");
 
             for (int i = 0; i < maxBullets; i++)
             {
@@ -361,8 +363,8 @@ namespace Bugzzz
             spiderman_top = Content.Load<Texture2D>("Sprites\\spidman_top");
             antman_bottom = Content.Load<Texture2D>("Sprites\\antman_bottom");
             spiderman_bottom = Content.Load<Texture2D>("Sprites\\spidman_bottom");
-            player1 = new Player(1,antman_top, antman_bottom, p1_w, new Vector2(viewport.Width * 7 / 15, viewport.Height / 2), 1, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP1);
-            player2 = new Player(2, spiderman_top, spiderman_bottom, p2_w, new Vector2(viewport.Width * 8 / 15, viewport.Height / 2), 2, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP2);
+            player1 = new Player(1,antman_top, antman_bottom, p1_w, new Vector2(viewport.Width * 7 / 15, viewport.Height / 2), 1, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP1, narcMenu);
+            player2 = new Player(2, spiderman_top, spiderman_bottom, p2_w, new Vector2(viewport.Width * 8 / 15, viewport.Height / 2), 2, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP2, narcMenu);
 
 
             bloodExplosion = Content.Load<ParticleEffect>("Particles\\bloody");
@@ -1972,8 +1974,8 @@ namespace Bugzzz
                                         gm.Select = true;
                                         scoreScreen = false;
                                         fade_out = true;
-                                        player1 = new Player(1, antman_top, antman_bottom, p1_w, new Vector2(viewport.Width * 7 / 15, viewport.Height / 2), 1, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP1);
-                                        player2 = new Player(2, spiderman_top, spiderman_bottom, p2_w, new Vector2(viewport.Width * 8 / 15, viewport.Height / 2), 2, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP2);
+                                        player1 = new Player(1, antman_top, antman_bottom, p1_w, new Vector2(viewport.Width * 7 / 15, viewport.Height / 2), 1, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP1,narcMenu);
+                                        player2 = new Player(2, spiderman_top, spiderman_bottom, p2_w, new Vector2(viewport.Width * 8 / 15, viewport.Height / 2), 2, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP2, narcMenu);
                                         this.gameOver = false;
                                         this.level = 0;
                                     }
@@ -1994,8 +1996,8 @@ namespace Bugzzz
                                         gm.Select = true;
                                         scoreScreen = false;
                                         fade_out = true;
-                                        player1 = new Player(1, antman_top, antman_bottom, p1_w, new Vector2(viewport.Width * 7 / 15, viewport.Height / 2), 1, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP1);
-                                        player2 = new Player(2, spiderman_top, spiderman_bottom, p2_w, new Vector2(viewport.Width * 8 / 15, viewport.Height / 2), 2, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP2);
+                                        player1 = new Player(1, antman_top, antman_bottom, p1_w, new Vector2(viewport.Width * 7 / 15, viewport.Height / 2), 1, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP1,narcMenu);
+                                        player2 = new Player(2, spiderman_top, spiderman_bottom, p2_w, new Vector2(viewport.Width * 8 / 15, viewport.Height / 2), 2, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP2,narcMenu);
                                         this.gameOver = false;
                                         this.level = 0;
                                     }
@@ -2017,8 +2019,8 @@ namespace Bugzzz
                                         gm.Select = true;
                                         scoreScreen = false;
                                         fade_out = true;
-                                        player1 = new Player(1, antman_top, antman_bottom, p1_w, new Vector2(viewport.Width * 7 / 15, viewport.Height / 2), 1, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP1);
-                                        player2 = new Player(2, spiderman_top, spiderman_bottom, p2_w, new Vector2(viewport.Width * 8 / 15, viewport.Height / 2), 2, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP2);
+                                        player1 = new Player(1, antman_top, antman_bottom, p1_w, new Vector2(viewport.Width * 7 / 15, viewport.Height / 2), 1, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP1, narcMenu);
+                                        player2 = new Player(2, spiderman_top, spiderman_bottom, p2_w, new Vector2(viewport.Width * 8 / 15, viewport.Height / 2), 2, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP2, narcMenu);
                                         this.gameOver = false;
                                         this.level = 0;
                                     }
@@ -2039,8 +2041,8 @@ namespace Bugzzz
                                         gm.Select = true;
                                         scoreScreen = false;
                                         fade_out = true;
-                                        player1 = new Player(1, antman_top, antman_bottom, p1_w, new Vector2(viewport.Width * 7 / 15, viewport.Height / 2), 1, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP1);
-                                        player2 = new Player(2, spiderman_top, spiderman_bottom, p2_w, new Vector2(viewport.Width * 8 / 15, viewport.Height / 2), 2, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP2);
+                                        player1 = new Player(1, antman_top, antman_bottom, p1_w, new Vector2(viewport.Width * 7 / 15, viewport.Height / 2), 1, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP1,narcMenu);
+                                        player2 = new Player(2, spiderman_top, spiderman_bottom, p2_w, new Vector2(viewport.Width * 8 / 15, viewport.Height / 2), 2, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP2, narcMenu);
                                         this.gameOver = false;
                                         this.level = 0;
                                     }

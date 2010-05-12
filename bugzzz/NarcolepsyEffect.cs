@@ -18,6 +18,8 @@ namespace Bugzzz
     {
         #region Fields (active, state, pressed)
         private bool active;
+        private int width;
+        private int height;
         private int state;
         private bool pressed;
         private int curLevel;
@@ -28,10 +30,22 @@ namespace Bugzzz
         private Buttons[] konamiButtons;
         private int kCIndex;
 
+        Texture2D narcPanel;
+        Viewport viewport;
+
         //used for updateOne
         //indicates how many times a button has been pressed
         private int pressCount;
         private int totalCount;
+
+        //current position of top left corner of spell box
+        private Vector2 position;
+
+
+        //positions of box when it is locked on or off screen
+        private Vector2 lockedLeft;
+        private Vector2 lockedRight;
+
         #endregion
 
         #region Accessors (Active, State, Pressed) [r = read only, w = write only, rw = read/write]
@@ -67,11 +81,12 @@ namespace Bugzzz
                 pressed = value;
             }
         }
+        
         #endregion
 
 
         #region Main Methods (Constructor, Update, Narc Update, updateLevel, updateOne, updateTwo, updateThree, updateFour, Draw)
-        public NarcolepsyEffect(SpriteFont f, int id)
+        public NarcolepsyEffect(SpriteFont f, Texture2D narcPanel, Viewport viewport, int id)
         {
             this.active = false;
             this.state = 0;
@@ -81,6 +96,7 @@ namespace Bugzzz
             this.pressCount = 0;
             dispFont = f;
             this.playerID = id;
+            this.narcPanel = narcPanel;
 
             int hash = id*DateTime.Now.Second + 791;
             rand = new Random(hash);
@@ -111,15 +127,32 @@ namespace Bugzzz
             konamiButtons[7] = Buttons.DPadRight;
             konamiButtons[8] = Buttons.B;
             konamiButtons[9] = Buttons.A;
+            this.viewport = viewport;
 
-
+            if (playerID == 1)
+                position = new Vector2(-1*narcPanel.Width, viewport.Height/2-(narcPanel.Height/2));
+            else
+                position = new Vector2(viewport.Width, viewport.Height/2-(narcPanel.Height/2));
+            if (playerID == 1)
+            {
+                lockedLeft = new Vector2(-1*narcPanel.Width, position.Y);
+                lockedRight = new Vector2(0, position.Y);
+            }
+            else
+            {
+                lockedLeft = new Vector2(viewport.Width - narcPanel.Width, position.Y);
+                lockedRight = new Vector2(viewport.Width, position.Y);
+            }
+                
         }
 
 
         public void Update(GamePadState g, KeyboardState k)
         {
             if (active)
-                NarcolepsyUpdate(g,k);
+            {
+                NarcolepsyUpdate(g, k);
+            }
             else if (rand.Next(5000) == 1)
             {
 
@@ -129,8 +162,19 @@ namespace Bugzzz
                     this.state = 1;
                 else
                     this.state = 2;
-               // this.state = rand.Next(2)+1;
+                // this.state = rand.Next(2)+1;
                 Console.WriteLine(state + "   " + r);
+            }
+            else
+            {
+                if (playerID == 1)
+                {
+                    moveLeft();
+                }
+                else
+                {
+                    moveRight();
+                }
             }
             
         }
@@ -143,6 +187,10 @@ namespace Bugzzz
                     updateOne(g,k);
                     break;
                 case 2:
+                    if (playerID == 1)
+                        moveRight();
+                    else
+                        moveLeft();
                     updateTwo(g,k);
                     break;
                 case 3:
@@ -250,22 +298,43 @@ namespace Bugzzz
         //draws text telling person what to do
         public void Draw(SpriteBatch s)
         {
-            //TODO:: Needs to be fixed so that it works smoother
-            if (this.active)
-            {
-
                 switch (state)
                 {
                     case 1:
+                        if(this.active)
                         s.DrawString(dispFont, "Oh no!! Player " + playerID + " press A (Space) a lot!!!", new Vector2(350f, 150f), Color.Green);
+                        /*
+                        if (playerID == 1)
+                            s.Draw(narcPanel, new Vector2(0,viewport.Height/2-(narcPanel.Height/2)), null, Color.White);
+                        
+                         */
+                        
                         break;
                     case 2:
-                        s.DrawString(dispFont, "Player " + playerID + " Enter the Konami Code!!!", new Vector2(350f, 150f), Color.Green);
+                        //s.DrawString(dispFont, "Player " + playerID + " Enter the Konami Code!!!", new Vector2(350f, 150f), Color.Green);
+                        if(playerID == 1)
+                        s.Draw(narcPanel, new Rectangle((int)position.X, (int)position.Y,narcPanel.Width,narcPanel.Height),null, Color.White,0,new Vector2(),SpriteEffects.FlipHorizontally,0);
+                        else
+                        s.Draw(narcPanel, new Rectangle((int)position.X, (int)position.Y, narcPanel.Width, narcPanel.Height), null, Color.White, (float) 0, new Vector2(), SpriteEffects.None, 0);
                         break;
                     default:
                         break;
                 }
-            }
+        }
+
+        public void moveRight()
+        {
+            if (position.X < this.lockedRight.X)
+                this.position = new Vector2(position.X + 8f, position.Y);
+            else
+                this.position.X = this.lockedRight.X;
+        }
+        public void moveLeft()
+        {
+            if (position.X > this.lockedLeft.X)
+                this.position = new Vector2(position.X-8f, position.Y);
+            else
+                this.position.X = this.lockedLeft.X;
         }
 
         #endregion
