@@ -54,7 +54,7 @@ namespace Bugzzz
             }
         }
 
-        public Player(int i, Texture2D t, Texture2D b, Weapons w, Vector2 pos, int ty, Statistics s, Texture2D[] sMenu, Viewport viewport, SpriteFont f, Texture2D healthBack, Texture2D healthFront, Texture2D narcMenu)
+        public Player(int i, Texture2D t, Texture2D b, Weapons w, Vector2 pos, int ty, Statistics s, Texture2D[] sMenu, Viewport viewport, SpriteFont f, Texture2D healthBack, Texture2D healthFront, Texture2D narcMenu, Texture2D[] narcTexArray)
         {
             energy = 100;
             deploy = false;
@@ -78,7 +78,7 @@ namespace Bugzzz
 
             type = ty;
             spellMenu = new SpellMenu(sMenu, viewport, id);
-            narc = new NarcolepsyEffect(f,narcMenu, viewport, id);
+            narc = new NarcolepsyEffect(f,narcMenu,narcTexArray, viewport, id);
             Vector2 healthPos;
             if (id == 1)
                 healthPos = new Vector2(viewport.Width / 15, viewport.Height / 15);
