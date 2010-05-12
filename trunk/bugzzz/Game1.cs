@@ -121,11 +121,14 @@ namespace Bugzzz
         SoundEffect ambianceSound;
         Song gameMusic;
         Song menuMusic;
+        Song gameOverMusic;
+
 
 
         bool introSoundPlayed;
         bool gameMusicPlayed;
         bool menuMusicPlayed;
+        bool gameOverMusicPlayed;
 
         // Time Effects
         SlowTimeEffect timeEffect;
@@ -217,7 +220,7 @@ namespace Bugzzz
             this.press2b = false;
             this.gameMusicPlayed = false;
             this.menuMusicPlayed = false;
-
+            this.gameOverMusicPlayed = false;
 
             
             this.viewport = GraphicsDevice.Viewport;
@@ -299,6 +302,7 @@ namespace Bugzzz
             ambianceSound = Content.Load<SoundEffect>("Sounds\\ambiance");
             this.gameMusic = Content.Load<Song>("Sounds\\gameMusic");
             this.menuMusic = Content.Load<Song>("Sounds\\menuMusic");
+            this.gameOverMusic = Content.Load<Song>("Sounds\\bestsongevar");
 
             // Refraction fx
             refractionEffect = Content.Load<Effect>("Content\\refraction");
@@ -554,7 +558,12 @@ namespace Bugzzz
         protected override void Update(GameTime gameTime)
         {
 
-
+            if (gameOver && !gameOverMusicPlayed)
+            {
+                MediaPlayer.Stop();
+                MediaPlayer.Play(gameOverMusic);
+                gameOverMusicPlayed = true;
+            }
             // Allows the game to exit
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
@@ -1794,9 +1803,9 @@ namespace Bugzzz
                 s.Draw(player2.spriteT, new Rectangle((int)player2.position.X, (int)player2.position.Y, player2.spriteT.Width, player2.spriteT.Height), null, Color.White, (float)(player2.rotation + .5 * Math.PI), new Vector2(player2.spriteT.Width / 2, player2.spriteT.Height / 2), SpriteEffects.None, 0);
             }
                 if (turret1.placed)
-                s.Draw(turret1.sprite, new Rectangle((int)turret1.position.X, (int)turret1.position.Y, turret1.sprite.Width, turret1.sprite.Height), null, Color.White, (float)(turret1.rotation + .5 * Math.PI), new Vector2(turret1.sprite.Width / 2, turret1.sprite.Height / 2), SpriteEffects.None, 0);
+                s.Draw(turret1.sprite, new Rectangle((int)turret1.position.X, (int)turret1.position.Y, turret1.sprite.Width, turret1.sprite.Height), null, Color.White, (float)(turret1.rotation + Math.PI), new Vector2(turret1.sprite.Width / 2, turret1.sprite.Height / 2), SpriteEffects.None, 0);
             if (turret2.placed)
-                s.Draw(turret2.sprite, new Rectangle((int)turret2.position.X, (int)turret2.position.Y, turret2.sprite.Width, turret2.sprite.Height), null, Color.White, (float)(turret2.rotation + .5 * Math.PI), new Vector2(turret2.sprite.Width / 2, turret2.sprite.Height / 2), SpriteEffects.None, 0);
+                s.Draw(turret2.sprite, new Rectangle((int)turret2.position.X, (int)turret2.position.Y, turret2.sprite.Width, turret2.sprite.Height), null, Color.White, (float)(turret2.rotation + Math.PI), new Vector2(turret2.sprite.Width / 2, turret2.sprite.Height / 2), SpriteEffects.None, 0);
         }
         private void DrawInformation(SpriteBatch s)
         {
