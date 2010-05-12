@@ -716,7 +716,7 @@ namespace Bugzzz
                         if (playerRect.Intersects(pickupRect))
                         {
                             destroyedPickup = pickup;
-                            p.spellMenu.bulletsLeft[pickup.weaponIndex] += 20;
+                            p.spellMenu.bulletsLeft[pickup.weaponIndex] += p.weapon.recharge[pickup.weaponIndex];
                             p.spellMenu.Active = true;
                             p.spellMenu.CurState = pickup.weaponIndex;
                             p.activeWeapon = pickup.weaponIndex;
