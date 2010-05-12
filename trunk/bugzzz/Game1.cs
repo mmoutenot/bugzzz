@@ -1947,6 +1947,7 @@ namespace Bugzzz
                 }
                 if (gm.Active)
                 {
+                    gameOverMusicPlayed = false;
                     if (gameMusicPlayed)
                     {
                         MediaPlayer.Stop();
