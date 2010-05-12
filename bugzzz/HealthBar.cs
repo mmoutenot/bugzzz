@@ -76,14 +76,15 @@ namespace Bugzzz
 
         public void Update()
         {
-            if (current != destination)
+            if (current >= destination)
                 current -= increment;
             
         }
 
-        public void Decrement(int val)
+        public void Decrement(float val)
         {
-            this.destination -= val;
+            if (current < destination)
+                this.destination -= val;
         }
 
 
