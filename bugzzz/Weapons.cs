@@ -20,6 +20,7 @@ namespace Bugzzz
         public int[] damages;
         public float[] delays;
         Texture2D[] sprite;
+        public int[] recharge;
 
         public Weapons(Texture2D a, Texture2D b, Texture2D c)
         {
@@ -27,18 +28,22 @@ namespace Bugzzz
             names = new String[3];
             damages = new int[3];
             delays = new float[3];
+            recharge = new int[3];
             sprite[0] = a;
             names[0] = "Rifle";
             damages[0] = 100;
             delays[0] = 0.20f;
+            recharge[0] = 100000;
             sprite[1] = b;
             names[1] = "Shotgun";
             damages[1] = 10;
-            delays[1] = 1.0f;
+            delays[1] = .80f;
+            recharge[1] = 80;
             sprite[2] = c;
             names[2] = "Flame Thrower";
             damages[2] = 100;
             delays[2] = 0.1f;
+            recharge[2] = 120;
 
             //TODO::Add Fourth Weapon
         }
