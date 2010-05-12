@@ -788,7 +788,7 @@ namespace Bugzzz
                             gm.stateInc();
                             gm.Select = true;
                         }
-                        else if (-0.5 < currentState.ThumbSticks.Left.Y && currentState.ThumbSticks.Left.Y < 0.5 && currentState.Buttons.A == ButtonState.Released)
+                        else if (-0.5 < currentState.ThumbSticks.Left.Y && currentState.ThumbSticks.Left.Y < 0.5 && currentState.Buttons.A == ButtonState.Released && -0.5 < cs.ThumbSticks.Left.Y && cs.ThumbSticks.Left.Y < 0.5 && cs.Buttons.A == ButtonState.Released)
                             gm.Select = false;
                 
 
@@ -823,12 +823,10 @@ namespace Bugzzz
                             gm.stateInc();
                             gm.Select = true;
                         }
-                        else if (-0.5 < cs.ThumbSticks.Left.Y && cs.ThumbSticks.Left.Y < 0.5 && cs.Buttons.A == ButtonState.Released)
-                            gm.Select = false;
 
 
                     }
-
+                     
                 }
                 #endregion
                 else
@@ -878,7 +876,7 @@ namespace Bugzzz
                     {
                         if (currentState.Buttons.A == ButtonState.Pressed)
                         {
-                            switch (gm.State)
+                            switch (pm.State)
                             {
                                 case 0:
                                     pm.Active = false;
@@ -903,14 +901,14 @@ namespace Bugzzz
                             pm.stateInc();
                             pm.Select = true;
                         }
-                        else if (-0.5 < currentState.ThumbSticks.Left.Y && currentState.ThumbSticks.Left.Y < 0.5)
+                        else if (-0.5 < currentState.ThumbSticks.Left.Y && currentState.ThumbSticks.Left.Y < 0.5 && currentState.Buttons.A == ButtonState.Released && -0.5 < cs.ThumbSticks.Left.Y && cs.ThumbSticks.Left.Y < 0.5 && cs.Buttons.A == ButtonState.Released)
                             pm.Select = false;
                     }
                     if (cs.IsConnected)
                     {
                         if (cs.Buttons.A == ButtonState.Pressed)
                         {
-                            switch (gm.State)
+                            switch (pm.State)
                             {
                                 case 0:
                                     pm.Active = false;
@@ -935,8 +933,6 @@ namespace Bugzzz
                             pm.stateInc();
                             pm.Select = true;
                         }
-                        else if (-0.5 < cs.ThumbSticks.Left.Y && cs.ThumbSticks.Left.Y < 0.5)
-                            pm.Select = false;
                     }
 
                 }
