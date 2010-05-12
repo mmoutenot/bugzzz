@@ -118,8 +118,13 @@ namespace Bugzzz
         SoundEffect shotgunSound;
         SoundEffect shotgunSoundSlow;
         SoundEffect ambianceSound;
+        Song gameMusic;
+        Song menuMusic;
+
 
         bool introSoundPlayed;
+        bool gameMusicPlayed;
+        bool menuMusicPlayed;
 
         // Time Effects
         SlowTimeEffect timeEffect;
@@ -209,6 +214,8 @@ namespace Bugzzz
             this.press2a = false;
             this.press1b = false;
             this.press2b = false;
+            this.gameMusicPlayed = false;
+            this.menuMusicPlayed = false;
 
 
             
@@ -241,6 +248,8 @@ namespace Bugzzz
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
+
+
 
             Texture2D[] menus = new Texture2D[9];
             menus[0] = Content.Load<Texture2D>("MainMenu\\play_sel");
@@ -275,6 +284,8 @@ namespace Bugzzz
             shotgunSound = Content.Load<SoundEffect>("Sounds\\shotgun");
             shotgunSoundSlow = Content.Load<SoundEffect>("Sounds\\shotgun_slow");
             ambianceSound = Content.Load<SoundEffect>("Sounds\\ambiance");
+            this.gameMusic = Content.Load<Song>("Sounds\\gameMusic");
+            this.menuMusic = Content.Load<Song>("Sounds\\menuMusic");
 
             // Refraction fx
             refractionEffect = Content.Load<Effect>("Content\\refraction");
@@ -620,6 +631,7 @@ namespace Bugzzz
                     }
                     else
                     {
+                        MediaPlayer.Volume = MediaPlayer.Volume / .5f;
                         timeEffect.isActive = false;
                         timeEffect.length = 200;
                         timeEffect.counter = 1;
@@ -1620,6 +1632,7 @@ namespace Bugzzz
 
                             if (enemy.ID == 8 && !timeEffect.isActive)
                             {
+                                MediaPlayer.Volume = MediaPlayer.Volume * .5f;
                                 timeEffect.isActive = true;
                                 ambianceSound.Play();
                             } 
@@ -1674,7 +1687,7 @@ namespace Bugzzz
                             // If it is a stink bug, players are poisoned
                             if (enemy.ID == 8 && !timeEffect.isActive)
                             {
-
+                                MediaPlayer.Volume = MediaPlayer.Volume * .5f;
                                 timeEffect.isActive = true;
                                 ambianceSound.Play();
                             }
@@ -1904,8 +1917,24 @@ namespace Bugzzz
             }
             else
             {
+                
+                if (!gm.Active && menuMusicPlayed)
+                {
+                    MediaPlayer.Stop();
+                    menuMusicPlayed = false;
+                }
                 if (gm.Active)
                 {
+                    if (gameMusicPlayed)
+                    {
+                        MediaPlayer.Stop();
+                        gameMusicPlayed = false;
+                    }
+                    if (!menuMusicPlayed)
+                    {
+                        MediaPlayer.Play(menuMusic);
+                        menuMusicPlayed = true;
+                    }
                     spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
                     gm.Draw(spriteBatch);
                     spriteBatch.End();
@@ -1925,6 +1954,13 @@ namespace Bugzzz
                 // Draw the game over screen which should lead back to the menu
                 else
                 {
+                    if (!gameMusicPlayed)
+                    {
+                        MediaPlayer.Volume = MediaPlayer.Volume * .3f;
+                        MediaPlayer.Play(gameMusic);
+                        gameMusicPlayed = true;
+                    }
+
                     if (!act_fade && (gameOver || (enemies_level[level] == enemies_killed)))
                     {
                         ls = new LevelScore(this.level + 1, player1, player2, true, 200, levelfont, titlefont, GraphicsDevice, this.healthBar, this.gameOver);
@@ -2110,6 +2146,7 @@ namespace Bugzzz
                     }
                     else
                     {
+
                         current_fade = 0;
                         fade_in = true;
                         fade_out = false;
