@@ -23,13 +23,13 @@ namespace Bugzzz
         public bool alive;
         public int score;
 
-        private int totHealth;
-        private int curHealth;
-        private int damage;
+        private float totHealth;
+        private float curHealth;
+        private float damage;
         private int iD;
 
         #region Accessors
-        public int Damage
+        public float Damage
         {
             get
             {
@@ -88,7 +88,7 @@ namespace Bugzzz
 
             }
         }
-        public void Update(int loss)
+        public void Update(float loss)
         {
             curHealth -= loss;
             if (curHealth <= 0f)
@@ -104,19 +104,19 @@ namespace Bugzzz
                 case 1: // little bitches
                     totHealth = 100;
                     curHealth = totHealth;
-                    damage = 5;
+                    damage = 0.01f;
                     score = 10;
                     break;
                 case 2: // medium enemies
                     totHealth = 450;
                     curHealth = totHealth;
-                    damage = 25;
+                    damage = .01f;
                     score = 25;
                     break;
                 case 3: // boss
                     totHealth = 5000;
                     curHealth = totHealth;
-                    damage = 50;
+                    damage = .1f;
                     score = 100;
                     break;
                 case 4: //default weapon
