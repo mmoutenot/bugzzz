@@ -29,6 +29,7 @@ namespace Bugzzz
         private Keys[] konamiKeys;
         private Buttons[] konamiButtons;
         private int kCIndex;
+        Texture2D[] narcArray;
 
         Texture2D narcPanel;
         Viewport viewport;
@@ -86,7 +87,7 @@ namespace Bugzzz
 
 
         #region Main Methods (Constructor, Update, Narc Update, updateLevel, updateOne, updateTwo, updateThree, updateFour, Draw)
-        public NarcolepsyEffect(SpriteFont f, Texture2D narcPanel, Viewport viewport, int id)
+        public NarcolepsyEffect(SpriteFont f, Texture2D narcPanel, Texture2D[] narcTextureArray, Viewport viewport, int id)
         {
             this.active = false;
             this.state = 0;
@@ -104,6 +105,8 @@ namespace Bugzzz
             kCIndex = 0;
             konamiKeys = new Keys[10];
             konamiButtons = new Buttons[10];
+
+            narcArray = narcTextureArray;
 
             //Keys and Buttons
             konamiKeys[0] = Keys.Up;
@@ -312,10 +315,144 @@ namespace Bugzzz
                         break;
                     case 2:
                         //s.DrawString(dispFont, "Player " + playerID + " Enter the Konami Code!!!", new Vector2(350f, 150f), Color.Green);
-                        if(playerID == 1)
-                        s.Draw(narcPanel, new Rectangle((int)position.X, (int)position.Y,narcPanel.Width,narcPanel.Height),null, Color.White,0,new Vector2(),SpriteEffects.FlipHorizontally,0);
+                        if (playerID == 1)
+                        {
+                            s.Draw(narcPanel, new Rectangle((int)position.X, (int)position.Y, narcPanel.Width, narcPanel.Height), null, Color.White, 0, new Vector2(), SpriteEffects.FlipHorizontally, 0);
+                            
+                        }
                         else
-                        s.Draw(narcPanel, new Rectangle((int)position.X, (int)position.Y, narcPanel.Width, narcPanel.Height), null, Color.White, (float) 0, new Vector2(), SpriteEffects.None, 0);
+                        {
+                            s.Draw(narcPanel, new Rectangle((int)position.X, (int)position.Y, narcPanel.Width, narcPanel.Height), null, Color.White, (float)0, new Vector2(), SpriteEffects.None, 0);
+                        }
+
+                        switch (kCIndex)
+                        {
+                            case 0:
+                                s.Draw(narcArray[4], new Rectangle((int)position.X, (int)position.Y + 5, narcArray[4].Width, narcArray[4].Height), null, Color.Yellow, 0, new Vector2(), SpriteEffects.None, 0);
+                                s.Draw(narcArray[3], new Rectangle((int)position.X, (int)position.Y + 55, narcArray[3].Width, narcArray[3].Height), null, Color.White, 0, new Vector2(), SpriteEffects.None, 0);
+                                s.Draw(narcArray[3], new Rectangle((int)position.X, (int)position.Y + 105, narcArray[3].Width, narcArray[3].Height), null, Color.White, 0, new Vector2(), SpriteEffects.FlipVertically, 0);
+                                s.Draw(narcArray[3], new Rectangle((int)position.X, (int)position.Y + 155, narcArray[3].Width, narcArray[3].Height), null, Color.White, 0, new Vector2(), SpriteEffects.FlipVertically, 0);
+                                s.Draw(narcArray[3], new Rectangle((int)position.X + narcArray[3].Width / 2, (int)position.Y + 205 + narcArray[3].Height / 2, narcArray[3].Width, narcArray[3].Height), null, Color.White, (float)(-1 * Math.PI / 2), new Vector2(narcArray[4].Width / 2, narcArray[4].Height / 2), SpriteEffects.None, 0);
+                                s.Draw(narcArray[3], new Rectangle((int)position.X + narcArray[3].Width / 2, (int)position.Y + 255 + narcArray[3].Height / 2, narcArray[3].Width, narcArray[3].Height), null, Color.White, (float)(Math.PI / 2), new Vector2(narcArray[4].Width / 2, narcArray[4].Height / 2), SpriteEffects.None, 0);
+                                s.Draw(narcArray[3], new Rectangle((int)position.X + narcArray[3].Width / 2, (int)position.Y + 305 + narcArray[3].Height / 2, narcArray[3].Width, narcArray[3].Height), null, Color.White, (float)(-1 * Math.PI / 2), new Vector2(narcArray[4].Width / 2, narcArray[4].Height / 2), SpriteEffects.None, 0);
+                                s.Draw(narcArray[3], new Rectangle((int)position.X + narcArray[3].Width / 2, (int)position.Y + 355 + narcArray[3].Height / 2, narcArray[3].Width, narcArray[3].Height), null, Color.White, (float)(Math.PI / 2), new Vector2(narcArray[4].Width / 2, narcArray[4].Height / 2), SpriteEffects.None, 0);
+                                s.Draw(narcArray[6], new Rectangle((int)position.X, (int)position.Y + 405, narcArray[3].Width, narcArray[3].Height), null, Color.White, 0, new Vector2(), SpriteEffects.None, 0);
+                                s.Draw(narcArray[0], new Rectangle((int)position.X, (int)position.Y + 455, narcArray[3].Width, narcArray[3].Height), null, Color.White, 0, new Vector2(), SpriteEffects.None, 0);
+                                break;
+                            case 1:
+                                s.Draw(narcArray[5], new Rectangle((int)position.X, (int)position.Y + 5, narcArray[5].Width, narcArray[5].Height), null, Color.White, 0, new Vector2(), SpriteEffects.None, 0);
+                                s.Draw(narcArray[4], new Rectangle((int)position.X, (int)position.Y + 55, narcArray[4].Width, narcArray[4].Height), null, Color.Yellow, 0, new Vector2(), SpriteEffects.None, 0);
+                                s.Draw(narcArray[3], new Rectangle((int)position.X, (int)position.Y + 105, narcArray[3].Width, narcArray[3].Height), null, Color.White, 0, new Vector2(), SpriteEffects.FlipVertically, 0);
+                                s.Draw(narcArray[3], new Rectangle((int)position.X, (int)position.Y + 155, narcArray[3].Width, narcArray[3].Height), null, Color.White, 0, new Vector2(), SpriteEffects.FlipVertically, 0);
+                                s.Draw(narcArray[3], new Rectangle((int)position.X + narcArray[3].Width / 2, (int)position.Y + 205 + narcArray[3].Height / 2, narcArray[3].Width, narcArray[3].Height), null, Color.White, (float)(-1 * Math.PI / 2), new Vector2(narcArray[4].Width / 2, narcArray[4].Height / 2), SpriteEffects.None, 0);
+                                s.Draw(narcArray[3], new Rectangle((int)position.X + narcArray[3].Width / 2, (int)position.Y + 255 + narcArray[3].Height / 2, narcArray[3].Width, narcArray[3].Height), null, Color.White, (float)(Math.PI / 2), new Vector2(narcArray[4].Width / 2, narcArray[4].Height / 2), SpriteEffects.None, 0);
+                                s.Draw(narcArray[3], new Rectangle((int)position.X + narcArray[3].Width / 2, (int)position.Y + 305 + narcArray[3].Height / 2, narcArray[3].Width, narcArray[3].Height), null, Color.White, (float)(-1 * Math.PI / 2), new Vector2(narcArray[4].Width / 2, narcArray[4].Height / 2), SpriteEffects.None, 0);
+                                s.Draw(narcArray[3], new Rectangle((int)position.X + narcArray[3].Width / 2, (int)position.Y + 355 + narcArray[3].Height / 2, narcArray[3].Width, narcArray[3].Height), null, Color.White, (float)(Math.PI / 2), new Vector2(narcArray[4].Width / 2, narcArray[4].Height / 2), SpriteEffects.None, 0);
+                                s.Draw(narcArray[6], new Rectangle((int)position.X, (int)position.Y + 405, narcArray[3].Width, narcArray[3].Height), null, Color.White, 0, new Vector2(), SpriteEffects.None, 0);
+                                s.Draw(narcArray[0], new Rectangle((int)position.X, (int)position.Y + 455, narcArray[3].Width, narcArray[3].Height), null, Color.White, 0, new Vector2(), SpriteEffects.None, 0);
+                                break;
+                            case 2:
+                                s.Draw(narcArray[5], new Rectangle((int)position.X, (int)position.Y + 5, narcArray[5].Width, narcArray[5].Height), null, Color.White, 0, new Vector2(), SpriteEffects.None, 0);
+                                s.Draw(narcArray[5], new Rectangle((int)position.X, (int)position.Y + 55, narcArray[4].Width, narcArray[4].Height), null, Color.White, 0, new Vector2(), SpriteEffects.None, 0);
+                                s.Draw(narcArray[4], new Rectangle((int)position.X, (int)position.Y + 105, narcArray[3].Width, narcArray[3].Height), null, Color.Yellow, 0, new Vector2(), SpriteEffects.FlipVertically, 0);
+                                s.Draw(narcArray[3], new Rectangle((int)position.X, (int)position.Y + 155, narcArray[3].Width, narcArray[3].Height), null, Color.White, 0, new Vector2(), SpriteEffects.FlipVertically, 0);
+                                s.Draw(narcArray[3], new Rectangle((int)position.X + narcArray[3].Width / 2, (int)position.Y + 205 + narcArray[3].Height / 2, narcArray[3].Width, narcArray[3].Height), null, Color.White, (float)(-1 * Math.PI / 2), new Vector2(narcArray[4].Width / 2, narcArray[4].Height / 2), SpriteEffects.None, 0);
+                                s.Draw(narcArray[3], new Rectangle((int)position.X + narcArray[3].Width / 2, (int)position.Y + 255 + narcArray[3].Height / 2, narcArray[3].Width, narcArray[3].Height), null, Color.White, (float)(Math.PI / 2), new Vector2(narcArray[4].Width / 2, narcArray[4].Height / 2), SpriteEffects.None, 0);
+                                s.Draw(narcArray[3], new Rectangle((int)position.X + narcArray[3].Width / 2, (int)position.Y + 305 + narcArray[3].Height / 2, narcArray[3].Width, narcArray[3].Height), null, Color.White, (float)(-1 * Math.PI / 2), new Vector2(narcArray[4].Width / 2, narcArray[4].Height / 2), SpriteEffects.None, 0);
+                                s.Draw(narcArray[3], new Rectangle((int)position.X + narcArray[3].Width / 2, (int)position.Y + 355 + narcArray[3].Height / 2, narcArray[3].Width, narcArray[3].Height), null, Color.White, (float)(Math.PI / 2), new Vector2(narcArray[4].Width / 2, narcArray[4].Height / 2), SpriteEffects.None, 0);
+                                s.Draw(narcArray[6], new Rectangle((int)position.X, (int)position.Y + 405, narcArray[3].Width, narcArray[3].Height), null, Color.White, 0, new Vector2(), SpriteEffects.None, 0);
+                                s.Draw(narcArray[0], new Rectangle((int)position.X, (int)position.Y + 455, narcArray[3].Width, narcArray[3].Height), null, Color.White, 0, new Vector2(), SpriteEffects.None, 0);
+                                break;
+                            case 3:
+                                s.Draw(narcArray[5], new Rectangle((int)position.X, (int)position.Y + 5, narcArray[5].Width, narcArray[5].Height), null, Color.White, 0, new Vector2(), SpriteEffects.None, 0);
+                                s.Draw(narcArray[5], new Rectangle((int)position.X, (int)position.Y + 55, narcArray[4].Width, narcArray[4].Height), null, Color.White, 0, new Vector2(), SpriteEffects.None, 0);
+                                s.Draw(narcArray[5], new Rectangle((int)position.X, (int)position.Y + 105, narcArray[3].Width, narcArray[3].Height), null, Color.White, 0, new Vector2(), SpriteEffects.FlipVertically, 0);
+                                s.Draw(narcArray[4], new Rectangle((int)position.X, (int)position.Y + 155, narcArray[3].Width, narcArray[3].Height), null, Color.Yellow, 0, new Vector2(), SpriteEffects.FlipVertically, 0);
+                                s.Draw(narcArray[3], new Rectangle((int)position.X + narcArray[3].Width / 2, (int)position.Y + 205 + narcArray[3].Height / 2, narcArray[3].Width, narcArray[3].Height), null, Color.White, (float)(-1 * Math.PI / 2), new Vector2(narcArray[4].Width / 2, narcArray[4].Height / 2), SpriteEffects.None, 0);
+                                s.Draw(narcArray[3], new Rectangle((int)position.X + narcArray[3].Width / 2, (int)position.Y + 255 + narcArray[3].Height / 2, narcArray[3].Width, narcArray[3].Height), null, Color.White, (float)(Math.PI / 2), new Vector2(narcArray[4].Width / 2, narcArray[4].Height / 2), SpriteEffects.None, 0);
+                                s.Draw(narcArray[3], new Rectangle((int)position.X + narcArray[3].Width / 2, (int)position.Y + 305 + narcArray[3].Height / 2, narcArray[3].Width, narcArray[3].Height), null, Color.White, (float)(-1 * Math.PI / 2), new Vector2(narcArray[4].Width / 2, narcArray[4].Height / 2), SpriteEffects.None, 0);
+                                s.Draw(narcArray[3], new Rectangle((int)position.X + narcArray[3].Width / 2, (int)position.Y + 355 + narcArray[3].Height / 2, narcArray[3].Width, narcArray[3].Height), null, Color.White, (float)(Math.PI / 2), new Vector2(narcArray[4].Width / 2, narcArray[4].Height / 2), SpriteEffects.None, 0);
+                                s.Draw(narcArray[6], new Rectangle((int)position.X, (int)position.Y + 405, narcArray[3].Width, narcArray[3].Height), null, Color.White, 0, new Vector2(), SpriteEffects.None, 0);
+                                s.Draw(narcArray[0], new Rectangle((int)position.X, (int)position.Y + 455, narcArray[3].Width, narcArray[3].Height), null, Color.White, 0, new Vector2(), SpriteEffects.None, 0);
+                                break;
+                            case 4:
+                                s.Draw(narcArray[5], new Rectangle((int)position.X, (int)position.Y + 5, narcArray[5].Width, narcArray[5].Height), null, Color.White, 0, new Vector2(), SpriteEffects.None, 0);
+                                s.Draw(narcArray[5], new Rectangle((int)position.X, (int)position.Y + 55, narcArray[4].Width, narcArray[4].Height), null, Color.White, 0, new Vector2(), SpriteEffects.None, 0);
+                                s.Draw(narcArray[5], new Rectangle((int)position.X, (int)position.Y + 105, narcArray[3].Width, narcArray[3].Height), null, Color.White, 0, new Vector2(), SpriteEffects.FlipVertically, 0);
+                                s.Draw(narcArray[5], new Rectangle((int)position.X, (int)position.Y + 155, narcArray[3].Width, narcArray[3].Height), null, Color.White, 0, new Vector2(), SpriteEffects.FlipVertically, 0);
+                                s.Draw(narcArray[4], new Rectangle((int)position.X + narcArray[3].Width / 2, (int)position.Y + 205 + narcArray[3].Height / 2, narcArray[3].Width, narcArray[3].Height), null, Color.Yellow, (float)(-1 * Math.PI / 2), new Vector2(narcArray[4].Width / 2, narcArray[4].Height / 2), SpriteEffects.None, 0);
+                                s.Draw(narcArray[3], new Rectangle((int)position.X + narcArray[3].Width / 2, (int)position.Y + 255 + narcArray[3].Height / 2, narcArray[3].Width, narcArray[3].Height), null, Color.White, (float)(Math.PI / 2), new Vector2(narcArray[4].Width / 2, narcArray[4].Height / 2), SpriteEffects.None, 0);
+                                s.Draw(narcArray[3], new Rectangle((int)position.X + narcArray[3].Width / 2, (int)position.Y + 305 + narcArray[3].Height / 2, narcArray[3].Width, narcArray[3].Height), null, Color.White, (float)(-1 * Math.PI / 2), new Vector2(narcArray[4].Width / 2, narcArray[4].Height / 2), SpriteEffects.None, 0);
+                                s.Draw(narcArray[3], new Rectangle((int)position.X + narcArray[3].Width / 2, (int)position.Y + 355 + narcArray[3].Height / 2, narcArray[3].Width, narcArray[3].Height), null, Color.White, (float)(Math.PI / 2), new Vector2(narcArray[4].Width / 2, narcArray[4].Height / 2), SpriteEffects.None, 0);
+                                s.Draw(narcArray[6], new Rectangle((int)position.X, (int)position.Y + 405, narcArray[3].Width, narcArray[3].Height), null, Color.White, 0, new Vector2(), SpriteEffects.None, 0);
+                                s.Draw(narcArray[0], new Rectangle((int)position.X, (int)position.Y + 455, narcArray[3].Width, narcArray[3].Height), null, Color.White, 0, new Vector2(), SpriteEffects.None, 0);
+                                break;
+                            case 5:
+                                s.Draw(narcArray[5], new Rectangle((int)position.X, (int)position.Y + 5, narcArray[5].Width, narcArray[5].Height), null, Color.White, 0, new Vector2(), SpriteEffects.None, 0);
+                                s.Draw(narcArray[5], new Rectangle((int)position.X, (int)position.Y + 55, narcArray[4].Width, narcArray[4].Height), null, Color.White, 0, new Vector2(), SpriteEffects.None, 0);
+                                s.Draw(narcArray[5], new Rectangle((int)position.X, (int)position.Y + 105, narcArray[3].Width, narcArray[3].Height), null, Color.White, 0, new Vector2(), SpriteEffects.FlipVertically, 0);
+                                s.Draw(narcArray[5], new Rectangle((int)position.X, (int)position.Y + 155, narcArray[3].Width, narcArray[3].Height), null, Color.White, 0, new Vector2(), SpriteEffects.FlipVertically, 0);
+                                s.Draw(narcArray[5], new Rectangle((int)position.X + narcArray[3].Width / 2, (int)position.Y + 205 + narcArray[3].Height / 2, narcArray[3].Width, narcArray[3].Height), null, Color.White, (float)(-1 * Math.PI / 2), new Vector2(narcArray[4].Width / 2, narcArray[4].Height / 2), SpriteEffects.None, 0);
+                                s.Draw(narcArray[4], new Rectangle((int)position.X + narcArray[3].Width / 2, (int)position.Y + 255 + narcArray[3].Height / 2, narcArray[3].Width, narcArray[3].Height), null, Color.Yellow, (float)(Math.PI / 2), new Vector2(narcArray[4].Width / 2, narcArray[4].Height / 2), SpriteEffects.None, 0);
+                                s.Draw(narcArray[3], new Rectangle((int)position.X + narcArray[3].Width / 2, (int)position.Y + 305 + narcArray[3].Height / 2, narcArray[3].Width, narcArray[3].Height), null, Color.White, (float)(-1 * Math.PI / 2), new Vector2(narcArray[4].Width / 2, narcArray[4].Height / 2), SpriteEffects.None, 0);
+                                s.Draw(narcArray[3], new Rectangle((int)position.X + narcArray[3].Width / 2, (int)position.Y + 355 + narcArray[3].Height / 2, narcArray[3].Width, narcArray[3].Height), null, Color.White, (float)(Math.PI / 2), new Vector2(narcArray[4].Width / 2, narcArray[4].Height / 2), SpriteEffects.None, 0);
+                                s.Draw(narcArray[6], new Rectangle((int)position.X, (int)position.Y + 405, narcArray[3].Width, narcArray[3].Height), null, Color.White, 0, new Vector2(), SpriteEffects.None, 0);
+                                s.Draw(narcArray[0], new Rectangle((int)position.X, (int)position.Y + 455, narcArray[3].Width, narcArray[3].Height), null, Color.White, 0, new Vector2(), SpriteEffects.None, 0);
+                                break;
+                            case 6:
+                                s.Draw(narcArray[5], new Rectangle((int)position.X, (int)position.Y + 5, narcArray[5].Width, narcArray[5].Height), null, Color.White, 0, new Vector2(), SpriteEffects.None, 0);
+                                s.Draw(narcArray[5], new Rectangle((int)position.X, (int)position.Y + 55, narcArray[4].Width, narcArray[4].Height), null, Color.White, 0, new Vector2(), SpriteEffects.None, 0);
+                                s.Draw(narcArray[5], new Rectangle((int)position.X, (int)position.Y + 105, narcArray[3].Width, narcArray[3].Height), null, Color.White, 0, new Vector2(), SpriteEffects.FlipVertically, 0);
+                                s.Draw(narcArray[5], new Rectangle((int)position.X, (int)position.Y + 155, narcArray[3].Width, narcArray[3].Height), null, Color.White, 0, new Vector2(), SpriteEffects.FlipVertically, 0);
+                                s.Draw(narcArray[5], new Rectangle((int)position.X + narcArray[3].Width / 2, (int)position.Y + 205 + narcArray[3].Height / 2, narcArray[3].Width, narcArray[3].Height), null, Color.White, (float)(-1 * Math.PI / 2), new Vector2(narcArray[4].Width / 2, narcArray[4].Height / 2), SpriteEffects.None, 0);
+                                s.Draw(narcArray[5], new Rectangle((int)position.X + narcArray[3].Width / 2, (int)position.Y + 255 + narcArray[3].Height / 2, narcArray[3].Width, narcArray[3].Height), null, Color.White, (float)(Math.PI / 2), new Vector2(narcArray[4].Width / 2, narcArray[4].Height / 2), SpriteEffects.None, 0);
+                                s.Draw(narcArray[4], new Rectangle((int)position.X + narcArray[3].Width / 2, (int)position.Y + 305 + narcArray[3].Height / 2, narcArray[3].Width, narcArray[3].Height), null, Color.Yellow, (float)(-1 * Math.PI / 2), new Vector2(narcArray[4].Width / 2, narcArray[4].Height / 2), SpriteEffects.None, 0);
+                                s.Draw(narcArray[3], new Rectangle((int)position.X + narcArray[3].Width / 2, (int)position.Y + 355 + narcArray[3].Height / 2, narcArray[3].Width, narcArray[3].Height), null, Color.White, (float)(Math.PI / 2), new Vector2(narcArray[4].Width / 2, narcArray[4].Height / 2), SpriteEffects.None, 0);
+                                s.Draw(narcArray[6], new Rectangle((int)position.X, (int)position.Y + 405, narcArray[3].Width, narcArray[3].Height), null, Color.White, 0, new Vector2(), SpriteEffects.None, 0);
+                                s.Draw(narcArray[0], new Rectangle((int)position.X, (int)position.Y + 455, narcArray[3].Width, narcArray[3].Height), null, Color.White, 0, new Vector2(), SpriteEffects.None, 0);
+                                break;
+                            case 7:
+                                s.Draw(narcArray[5], new Rectangle((int)position.X, (int)position.Y + 5, narcArray[5].Width, narcArray[5].Height), null, Color.White, 0, new Vector2(), SpriteEffects.None, 0);
+                                s.Draw(narcArray[5], new Rectangle((int)position.X, (int)position.Y + 55, narcArray[4].Width, narcArray[4].Height), null, Color.White, 0, new Vector2(), SpriteEffects.None, 0);
+                                s.Draw(narcArray[5], new Rectangle((int)position.X, (int)position.Y + 105, narcArray[3].Width, narcArray[3].Height), null, Color.White, 0, new Vector2(), SpriteEffects.FlipVertically, 0);
+                                s.Draw(narcArray[5], new Rectangle((int)position.X, (int)position.Y + 155, narcArray[3].Width, narcArray[3].Height), null, Color.White, 0, new Vector2(), SpriteEffects.FlipVertically, 0);
+                                s.Draw(narcArray[5], new Rectangle((int)position.X + narcArray[3].Width / 2, (int)position.Y + 205 + narcArray[3].Height / 2, narcArray[3].Width, narcArray[3].Height), null, Color.White, (float)(-1 * Math.PI / 2), new Vector2(narcArray[4].Width / 2, narcArray[4].Height / 2), SpriteEffects.None, 0);
+                                s.Draw(narcArray[5], new Rectangle((int)position.X + narcArray[3].Width / 2, (int)position.Y + 255 + narcArray[3].Height / 2, narcArray[3].Width, narcArray[3].Height), null, Color.White, (float)(Math.PI / 2), new Vector2(narcArray[4].Width / 2, narcArray[4].Height / 2), SpriteEffects.None, 0);
+                                s.Draw(narcArray[5], new Rectangle((int)position.X + narcArray[3].Width / 2, (int)position.Y + 305 + narcArray[3].Height / 2, narcArray[3].Width, narcArray[3].Height), null, Color.White, (float)(-1 * Math.PI / 2), new Vector2(narcArray[4].Width / 2, narcArray[4].Height / 2), SpriteEffects.None, 0);
+                                s.Draw(narcArray[4], new Rectangle((int)position.X + narcArray[3].Width / 2, (int)position.Y + 355 + narcArray[3].Height / 2, narcArray[3].Width, narcArray[3].Height), null, Color.Yellow, (float)(Math.PI / 2), new Vector2(narcArray[4].Width / 2, narcArray[4].Height / 2), SpriteEffects.None, 0);
+                                s.Draw(narcArray[6], new Rectangle((int)position.X, (int)position.Y + 405, narcArray[3].Width, narcArray[3].Height), null, Color.White, 0, new Vector2(), SpriteEffects.None, 0);
+                                s.Draw(narcArray[0], new Rectangle((int)position.X, (int)position.Y + 455, narcArray[3].Width, narcArray[3].Height), null, Color.White, 0, new Vector2(), SpriteEffects.None, 0);
+                                break;
+                            case 8:
+                                s.Draw(narcArray[5], new Rectangle((int)position.X, (int)position.Y + 5, narcArray[5].Width, narcArray[5].Height), null, Color.White, 0, new Vector2(), SpriteEffects.None, 0);
+                                s.Draw(narcArray[5], new Rectangle((int)position.X, (int)position.Y + 55, narcArray[4].Width, narcArray[4].Height), null, Color.White, 0, new Vector2(), SpriteEffects.None, 0);
+                                s.Draw(narcArray[5], new Rectangle((int)position.X, (int)position.Y + 105, narcArray[3].Width, narcArray[3].Height), null, Color.White, 0, new Vector2(), SpriteEffects.FlipVertically, 0);
+                                s.Draw(narcArray[5], new Rectangle((int)position.X, (int)position.Y + 155, narcArray[3].Width, narcArray[3].Height), null, Color.White, 0, new Vector2(), SpriteEffects.FlipVertically, 0);
+                                s.Draw(narcArray[5], new Rectangle((int)position.X + narcArray[3].Width / 2, (int)position.Y + 205 + narcArray[3].Height / 2, narcArray[3].Width, narcArray[3].Height), null, Color.White, (float)(-1 * Math.PI / 2), new Vector2(narcArray[4].Width / 2, narcArray[4].Height / 2), SpriteEffects.None, 0);
+                                s.Draw(narcArray[5], new Rectangle((int)position.X + narcArray[3].Width / 2, (int)position.Y + 255 + narcArray[3].Height / 2, narcArray[3].Width, narcArray[3].Height), null, Color.White, (float)(Math.PI / 2), new Vector2(narcArray[4].Width / 2, narcArray[4].Height / 2), SpriteEffects.None, 0);
+                                s.Draw(narcArray[5], new Rectangle((int)position.X + narcArray[3].Width / 2, (int)position.Y + 305 + narcArray[3].Height / 2, narcArray[3].Width, narcArray[3].Height), null, Color.White, (float)(-1 * Math.PI / 2), new Vector2(narcArray[4].Width / 2, narcArray[4].Height / 2), SpriteEffects.None, 0);
+                                s.Draw(narcArray[5], new Rectangle((int)position.X + narcArray[3].Width / 2, (int)position.Y + 355 + narcArray[3].Height / 2, narcArray[3].Width, narcArray[3].Height), null, Color.White, (float)(Math.PI / 2), new Vector2(narcArray[4].Width / 2, narcArray[4].Height / 2), SpriteEffects.None, 0);
+                                s.Draw(narcArray[7], new Rectangle((int)position.X, (int)position.Y + 405, narcArray[3].Width, narcArray[3].Height), null, Color.Yellow, 0, new Vector2(), SpriteEffects.None, 0);
+                                s.Draw(narcArray[0], new Rectangle((int)position.X, (int)position.Y + 455, narcArray[3].Width, narcArray[3].Height), null, Color.White, 0, new Vector2(), SpriteEffects.None, 0);
+                                break;
+                            case 9:
+                                s.Draw(narcArray[5], new Rectangle((int)position.X, (int)position.Y + 5, narcArray[5].Width, narcArray[5].Height), null, Color.White, 0, new Vector2(), SpriteEffects.None, 0);
+                                s.Draw(narcArray[5], new Rectangle((int)position.X, (int)position.Y + 55, narcArray[4].Width, narcArray[4].Height), null, Color.White, 0, new Vector2(), SpriteEffects.None, 0);
+                                s.Draw(narcArray[5], new Rectangle((int)position.X, (int)position.Y + 105, narcArray[3].Width, narcArray[3].Height), null, Color.White, 0, new Vector2(), SpriteEffects.FlipVertically, 0);
+                                s.Draw(narcArray[5], new Rectangle((int)position.X, (int)position.Y + 155, narcArray[3].Width, narcArray[3].Height), null, Color.White, 0, new Vector2(), SpriteEffects.FlipVertically, 0);
+                                s.Draw(narcArray[5], new Rectangle((int)position.X + narcArray[3].Width / 2, (int)position.Y + 205 + narcArray[3].Height / 2, narcArray[3].Width, narcArray[3].Height), null, Color.White, (float)(-1 * Math.PI / 2), new Vector2(narcArray[4].Width / 2, narcArray[4].Height / 2), SpriteEffects.None, 0);
+                                s.Draw(narcArray[5], new Rectangle((int)position.X + narcArray[3].Width / 2, (int)position.Y + 255 + narcArray[3].Height / 2, narcArray[3].Width, narcArray[3].Height), null, Color.White, (float)(Math.PI / 2), new Vector2(narcArray[4].Width / 2, narcArray[4].Height / 2), SpriteEffects.None, 0);
+                                s.Draw(narcArray[5], new Rectangle((int)position.X + narcArray[3].Width / 2, (int)position.Y + 305 + narcArray[3].Height / 2, narcArray[3].Width, narcArray[3].Height), null, Color.White, (float)(-1 * Math.PI / 2), new Vector2(narcArray[4].Width / 2, narcArray[4].Height / 2), SpriteEffects.None, 0);
+                                s.Draw(narcArray[5], new Rectangle((int)position.X + narcArray[3].Width / 2, (int)position.Y + 355 + narcArray[3].Height / 2, narcArray[3].Width, narcArray[3].Height), null, Color.White, (float)(Math.PI / 2), new Vector2(narcArray[4].Width / 2, narcArray[4].Height / 2), SpriteEffects.None, 0);
+                                s.Draw(narcArray[8], new Rectangle((int)position.X, (int)position.Y + 405, narcArray[3].Width, narcArray[3].Height), null, Color.White, 0, new Vector2(), SpriteEffects.None, 0);
+                                s.Draw(narcArray[1], new Rectangle((int)position.X, (int)position.Y + 455, narcArray[3].Width, narcArray[3].Height), null, Color.Yellow, 0, new Vector2(), SpriteEffects.None, 0);
+                                break;
+
+                        }
+                        
+                        
+                        
+                        
                         break;
                     default:
                         break;

@@ -96,6 +96,7 @@ namespace Bugzzz
         GameTime gt;
 
         Texture2D[] level_backgrounds;
+        Texture2D[] narcTexArray;
         Texture2D getReady;
         Texture2D logo;
         Texture2D antman_top;
@@ -262,6 +263,18 @@ namespace Bugzzz
             menus[7] = Content.Load<Texture2D>("MainMenu\\exit_un");
             menus[8] = Content.Load<Texture2D>("MainMenu\\menu");
 
+            narcTexArray = new Texture2D[9];
+            narcTexArray[0] = Content.Load<Texture2D>("NarcMenu\\a");
+            narcTexArray[1] = Content.Load<Texture2D>("NarcMenu\\a_act");
+            narcTexArray[2] = Content.Load<Texture2D>("NarcMenu\\a_un");
+            narcTexArray[3] = Content.Load<Texture2D>("NarcMenu\\arrow");
+            narcTexArray[4] = Content.Load<Texture2D>("NarcMenu\\arrow_act");
+            narcTexArray[5] = Content.Load<Texture2D>("NarcMenu\\arrow_un");
+            narcTexArray[6] = Content.Load<Texture2D>("NarcMenu\\b");
+            narcTexArray[7] = Content.Load<Texture2D>("NarcMenu\\b_act");
+            narcTexArray[8] = Content.Load<Texture2D>("NarcMenu\\b_un");
+
+
             this.gm = new GameMenu(menus, viewport);
 
             menus = new Texture2D[7];
@@ -380,8 +393,8 @@ namespace Bugzzz
             spiderman_top = Content.Load<Texture2D>("Sprites\\spidman_top");
             antman_bottom = Content.Load<Texture2D>("Sprites\\antman_bottom");
             spiderman_bottom = Content.Load<Texture2D>("Sprites\\spidman_bottom");
-            player1 = new Player(1,antman_top, antman_bottom, p1_w, new Vector2(viewport.Width * 7 / 15, viewport.Height / 2), 1, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP1, narcMenu);
-            player2 = new Player(2, spiderman_top, spiderman_bottom, p2_w, new Vector2(viewport.Width * 8 / 15, viewport.Height / 2), 2, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP2, narcMenu);
+            player1 = new Player(1,antman_top, antman_bottom, p1_w, new Vector2(viewport.Width * 7 / 15, viewport.Height / 2), 1, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP1, narcMenu, narcTexArray);
+            player2 = new Player(2, spiderman_top, spiderman_bottom, p2_w, new Vector2(viewport.Width * 8 / 15, viewport.Height / 2), 2, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP2, narcMenu, narcTexArray);
 
 
             bloodExplosion = Content.Load<ParticleEffect>("Particles\\bloody");
@@ -2016,8 +2029,8 @@ namespace Bugzzz
                                         gm.Select = true;
                                         scoreScreen = false;
                                         fade_out = true;
-                                        player1 = new Player(1, antman_top, antman_bottom, p1_w, new Vector2(viewport.Width * 7 / 15, viewport.Height / 2), 1, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP1,narcMenu);
-                                        player2 = new Player(2, spiderman_top, spiderman_bottom, p2_w, new Vector2(viewport.Width * 8 / 15, viewport.Height / 2), 2, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP2, narcMenu);
+                                        player1 = new Player(1, antman_top, antman_bottom, p1_w, new Vector2(viewport.Width * 7 / 15, viewport.Height / 2), 1, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP1,narcMenu,narcTexArray);
+                                        player2 = new Player(2, spiderman_top, spiderman_bottom, p2_w, new Vector2(viewport.Width * 8 / 15, viewport.Height / 2), 2, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP2, narcMenu,narcTexArray);
                                         this.gameOver = false;
                                         this.level = 0;
                                     }
@@ -2038,8 +2051,8 @@ namespace Bugzzz
                                         gm.Select = true;
                                         scoreScreen = false;
                                         fade_out = true;
-                                        player1 = new Player(1, antman_top, antman_bottom, p1_w, new Vector2(viewport.Width * 7 / 15, viewport.Height / 2), 1, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP1,narcMenu);
-                                        player2 = new Player(2, spiderman_top, spiderman_bottom, p2_w, new Vector2(viewport.Width * 8 / 15, viewport.Height / 2), 2, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP2,narcMenu);
+                                        player1 = new Player(1, antman_top, antman_bottom, p1_w, new Vector2(viewport.Width * 7 / 15, viewport.Height / 2), 1, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP1,narcMenu,narcTexArray);
+                                        player2 = new Player(2, spiderman_top, spiderman_bottom, p2_w, new Vector2(viewport.Width * 8 / 15, viewport.Height / 2), 2, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP2,narcMenu,narcTexArray);
                                         this.gameOver = false;
                                         this.level = 0;
                                     }
@@ -2061,8 +2074,8 @@ namespace Bugzzz
                                         gm.Select = true;
                                         scoreScreen = false;
                                         fade_out = true;
-                                        player1 = new Player(1, antman_top, antman_bottom, p1_w, new Vector2(viewport.Width * 7 / 15, viewport.Height / 2), 1, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP1, narcMenu);
-                                        player2 = new Player(2, spiderman_top, spiderman_bottom, p2_w, new Vector2(viewport.Width * 8 / 15, viewport.Height / 2), 2, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP2, narcMenu);
+                                        player1 = new Player(1, antman_top, antman_bottom, p1_w, new Vector2(viewport.Width * 7 / 15, viewport.Height / 2), 1, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP1, narcMenu,narcTexArray);
+                                        player2 = new Player(2, spiderman_top, spiderman_bottom, p2_w, new Vector2(viewport.Width * 8 / 15, viewport.Height / 2), 2, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP2, narcMenu,narcTexArray);
                                         this.gameOver = false;
                                         this.level = 0;
                                     }
@@ -2083,8 +2096,8 @@ namespace Bugzzz
                                         gm.Select = true;
                                         scoreScreen = false;
                                         fade_out = true;
-                                        player1 = new Player(1, antman_top, antman_bottom, p1_w, new Vector2(viewport.Width * 7 / 15, viewport.Height / 2), 1, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP1,narcMenu);
-                                        player2 = new Player(2, spiderman_top, spiderman_bottom, p2_w, new Vector2(viewport.Width * 8 / 15, viewport.Height / 2), 2, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP2, narcMenu);
+                                        player1 = new Player(1, antman_top, antman_bottom, p1_w, new Vector2(viewport.Width * 7 / 15, viewport.Height / 2), 1, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP1,narcMenu,narcTexArray);
+                                        player2 = new Player(2, spiderman_top, spiderman_bottom, p2_w, new Vector2(viewport.Width * 8 / 15, viewport.Height / 2), 2, new Statistics(true), sMenu, viewport, levelfont, healthBack, healthFrontP2, narcMenu,narcTexArray);
                                         this.gameOver = false;
                                         this.level = 0;
                                     }
