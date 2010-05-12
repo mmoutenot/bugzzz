@@ -17,12 +17,13 @@ namespace Bugzzz
     class AnimatedGameObject : GameObject
     {
         ArrayList sprites;
-        int duration, curFrame;
+        int duration, curFrame, index;
         public AnimatedGameObject(ArrayList textures, int ID)
             : base((Texture2D) textures[0], ID)
         {
             this.sprites = textures;
-            this.duration = textures.Count;
+            this.duration = 15;
+            index = 0;
             curFrame = 0;
         }
 
@@ -31,12 +32,17 @@ namespace Bugzzz
             if (curFrame >= duration - 1)
             {
                 curFrame = 0;
+                if (index == sprites.Count -1) {
+                    index = 0;
+                } else {
+                    index += 1;
+                }
             }
             else
             {
                 curFrame++;
             }
-            sprite = (Texture2D) sprites[curFrame];
+            sprite = (Texture2D) sprites[index];
         }
     }
 }
