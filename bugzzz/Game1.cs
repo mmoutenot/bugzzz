@@ -279,7 +279,7 @@ namespace Bugzzz
             refractionEffect = Content.Load<Effect>("Content\\refraction");
             waterfallTexture = Content.Load<Texture2D>("Sprites\\waterfall");
 
-            Texture2D temp = Content.Load<Texture2D>("Sprites\\cannon");
+            Texture2D temp = Content.Load<Texture2D>("Sprites\\newcannon");
             turret1 = new Turret(temp);
             turret2 = new Turret(temp);
             
