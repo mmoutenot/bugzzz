@@ -1984,7 +1984,7 @@ namespace Bugzzz
                         gameMusicPlayed = true;
                     }
 
-                    if (!act_fade && (gameOver || (enemies_level[level] == enemies_killed)))
+                    if (!act_fade && (gameOver || (enemies_level[level] >= enemies_killed)))
                     {
                         ls = new LevelScore(this.level + 1, player1, player2, true, 200, levelfont, titlefont, GraphicsDevice, this.healthBar, this.gameOver);
                         act_fade = true;
