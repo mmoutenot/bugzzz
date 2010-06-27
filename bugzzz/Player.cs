@@ -23,6 +23,8 @@ namespace Bugzzz
 
         public Vector2 velocity = Vector2.Zero;
         public Vector2 position = Vector2.Zero;
+        private Vector2 startPos;
+
         public HealthBar healthBar;
 
         public int type;
@@ -67,6 +69,7 @@ namespace Bugzzz
             move3 = false;
 
             position = pos;
+            startPos = pos;
             velocity = Vector2.Zero;
             spriteT = t;
             spriteB = b;
@@ -85,6 +88,24 @@ namespace Bugzzz
             else
                 healthPos = new Vector2(viewport.Width * 12 / 16, viewport.Height / 15);
             healthBar = new HealthBar(healthBack, healthFront, healthPos);
+        }
+        public void Restart()
+        {
+            energy = 100;
+            deploy = false;
+            isAlive = true;
+
+            fire = false;
+            move1 = false;
+            move2 = false;
+            move3 = false;
+
+            position = startPos;
+            velocity = Vector2.Zero;
+            rotation = 0.0f;
+            rotation_b = 0.0f;
+            activeWeapon = 0;
+            healthBar.Restart();
         }
     }
 }

@@ -96,7 +96,6 @@ namespace Bugzzz
                 this.alive = false;
             }
         }
-
         public void Reset(int ID)
         {
             switch (ID)
