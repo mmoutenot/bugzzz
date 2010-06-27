@@ -26,6 +26,7 @@ namespace Bugzzz
         float destination;
 
         int livesLeft;
+        const int MAXLIVES = 10;
 
         const float increment = 0.5f;
 
@@ -94,6 +95,11 @@ namespace Bugzzz
             s.Draw(bar, new Rectangle((int)position.X + 2, (int)position.Y + 2, (int)((bar.Width * current / 100)-4), (int)(bar.Height*.8)), Color.White);
         }
 
+        public void Restart()
+        {
+            current = max;
+            livesLeft = MAXLIVES;
+        }
         #endregion
     }
 }

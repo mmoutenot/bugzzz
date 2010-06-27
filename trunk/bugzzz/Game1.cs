@@ -109,6 +109,9 @@ namespace Bugzzz
         Texture2D healthFrontP2;
         Texture2D poison;
         Texture2D narcMenu;
+        Texture2D bulletTexture;
+        Texture2D[] enemyTextures;
+        ArrayList[] enemyAnimations;
 
         bool gameOver;
 
@@ -208,7 +211,6 @@ namespace Bugzzz
             this.current_fade = 0;
             this.fade_in = true;
             this.rand = new Random();
-            this.enemies_killed = 0;
             this.enemies_level = new int[4];
             this.enemies_level[0] = 100;
             this.enemies_level[1] = 250;
@@ -221,11 +223,16 @@ namespace Bugzzz
             this.gameMusicPlayed = false;
             this.menuMusicPlayed = false;
             this.gameOverMusicPlayed = false;
+            this.enemyTextures = new Texture2D[3];
+            this.enemyAnimations = new ArrayList[2];
 
             
             this.viewport = GraphicsDevice.Viewport;
             this.viewportRect = new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+            
+            this.introSoundPlayed = false;
 
+            this.timeEffect = new SlowTimeEffect();
             this.level = 0;
             this.bullets = new GameObject[maxBullets];
             this.bullets2 = new GameObject[maxBullets];
@@ -236,13 +243,61 @@ namespace Bugzzz
             this.enemies = new GameObject[maxEnemies];
 
             this.gameOver = false;
-            this.introSoundPlayed = false;
 
-            this.timeEffect = new SlowTimeEffect();
-            timeEffect.isActive = false;
+            this.timeEffect.isActive = false;
+
+            this.enemies_killed = 0;
 
             base.Initialize();
+            this.gameRestart();
 
+        }
+
+        //these are the items that need to be reset each time the game is played. 
+        protected void gameRestart()
+        {
+            this.level = 0;
+            this.bullets = new GameObject[maxBullets];
+            this.bullets2 = new GameObject[maxBullets];
+
+            this.turretBullets1 = new GameObject[maxBullets];
+            this.turretBullets2 = new GameObject[maxBullets];
+
+            this.enemies = new GameObject[maxEnemies];
+
+            this.gameOver = false;
+
+            this.timeEffect.isActive = false;
+
+            this.enemies_killed = 0;
+
+            for (int i = 0; i < maxBullets; i++)
+            {
+                bullets2[i] = new GameObject(this.bulletTexture, 4);
+                bullets[i] = new GameObject(this.bulletTexture, 4);
+            }
+
+            for (int i = 0; i < maxBullets; i++)
+            {
+                turretBullets1[i] = new GameObject(this.bulletTexture, 4);
+                turretBullets2[i] = new GameObject(this.bulletTexture, 4);
+            }
+            for (int j = 0; j < maxEnemies; j++)
+            {
+                if (j % 10 == 0)
+                    enemies[j] = new GameObject(enemyTextures[1], 2);
+                else if (j == maxEnemies - 2)
+                    enemies[j] = new GameObject(enemyTextures[2], 8);
+                else if (j % 2 == 0)
+                    enemies[j] = new GameObject(enemyTextures[0], 1);
+                else if (j == maxEnemies - 1)
+                    enemies[j] = new AnimatedGameObject(enemyAnimations[0], 3);
+                else
+                    enemies[j] = new AnimatedGameObject(enemyAnimations[1], 9);
+            }
+            score.Clear();
+            this.player1.Restart();
+            this.player2.Restart();
         }
 
         /// <summary>
@@ -314,7 +369,7 @@ namespace Bugzzz
             
             healthBar = Content.Load<Texture2D>("Sprites\\healthBar");
             temp = null;
-            temp = Content.Load<Texture2D>("Sprites\\cannonball");
+            this.bulletTexture = Content.Load<Texture2D>("Sprites\\cannonball");
 
             p1_w = new Weapons(temp, temp, temp);
             p2_w = new Weapons(temp, temp, temp);
@@ -330,44 +385,41 @@ namespace Bugzzz
 
             for (int i = 0; i < maxBullets; i++)
             {
-                bullets2[i] = new GameObject(temp,4);
-                bullets[i] = new GameObject(temp,4);
+                bullets2[i] = new GameObject(this.bulletTexture, 4);
+                bullets[i] = new GameObject(this.bulletTexture, 4);
             }
 
             for (int i = 0; i < maxBullets; i++)
             {
-                turretBullets1[i] = new GameObject(temp,4);
-                turretBullets2[i] = new GameObject(temp,4);
+                turretBullets1[i] = new GameObject(this.bulletTexture, 4);
+                turretBullets2[i] = new GameObject(this.bulletTexture, 4);
             }
 
             temp = Content.Load<Texture2D>("Sprites\\roach");
-            Texture2D littlebug = Content.Load<Texture2D>("Sprites\\littlebug");
-            Texture2D bigboss = Content.Load<Texture2D>("Sprites\\bigboss");
-            Texture2D stinky = Content.Load<Texture2D>("Sprites\\stinky");
-            ArrayList roachSprites = new ArrayList();
-            ArrayList bigBug = new ArrayList();
-            for (int i = 0; i < 10; i++)
-            {
-                roachSprites.Add(Content.Load<Texture2D>("Sprites\\roach\\roach" + i));
-            }
+            this.enemyTextures[0]= Content.Load<Texture2D>("Sprites\\littlebug");
+            this.enemyTextures[1] = Content.Load<Texture2D>("Sprites\\bigboss");
+            this.enemyTextures[2] = Content.Load<Texture2D>("Sprites\\stinky");
+            this.enemyAnimations[0] = new ArrayList();
+            this.enemyAnimations[1] = new ArrayList();
 
             for (int i = 0; i < 4; i++)
-            {
-                bigBug.Add(Content.Load<Texture2D>("Sprites\\bigbug\\bigbug" + i));
-            }
+                this.enemyAnimations[0].Add(Content.Load<Texture2D>("Sprites\\bigbug\\bigbug" + i));
+            for (int i = 0; i < 10; i++)
+                this.enemyAnimations[1].Add(Content.Load<Texture2D>("Sprites\\roach\\roach" + i));
+            
 
             for (int j = 0; j < maxEnemies; j++)
             {
                 if (j % 10 == 0)
-                    enemies[j] = new GameObject(temp, 2);
+                    enemies[j] = new GameObject(this.enemyTextures[1], 2);
                 else if (j == maxEnemies - 2)
-                    enemies[j] = new GameObject(stinky, 8);
+                    enemies[j] = new GameObject(this.enemyTextures[2], 8);
                 else if (j % 2 == 0)
-                    enemies[j] = new GameObject(littlebug, 1);
+                    enemies[j] = new GameObject(this.enemyTextures[0], 1);
                 else if (j == maxEnemies - 1)
-                    enemies[j] = new AnimatedGameObject(bigBug, 3);
+                    enemies[j] = new AnimatedGameObject(this.enemyAnimations[0], 3);
                 else
-                    enemies[j] = new AnimatedGameObject(roachSprites, 9);
+                    enemies[j] = new AnimatedGameObject(this.enemyAnimations[1], 9);
             }
 
             //spell menu textures
@@ -424,6 +476,7 @@ namespace Bugzzz
         }
 
         /// <summary>
+        /// 
         /// UnloadContent will be called once per game and is the place to unload
         /// all content.
         /// </summary>
@@ -446,8 +499,8 @@ namespace Bugzzz
             {
                 if(timeEffect.isActive)
                     shotgunSoundSlow.Play();
-                    else
-                shotgunSound.Play();
+                else
+                    shotgunSound.Play();
             }
             else
             {
@@ -569,7 +622,7 @@ namespace Bugzzz
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
-            if (pm.Active || gm.Active)
+            if ((pm.Active || gm.Active) && !gameLoading)
             {
                 this.updateInput();
             }
@@ -579,7 +632,10 @@ namespace Bugzzz
 
                 if (!timeEffect.isActive || (timeEffect.isActive && timeEffect.counter % 2 == 0))
                 {
-                    updateInput();
+                    if (!gameLoading)
+                    {
+                        updateInput();
+                    }
                     if (!act_fade && !gm.Active)
                     {
                         if (GamePad.GetState(PlayerIndex.One).Buttons.Y == ButtonState.Pressed)
@@ -795,6 +851,7 @@ namespace Bugzzz
             GamePadState cs = GamePad.GetState(PlayerIndex.Two);
 
 
+            //Main menu
             if (gm.Active)
             {
                 #region Xbox Menu Controls
@@ -807,7 +864,9 @@ namespace Bugzzz
                         {
                             switch (gm.State)
                             {
-                                case 0:
+                                case 0: //start game
+                                    //TODO:  Game Reset Here.
+                                    this.gameRestart();
                                     gm.Active = false;
                                     act_fade = true;
                                     fade_out = true;
@@ -815,7 +874,7 @@ namespace Bugzzz
                                     fade_in = false;
                                     current_fade = 255;
                                     break;
-                                default:
+                                default: //quit game
                                     Exit();
                                     break;
                             }
@@ -843,6 +902,7 @@ namespace Bugzzz
                             switch (gm.State)
                             {
                                 case 0:
+                                    this.gameRestart();
                                     gm.Active = false;
                                     act_fade = true;
                                     fade_out = true;
@@ -865,6 +925,8 @@ namespace Bugzzz
                             gm.stateInc();
                             gm.Select = true;
                         }
+                        else if (-0.5 < currentState.ThumbSticks.Left.Y && currentState.ThumbSticks.Left.Y < 0.5 && currentState.Buttons.A == ButtonState.Released && -0.5 < cs.ThumbSticks.Left.Y && cs.ThumbSticks.Left.Y < 0.5 && cs.Buttons.A == ButtonState.Released)
+                            gm.Select = false;
 
 
                     }
@@ -880,6 +942,7 @@ namespace Bugzzz
                         switch (gm.State)
                         {
                             case 0:
+                                this.gameRestart();
                                 gm.Active = false;
                                 act_fade = true;
                                 fade_out = true;
@@ -908,9 +971,10 @@ namespace Bugzzz
                 }
 
             }
-
+            //Pause Menu
             else if (pm.Active)
             {
+
                 #region Xbox Menu Controls
                 if (currentState.IsConnected || cs.IsConnected)
                 {
@@ -920,7 +984,7 @@ namespace Bugzzz
                         {
                             switch (pm.State)
                             {
-                                case 0:
+                                case 0: //continue
                                     pm.Active = false;
                                     break;
                                 case 1:
@@ -1920,8 +1984,8 @@ namespace Bugzzz
                 GraphicsDevice.Clear(Color.Black);
 
 
-            spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
-            spriteBatch.Draw(logo, new Rectangle(0, 0, (int)viewport.Width, (int)viewport.Height), new Color(Color.White, (byte)(int)progress));
+                spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
+                spriteBatch.Draw(logo, new Rectangle(0, 0, (int)viewport.Width, (int)viewport.Height), new Color(Color.White, (byte)(int)progress));
                 if (progress <= 255)
                 {
                     progress += 1.3f*fade_increment;
@@ -1947,6 +2011,7 @@ namespace Bugzzz
                 }
                 if (gm.Active)
                 {
+                    //stop any music playing, set to menu music playing
                     gameOverMusicPlayed = false;
                     if (gameMusicPlayed)
                     {
@@ -1984,8 +2049,9 @@ namespace Bugzzz
                         gameMusicPlayed = true;
                     }
 
-                    if (!act_fade && (gameOver || (enemies_level[level] >= enemies_killed)))
+                    if (!act_fade && (gameOver || (enemies_level[level] <= enemies_killed)))
                     {
+                        Console.Out.WriteLine("??");
                         ls = new LevelScore(this.level + 1, player1, player2, true, 200, levelfont, titlefont, GraphicsDevice, this.healthBar, this.gameOver);
                         act_fade = true;
                         enemies_killed = 0;
@@ -2000,6 +2066,8 @@ namespace Bugzzz
 
                     if (act_fade)
                     {
+                        Console.Out.WriteLine("Drawing2");
+                        
                         //Fade to Black
                         float elapsed = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
                         spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
@@ -2127,6 +2195,7 @@ namespace Bugzzz
 
                         if (fade_out)
                         {
+                            Console.Out.WriteLine("Drawing3");
                             // Reset the pickups for the next level
                             pickups = new ArrayList();
 
@@ -2140,28 +2209,11 @@ namespace Bugzzz
                             spriteBatch.Draw(getReady, new Rectangle(0, 0, viewport.Width, viewport.Height), new Color(Color.White, (byte)(int)(current_fade)));
 
 
-                            #region Level Reset
                             current_fade -= 4 * fade_increment;
                             if (current_fade <= 0)
                             {
-                                //refresh everything
-                                for (int i = 0; i < maxBullets; i++)
-                                {
-                                    bullets[i].alive = false;
-                                    turretBullets1[i].alive = false;
-                                    bullets2[i].alive = false;
-                                    turretBullets2[i].alive = false;
-                                }
-                                foreach (GameObject enm in enemies)
-                                {
-                                    enm.alive = false;
-                                }
-                                score.Clear();
-                                fade_out = false;
                                 act_fade = false;
                             }
-                            #endregion
-
                         }
                         #endregion
 
@@ -2169,7 +2221,7 @@ namespace Bugzzz
                     }
                     else
                     {
-
+                        Console.Out.WriteLine("DrawingXXXXXXX");
                         current_fade = 0;
                         fade_in = true;
                         fade_out = false;
