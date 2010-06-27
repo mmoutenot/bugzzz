@@ -374,8 +374,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Sprites\littlebitch.png">
-      <Name>littlebitch</Name>
+    <Compile Include="Sprites\littlebug.png">
+      <Name>littlebug</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
